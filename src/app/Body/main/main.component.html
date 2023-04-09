@@ -1,1 +1,31 @@
-<p>main works!</p>
+<h2 class="text-center text-capitalize pt-3 mb-4" style="color:white">
+    Book Catalog
+</h2>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-xl-2 ml-2 mb-5" *ngFor="let item of booksList">
+        <div class="bookCard">
+            <img src="{{item.imageLink}}" class="bookImg" alt="...">
+            <div class="">
+                <h2 class="bookInfo">{{item.title}}</h2>
+                <h2 class="bookInfo">{{item.author}}</h2>
+                <p class="bookInfo">{{item.price}} $</p>
+                <!-- <p class=" card-text">This is a wider card with supporting text below as a natural lead-in to
+            additional
+            content. This content is a little bit longer.</p> -->
+                <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
+            </div>
+        </div>
+    </div>
+    <!-- <div *ngFor="let item of booksList" style="max-width: 18rem;">
+    <div class="card">
+        <img src="{{item.imageLink}}" class="" alt="...">
+        <div class="card-body">
+            <h2 class="card-title">{{item.title}}</h2>
+            <h2 class="card-title">{{item.author}}</h2>
+            <p class="card-title">{{item.price}} $</p>
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
+                content. This content is a little bit longer.</p>
+            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        </div>
+    </div> -->
