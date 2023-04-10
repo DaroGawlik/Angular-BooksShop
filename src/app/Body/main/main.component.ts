@@ -15,7 +15,10 @@ export class MainComponent implements OnInit {
     description: string;
   }[] = books;
 
+  IsMoreInfoPopUpOpen = false;
+
   constructor() {}
 
   ngOnInit(): void {}
+
 }
