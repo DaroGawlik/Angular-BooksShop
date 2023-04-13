@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import books from '../../../books.json';
+import { Component, OnInit, Input } from '@angular/core';
+import { BookModel } from '../book.model';
+import BooksJson from '../../../books.json';
 
 @Component({
   selector: 'app-main',
@@ -7,18 +8,11 @@ import books from '../../../books.json';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
-  booksList: {
-    author: string;
-    imageLink: string;
-    title: string;
-    price: number;
-    description: string;
-  }[] = books;
-
-  IsMoreInfoPopUpOpen = false;
+  Books: [] = BooksJson;
 
   constructor() {}
 
-  ngOnInit(): void {}
-
+  ngOnInit() {
+    console.log(this.Books);
+  }
 }

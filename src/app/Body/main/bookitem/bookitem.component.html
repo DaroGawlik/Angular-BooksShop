@@ -1,0 +1,24 @@
+<div class="container bookCard d-flex flex-column col-1">
+    <div class="row pt-3">
+        <img class="col align-self-center bookImg img-responsive" src="{{bookItem.imageLink}}" alt="book's image">
+    </div>
+    <h2 class="row m-0 pt-2 bookInfo">{{bookItem.title}}</h2>
+    <h2 class="row m-0 pt-3 bookInfo">{{bookItem.author}}</h2>
+    <h4 class="row m-0 pt-3 bookInfo">{{bookItem.price}} $</h4>
+
+    <div class="row mt-auto m-0 pt-1 pb-2 row-cols-2 justify-content-between">
+
+        <div class="col p-0 btn-group">
+            <button type=" button">
+                More Info</button>
+            <div class="moreInfo" *ngIf="">
+                <div>{{bookItem.description}}</div>
+                <button type="button">
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <button class="col" type="button">Add To Bag</button>
+    </div>
+</div>

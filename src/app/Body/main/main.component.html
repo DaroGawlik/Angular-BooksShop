@@ -1,40 +1,6 @@
-<h2 class="text-center pt-3 mb-4" style="color:white">
-    Book Catalog
-</h2>
+<h2 class="text-center pt-3 mb-4" style="color:white">Book Catalog</h2>
 <div class="container">
     <div class="row row-cols-auto">
-        <div class="container bookCard d-flex flex-column col-1" *ngFor="let book of booksList">
-            <div class="row pt-3">
-                <img class="col align-self-center bookImg img-responsive" src="{{book.imageLink}}" alt="book's image">
-            </div>
-            <h2 class="row m-0 pt-2 bookInfo">{{book.title}}</h2>
-            <h2 class="row m-0 pt-3 bookInfo">{{book.author}}</h2>
-            <h4 class="row m-0 pt-3 bookInfo">{{book.price}} $</h4>
-
-            <div class="row mt-auto m-0 pt-1 pb-2 row-cols-2 justify-content-between">
-
-                <div class="col p-0 btn-group dropup">
-                    <button type="button" class="dropdown-toggle" data-mdb-toggle="dropdown" aria-expanded="false"> More
-                        Info</button>
-                    <div class="dropdown-menu">
-                        <p>dsdssds</p>
-                        <p>dsdssds</p>
-                        <p>dsdssds</p>
-                        <p>dsdssds</p>
-                    </div>
-                </div>
-                <!-- <div class="col p-0" ngbDropdown placement="top-end">
-                    <button type="button" id="dropdownBasic2" ngbDropdownToggle> More Info</button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
-                        <p>dsdssds</p>
-                        <p>dsdssds</p>
-                        <p>dsdssds</p>
-                        <p>dsdssds</p>
-                    </div>
-                </div> -->
-                <button class="col" type="button">Add To Bag</button>
-
-            </div>
-        </div>
+        <app-bookitem *ngFor="let bookEl of Books" [bookItem]="bookEl"></app-bookitem>
     </div>
 </div>
