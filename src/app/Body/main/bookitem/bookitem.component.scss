@@ -1,24 +1,25 @@
 .bookCard {
-    width: 200px;
-    height: 350px;
-    border: 1px solid black;
-    cursor: move;
-    .bookImg {
-      width: 160px;
-      height: 180px;
-    }
-    .bookInfo {
-      font-size: 0.8rem;
-    }
-
-    button {
-      width: 4.5rem;
-      font-size: 0.7rem;
-      border-radius: 5px;
-      padding: 0;
-    }
-    .dropUp {
-      font-size: 10px;
-      margin-left: 40px;
-    }
+  width: 200px;
+  height: 350px;
+  border: 1px solid black;
+  margin: 10px auto;
+  cursor: move;
+  .bookImg {
+    width: 160px;
+    height: 180px;
   }
+  .bookInfo {
+    font-size: 0.8rem;
+  }
+
+  button {
+    width: 4.5rem;
+    font-size: 0.7rem;
+    border-radius: 5px;
+    padding: 0;
+  }
+  .dropUp {
+    font-size: 10px;
+    margin-left: 40px;
+  }
+}
