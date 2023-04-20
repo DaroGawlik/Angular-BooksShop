@@ -1,1 +1,11 @@
-<p>aside works!</p>
+<div *ngIf="basketOfBooks.length > 0; then areBooks; else noBooks"></div>
+
+<ng-template #areBooks>
+    <div></div>
+</ng-template>
+
+<ng-template #noBooks>
+    <div class="noBooks">
+        <p>No books in your bag</p>
+    </div>
+</ng-template>

@@ -5,20 +5,14 @@
     <h2 class="row m-0 pt-2 bookInfo">{{bookItem.title}}</h2>
     <h2 class="row m-0 pt-3 bookInfo">{{bookItem.author}}</h2>
     <h4 class="row m-0 pt-3 bookInfo">{{bookItem.price}} $</h4>
-
     <div class="row mt-auto m-0 pt-1 pb-2 row-cols-2 justify-content-between">
-
         <div class="col p-0 btn-group">
-            <button type="button">More Info</button>
-            <!-- (click)="onSelected()" -->
-            <!-- <div class="moreInfo" *ngIf="">
-                <div>{{bookItem.description}}</div>
-                <button type="button">
-                    Close
-                </button>
-        </div> -->
+            <button type="button" (click)="openMoreInfo()">More Info</button>
         </div>
-
-        <button class="col" type="button">Add To Bag</button>
+        <button class="col" type="button" (click)="addBookToBag()">Add To Bag</button>
+    </div>
+    <div class=" moreInfo" *ngIf="isMoreInfoOpen">
+            <div>{{bookItem.description}}</div>
+            <button type="button" (click)="closeMoreInfo()">Close</button>
     </div>
 </div>

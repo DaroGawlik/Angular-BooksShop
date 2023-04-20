@@ -1,0 +1,19 @@
+div {
+  min-height: 5rem;
+  background-image: linear-gradient(to left, #d7d2cc 0%, #304352 100%);
+  border-top: 1px solid black;
+  font-size: 2rem;
+  span {
+    margin: 1rem 0 1rem 0;
+  }
+}
+
+@media (max-width: 991px) {
+  div {
+    min-height: 3rem;
+
+    .footerSpan {
+      font-size: 1rem;
+    }
+  }
+}

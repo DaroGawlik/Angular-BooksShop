@@ -1,0 +1,21 @@
+.noBooks {
+  height: 100%;
+  border-left: 1px solid black;
+  padding: 5rem 2rem 0 2rem;
+  font-size: 4rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+@media (max-width: 991px) {
+  .noBooks {
+    border-top: 1px solid black;
+    padding: 1rem 0rem 0 0rem;
+    font-size: 2.5rem;
+  }
+}
+@media (max-width: 500px) {
+  .noBooks {
+    font-size: 1.5rem;
+  }
+}

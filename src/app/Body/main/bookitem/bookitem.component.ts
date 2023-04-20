@@ -8,9 +8,18 @@ import { BookModel } from '../../book.model';
 })
 export class BookitemComponent implements OnInit {
   @Input() bookItem: any;
+  isMoreInfoOpen: boolean = false;
 
   constructor() {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  openMoreInfo() {
+    this.isMoreInfoOpen = true;
   }
+  closeMoreInfo() {
+    this.isMoreInfoOpen = false;
+  }
+
+  addBookToBag() {}
 }
