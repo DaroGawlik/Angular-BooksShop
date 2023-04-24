@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BookModel } from '../../book.model';
+import { BooksService } from 'src/app/service/books.service';
 
 @Component({
   selector: 'app-bookitem',
@@ -10,7 +10,7 @@ export class BookitemComponent implements OnInit {
   @Input() bookItem: any;
   isMoreInfoOpen: boolean = false;
 
-  constructor() {}
+  constructor(private booksService: BooksService) {}
 
   ngOnInit(): void {}
 
@@ -21,5 +21,7 @@ export class BookitemComponent implements OnInit {
     this.isMoreInfoOpen = false;
   }
 
-  addBookToBag() {}
+  addBookToBag() {
+    this.booksService.addTobagList(this.bookItem);
+  }
 }

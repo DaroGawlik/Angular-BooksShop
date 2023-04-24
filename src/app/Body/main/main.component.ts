@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { BookModel } from '../book.model';
-import BooksJson from '../../../books.json';
+import { BooksService } from 'src/app/service/books.service';
 
 @Component({
   selector: 'app-main',
@@ -8,9 +7,11 @@ import BooksJson from '../../../books.json';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
-  Books: [] = BooksJson;
+  Books: Array<object> = [];
 
-  constructor() {}
+  constructor(private booksService: BooksService) {
+    this.Books = this.booksService.getDefaultBooks();
+  }
 
   ngOnInit() {}
 }
