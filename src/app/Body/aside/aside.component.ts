@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { BooksService } from 'src/app/service/books.service';
 
 @Component({
@@ -8,6 +14,10 @@ import { BooksService } from 'src/app/service/books.service';
 })
 export class AsideComponent implements OnInit {
   public bagOfBooks: Array<object> = [];
+  public innerWidth: any;
+
+  @Output()
+  isAsideOpen = new EventEmitter<boolean>();
 
   constructor(private bookService: BooksService) {
     this.bookService
@@ -18,5 +28,17 @@ export class AsideComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.innerWidth = window.innerWidth;
+  }
+
+  closeAside() {
+    this.isAsideOpen.emit(false);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.innerWidth = window.innerWidth;
+    console.log(this.innerWidth);
+  }
 }

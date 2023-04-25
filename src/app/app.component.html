@@ -1,18 +1,24 @@
 <app-header></app-header>
 <div class="container-fluid m-0 p-0" style="background-image: linear-gradient(to left, #d7d2cc 0%, #304352 100%);">
-  <div class="row m-0">
+  <div class="row m-0" [ngStyle]="{'position':'relative'}">
     <div class="col-xs-12 col-lg-9 m-0 p-0">
       <app-main></app-main>
     </div>
-    <div class="d-lg-none m-0 p-0">
-      <!-- <i class="fa fa-regular fa-bars fa-beat fa-2xl fa-5x"></i> -->
+
+<!-- MOBILE -->
+    <div class="d-lg-none m-0 p-0 bagBar">
+      <i class="fa fa-solid fa-bars" *ngIf="!isAsideOpen" (click)="openAside()" style="cursor: pointer;"></i>
+      <div class="moreInfo" *ngIf="isAsideOpen">
+        <app-aside (isAsideOpen)="isAsideOpen=$event"></app-aside>
+      </div>
     </div>
+<!-- DESKTOP -->
     <div class="d-none
     d-lg-block col-xs-12 col-lg-3 m-0 p-0">
       <app-aside></app-aside>
     </div>
-  </div>
 
+  </div>
   <div class="row m-0 p-0">
   </div>
 </div>

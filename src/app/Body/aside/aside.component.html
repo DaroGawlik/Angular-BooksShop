@@ -1,16 +1,16 @@
 <div *ngIf="bagOfBooks.length > 0; then areBooks; else noBooks"></div>
-
-
-    <ng-template #areBooks>
-        <div class="container">
-            <div class="">
-                <app-book-in-bag-min992 *ngFor="let bookEl of bagOfBooks" [bookItem]="bookEl"></app-book-in-bag-min992>
-            </div>
+<ng-template #areBooks>
+    <div class="container">
+        <div class="">
+            <app-book-in-bag-min992 *ngFor="let bookEl of bagOfBooks" [bookItem]="bookEl"></app-book-in-bag-min992>
         </div>
-    </ng-template>
+    </div>
+</ng-template>
 
-    <ng-template #noBooks>
-        <div class="noBooks">
-            <p>No books in your bag</p>
-        </div>
-    </ng-template>
+
+<ng-template #noBooks>
+    <div [ngClass]="innerWidth < 992 ? 'noBooksMobile' : 'noBooksDesktop'">
+        <p>No books in your bag</p>
+        <button type="button" (click)="closeAside()">Close</button>
+    </div>
+</ng-template>

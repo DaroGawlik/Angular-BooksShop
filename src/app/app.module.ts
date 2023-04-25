@@ -7,7 +7,7 @@ import { HeaderComponent } from './Body/header/header.component';
 import { MainComponent } from './Body/main/main.component';
 import { AsideComponent } from './Body/aside/aside.component';
 import { FooterComponent } from './Body/footer/footer.component';
-import { DropupDirective } from './shared/dropupMoreInfo.directive';
+import { CheckWidthPageDirective } from './shared/checkWidthpage.directive';
 import { BookitemComponent } from './Body/main/bookitem/bookitem.component';
 import { BooksService } from './service/books.service';
 import { BookInBagComponent } from './Body/aside/book-in-bag/book-in-bag.component';
@@ -19,7 +19,7 @@ import { BookInBagComponent } from './Body/aside/book-in-bag/book-in-bag.compone
     MainComponent,
     AsideComponent,
     FooterComponent,
-    DropupDirective,
+    CheckWidthPageDirective,
     BookitemComponent,
     AsideComponent,
     BookInBagComponent,
