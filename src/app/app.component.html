@@ -5,14 +5,14 @@
       <app-main></app-main>
     </div>
 
-<!-- MOBILE -->
+    <!-- MOBILE -->
     <div class="d-lg-none m-0 p-0 bagBar">
       <i class="fa fa-solid fa-bars" *ngIf="!isAsideOpen" (click)="openAside()" style="cursor: pointer;"></i>
-      <div class="moreInfo" *ngIf="isAsideOpen">
+      <div *ngIf="isAsideOpen">
         <app-aside (isAsideOpen)="isAsideOpen=$event"></app-aside>
       </div>
     </div>
-<!-- DESKTOP -->
+    <!-- DESKTOP -->
     <div class="d-none
     d-lg-block col-xs-12 col-lg-3 m-0 p-0">
       <app-aside></app-aside>

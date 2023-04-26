@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'BooksShop-Project-Angular';
 
-  isAsideOpen = false;
+  isAsideOpen = true;
 
   openAside() {
     this.isAsideOpen = true;

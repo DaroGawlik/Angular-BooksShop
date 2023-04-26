@@ -10,7 +10,7 @@ import { FooterComponent } from './Body/footer/footer.component';
 import { CheckWidthPageDirective } from './shared/checkWidthpage.directive';
 import { BookitemComponent } from './Body/main/bookitem/bookitem.component';
 import { BooksService } from './service/books.service';
-import { BookInBagComponent } from './Body/aside/book-in-bag/book-in-bag.component';
+import { BookinbagComponent } from './Body/aside/bookinbag/bookinbag.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,7 @@ import { BookInBagComponent } from './Body/aside/book-in-bag/book-in-bag.compone
     CheckWidthPageDirective,
     BookitemComponent,
     AsideComponent,
-    BookInBagComponent,
+    BookinbagComponent,
   ],
   imports: [BrowserModule, NgbModule],
   providers: [BooksService],

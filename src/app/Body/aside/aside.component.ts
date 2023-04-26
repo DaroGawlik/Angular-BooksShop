@@ -1,11 +1,12 @@
 import {
   Component,
   EventEmitter,
-  HostListener,
   OnInit,
   Output,
+  HostListener,
 } from '@angular/core';
 import { BooksService } from 'src/app/service/books.service';
+import { BookModel } from 'src/app/shared/book.model';
 
 @Component({
   selector: 'app-aside',
@@ -13,19 +14,19 @@ import { BooksService } from 'src/app/service/books.service';
   styleUrls: ['./aside.component.scss'],
 })
 export class AsideComponent implements OnInit {
-  public bagOfBooks: Array<object> = [];
+  public bagOfBooks: BookModel[];
   public innerWidth: any;
+  public totalCost: number;
 
   @Output()
   isAsideOpen = new EventEmitter<boolean>();
 
   constructor(private bookService: BooksService) {
-    this.bookService
-      .getBagOfBooksObs()
-      .subscribe((booksInBag: Array<object>) => {
-        this.bagOfBooks = booksInBag;
-        console.log(this.bagOfBooks);
-      });
+    this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
+      this.bagOfBooks = booksInBag;
+    });
+    this.totalCost = this.bookService.getTotalCosts();
+    console.log(this.totalCost);
   }
 
   ngOnInit(): void {
@@ -39,6 +40,5 @@ export class AsideComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.innerWidth = window.innerWidth;
-    console.log(this.innerWidth);
   }
 }
