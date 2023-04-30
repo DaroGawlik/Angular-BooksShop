@@ -6,8 +6,11 @@
         <div class="col-12 mt-2">{{bookItem.title}}</div>
         <div class="col-12 mt-2">{{bookItem.author}}</div>
         <div class="col-12 mt-2">{{bookItem.price}} $</div>
-        <div class="col-12 mt-2" [ngStyle]="{'text-align': 'right', 'padding-right.rem': 1}">
-            <button>Remove</button>
+
+        <div class="d-flex m-0 p-0 mt-2"
+            [ngClass]="{'justify-content-end': !howMoreSameBook, 'justify-content-between': howMoreSameBook}">
+            <p class="d-flex align-items-center m-0 p-0" [hidden]="!howMoreSameBook">Amount: {{ howMoreSameBook}}</p>
+            <button class="m-1">Remove</button>
         </div>
     </div>
 </li>

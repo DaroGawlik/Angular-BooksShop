@@ -1,10 +1,10 @@
-<div *ngIf="bagOfBooks.length > 0; then areBooks; else noBooks"></div>
+<div *ngIf="bagOfBooksArr.length > 0; then areBooks; else noBooks"></div>
 <ng-template #areBooks>
     <div class="container">
         <div [ngClass]="innerWidth < 992 ? 'areBooksMobile' : 'areBooksDesktop'">
             <p>Your Bag</p>
             <ul class="m-0 p-0">
-                <app-bookinbag *ngFor="let bookEl of bagOfBooks" [bookItem]="bookEl"></app-bookinbag>
+                <app-bookinbag *ngFor="let bookEl of uniqueBooksArr" [bookItem]="bookEl"></app-bookinbag>
             </ul>
             <div class="mt-3">Total: {{totalCost}}$</div>
             <div>
