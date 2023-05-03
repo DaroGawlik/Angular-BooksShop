@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, Injectable } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Injectable,
+  HostListener,
+} from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
@@ -12,7 +18,8 @@ import { BookModel } from 'src/app/shared/book.model';
 export class BookinbagComponent implements OnInit {
   @Input() bookItem: any = {};
   private bagOfBooks: BookModel[];
-  howMoreSameBook: number;
+  public innerWidth: any;
+  public howMoreSameBook: number;
 
   constructor(private bookService: BooksService) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
@@ -37,5 +44,10 @@ export class BookinbagComponent implements OnInit {
     );
     this.bookService.deleteBookFromBag(index, this.bookItem.price);
     this.countSameBook();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.innerWidth = window.innerWidth;
   }
 }
