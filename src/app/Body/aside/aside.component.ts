@@ -14,11 +14,13 @@ import { BookModel } from 'src/app/shared/book.model';
   styleUrls: ['./aside.component.scss'],
 })
 export class AsideComponent implements OnInit {
-  public bagOfBooksArr: BookModel[];
+  public bagOfBooksArr: BookModel[] = [];
   public innerWidth: any;
   public totalCost: any;
   public uniqueBooksArr: any;
 
+  @Output()
+  countAllBookInBag = new EventEmitter<number>();
   @Output()
   isAsideOpen = new EventEmitter<boolean>();
 
@@ -26,6 +28,7 @@ export class AsideComponent implements OnInit {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooksArr = booksInBag;
       this.getUniqueBooks();
+      this.countAllBookInBag.emit(this.bagOfBooksArr.length);
     });
     this.bookService.getTotalCosts().subscribe((booksInBag: number) => {
       this.totalCost = booksInBag;
@@ -49,5 +52,12 @@ export class AsideComponent implements OnInit {
     this.uniqueBooksArr = this.bagOfBooksArr.filter(
       (book, i, arr) => arr.findIndex((b) => b.author === book.author) === i
     );
+  }
+
+  confirmOrder() {}
+
+  clearAllBooks() {
+    this.bookService.deleteAllBookFromBag();
+    this.bagOfBooksArr = [];
   }
 }

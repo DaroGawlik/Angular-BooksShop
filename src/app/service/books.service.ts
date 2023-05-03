@@ -3,8 +3,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import BooksJson from '../../books.json';
 import { BookModel } from '../shared/book.model';
-import { from } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 @Injectable()
 export class BooksService {
@@ -41,4 +39,17 @@ export class BooksService {
     return this.totalCostObs.asObservable();
   }
 
+  deleteBookFromBag(index: number, bookItemPirce: number) {
+    this.bagOfBooks.splice(index, 1);
+    this.bagOfBooksObs.next(this.bagOfBooks.slice());
+
+    this.totalCost -= bookItemPirce;
+    this.totalCostObs.next(this.totalCost);
+  }
+
+  deleteAllBookFromBag() {
+    this.bagOfBooks = [];
+    this.bagOfBooksObs.next(this.bagOfBooks.slice());
+    this.totalCost = 0;
+  }
 }

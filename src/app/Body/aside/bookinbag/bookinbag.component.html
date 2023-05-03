@@ -8,9 +8,9 @@
         <div class="col-12 mt-2">{{bookItem.price}} $</div>
 
         <div class="d-flex m-0 p-0 mt-2"
-            [ngClass]="{'justify-content-end': !howMoreSameBook, 'justify-content-between': howMoreSameBook}">
-            <p class="d-flex align-items-center m-0 p-0" [hidden]="!howMoreSameBook">Amount: {{ howMoreSameBook}}</p>
-            <button class="m-1">Remove</button>
+            [ngClass]="{'justify-content-end': howMoreSameBook < 2, 'justify-content-between': howMoreSameBook > 1}">
+            <p *ngIf="howMoreSameBook > 1" class="d-flex align-items-center m-0 p-0">Amount: {{ howMoreSameBook}}</p>
+            <button class="m-1" (click)="deleteBook()">Remove</button>
         </div>
     </div>
 </li>

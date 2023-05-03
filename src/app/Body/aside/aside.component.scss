@@ -25,6 +25,18 @@
     border-radius: 5px;
     padding: 0;
   }
+
+  .test {
+    button {
+      position: static;
+      right: 5px;
+      bottom: 5px;
+      width: 4.5rem;
+      font-size: 0.7rem;
+      border-radius: 5px;
+      padding: 0;
+    }
+  }
 }
 
 .noBooksDesktop {
@@ -38,7 +50,7 @@
     position: none;
   }
 
-  button {
+  .closeBtn {
     visibility: hidden;
   }
 }
@@ -64,5 +76,54 @@
 
   ul {
     list-style-type: none;
+  }
+
+  .confirmBtn,
+  .clearBtn,
+  .closeAsideBtn {
+    width: 4.5rem;
+    font-size: 0.7rem;
+    border-radius: 5px;
+    padding: 0;
+  }
+  .confirmBtn {
+    width: 5.2rem;
+  }
+  .closeAsideBtn {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.5rem;
+  }
+}
+.totalCost {
+  margin-top: 1rem;
+  padding-left: 1rem;
+}
+
+.areBooksDesktop {
+  border-left: 1px solid black;
+  ul {
+    max-height: 650px;
+    overflow-y: scroll;
+  }
+
+  p {
+    font-size: 2rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 1493px) {
+  .areBooksDesktop {
+    ul {
+      max-height: 1000px;
+    }
+  }
+}
+@media (max-width: 1194px) {
+  .areBooksDesktop {
+    ul {
+      max-height: 1400px;
+    }
   }
 }
