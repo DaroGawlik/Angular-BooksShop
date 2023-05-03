@@ -67,7 +67,7 @@
   font-size: 1rem;
   font-weight: bold;
   text-transform: uppercase;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   p {
     padding-top: 0.5rem;
@@ -104,7 +104,7 @@
   border-left: 1px solid black;
   ul {
     max-height: 650px;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   p {
