@@ -1,0 +1,24 @@
+<div *ngIf="bagOfBooksArr.length > 0; then areBooks; else noBooks"></div>
+<ng-template #areBooks>
+    <div class="container">
+        <div [ngClass]="innerWidth < 992 ? 'areBooksMobile' : 'areBooksDesktop'">
+            <button class="closeAsideBtn d-lg-none" type="button" (click)="closeAside()">Close</button>
+            <p>Your Bag</p>
+            <ul class="m-0 p-0">
+                <app-bookinbag *ngFor="let bookEl of uniqueBooksArr" [bookItem]="bookEl"></app-bookinbag>
+            </ul>
+            <div class="totalCost"> Total: {{totalCost}}$</div>
+            <div class="d-flex justify-content-around mt-3 mb-3">
+                <button class="confirmBtn" type="button" (click)="confirmOrder()">Confirm Order</button>
+                <button class="clearBtn" type="button" (click)="clearAllBooks()">Clear All</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noBooks>
+    <div [ngClass]="innerWidth < 992 ? 'noBooksMobile' : 'noBooksDesktop'">
+        <p>No books in your bag</p>
+        <button class="closeBtn" type="button" (click)="closeAside()">Close</button>
+    </div>
+</ng-template>

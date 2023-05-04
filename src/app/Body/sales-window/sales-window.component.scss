@@ -1,0 +1,21 @@
+.bagBar {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  right: 1rem;
+  top: 1rem;
+
+  svg {
+    position: fixed;
+
+    width: 2.5rem;
+    height: 2.5rem;
+    right: 0.5rem;
+  }
+  span {
+    position: fixed;
+    font-size: 2.5rem;
+    right: 2.5rem;
+    color: gold;
+  }
+}

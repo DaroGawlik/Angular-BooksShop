@@ -1,0 +1,133 @@
+.noBooksMobile {
+    position: absolute;
+    position: fixed;
+    height: 5rem;
+    width: 15rem;
+    right: 1rem;
+    background-color: grey;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    p {
+      padding-top: 0.5rem;
+      text-align: center;
+    }
+
+    button {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      width: 4.5rem;
+      font-size: 0.7rem;
+      border-radius: 5px;
+      padding: 0;
+    }
+
+    .test {
+      button {
+        position: static;
+        right: 5px;
+        bottom: 5px;
+        width: 4.5rem;
+        font-size: 0.7rem;
+        border-radius: 5px;
+        padding: 0;
+      }
+    }
+  }
+
+  .noBooksDesktop {
+    height: 100%;
+    border-left: 1px solid black;
+    padding: 5rem 2rem 0 2rem;
+    font-size: 4rem;
+    text-align: center;
+    text-transform: uppercase;
+    p {
+      position: none;
+    }
+
+    .closeBtn {
+      visibility: hidden;
+    }
+  }
+
+  .areBooksMobile {
+    position: absolute;
+    position: fixed;
+    max-height: 25rem;
+    width: 18rem;
+    right: 1rem;
+    background-color: grey;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    overflow-y: auto;
+
+    p {
+      padding-top: 0.5rem;
+      text-align: center;
+    }
+
+    ul {
+      list-style-type: none;
+    }
+
+    .confirmBtn,
+    .clearBtn,
+    .closeAsideBtn {
+      width: 4.5rem;
+      font-size: 0.7rem;
+      border-radius: 5px;
+      padding: 0;
+    }
+    .confirmBtn {
+      width: 5.2rem;
+    }
+    .closeAsideBtn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.5rem;
+    }
+  }
+  .totalCost {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    font-weight: bold;
+  }
+
+  .areBooksDesktop {
+    border-left: 1px solid black;
+    ul {
+      max-height: 650px;
+      overflow-y: auto;
+    }
+
+    p {
+      font-size: 2rem;
+      text-align: center;
+    }
+    .totalCost {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 1493px) {
+    .areBooksDesktop {
+      ul {
+        max-height: 1000px;
+      }
+    }
+  }
+  @media (max-width: 1194px) {
+    .areBooksDesktop {
+      ul {
+        max-height: 1400px;
+      }
+    }
+  }

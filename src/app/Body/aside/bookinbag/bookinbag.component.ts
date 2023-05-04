@@ -1,53 +1,54 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Injectable,
-  HostListener,
-} from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { BooksService } from 'src/app/service/books.service';
-import { BookModel } from 'src/app/shared/book.model';
+// import {
+//   Component,
+//   OnInit,
+//   Input,
+//   Injectable,
+//   HostListener,
+// } from '@angular/core';
+// import { BehaviorSubject, Observable } from 'rxjs';
+// import { BooksService } from 'src/app/service/books.service';
+// import { BookModel } from 'src/app/shared/book.model';
 
-@Component({
-  selector: 'app-bookinbag',
-  templateUrl: './bookinbag.component.html',
-  styleUrls: ['./bookinbag.component.scss'],
-})
-@Injectable()
-export class BookinbagComponent implements OnInit {
-  @Input() bookItem: any = {};
-  private bagOfBooks: BookModel[];
-  public innerWidth: any;
-  public howMoreSameBook: number;
+// @Component({
+//   selector: 'app-bookinbag',
+//   templateUrl: './bookinbag.component.html',
+//   styleUrls: ['./bookinbag.component.scss'],
+// })
+// @Injectable()
+// export class BookinbagComponent implements OnInit {
+//   @Input() bookItem: any = {};
+//   private bagOfBooks: BookModel[];
+//   public innerWidth: any;
+//   public howMoreSameBook: number;
 
-  constructor(private bookService: BooksService) {
-    this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
-      this.bagOfBooks = booksInBag;
-      this.countSameBook();
-    });
-  }
+//   constructor(private bookService: BooksService) {
+//     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
+//       this.bagOfBooks = booksInBag;
+//       this.countSameBook();
+//     });
+//   }
 
-  ngOnInit() {
-    this.countSameBook();
-  }
+//   ngOnInit() {
+//     this.innerWidth = window.innerWidth;
+//     this.countSameBook();
+//   }
 
-  countSameBook() {
-    this.howMoreSameBook = this.bagOfBooks.filter(
-      (book) => book.title === this.bookItem.title
-    ).length;
-  }
+//   countSameBook() {
+//     this.howMoreSameBook = this.bagOfBooks.filter(
+//       (book) => book.title === this.bookItem.title
+//     ).length;
+//   }
 
-  deleteBook() {
-    let index = this.bagOfBooks.findIndex(
-      (book) => book.title === this.bookItem.title
-    );
-    this.bookService.deleteBookFromBag(index, this.bookItem.price);
-    this.countSameBook();
-  }
+//   deleteBook() {
+//     let index = this.bagOfBooks.findIndex(
+//       (book) => book.title === this.bookItem.title
+//     );
+//     this.bookService.deleteBookFromBag(index, this.bookItem.price);
+//     this.countSameBook();
+//   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.innerWidth = window.innerWidth;
-  }
-}
+//   @HostListener('window:resize', ['$event'])
+//   onResize() {
+//     this.innerWidth = window.innerWidth;
+//   }
+// }
