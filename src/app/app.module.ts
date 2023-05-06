@@ -1,5 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+// CALENDAR
+// import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -13,6 +21,7 @@ import { MainComponent } from './Body/sales-window/main/main.component';
 import { BookitemComponent } from './Body/sales-window/main/bookitem/bookitem.component';
 import { AsideComponent } from './Body/sales-window/aside/aside.component';
 import { BookinbagComponent } from './Body/sales-window/aside/bookinbag/bookinbag.component';
+import { OrderFieldsComponent } from './Body/order-fields/order-fields.component';
 
 @NgModule({
   declarations: [
@@ -25,9 +34,20 @@ import { BookinbagComponent } from './Body/sales-window/aside/bookinbag/bookinba
     AsideComponent,
     BookinbagComponent,
     CheckWidthPageDirective,
+    OrderFieldsComponent,
   ],
-  imports: [BrowserModule, NgbModule, AppRoutingModule],
-  providers: [BooksService],
+  imports: [
+    BrowserModule,
+    NgbModule,
+    AppRoutingModule,
+    FormsModule,
+    // MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
+    BrowserAnimationsModule,
+  ],
+  providers: [BooksService, MatDatepickerModule, MatNativeDateModule],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

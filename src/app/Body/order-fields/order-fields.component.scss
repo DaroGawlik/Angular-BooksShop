@@ -1,0 +1,27 @@
+.container {
+  width: 300px;
+  padding-top: 1rem;
+  p {
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .row {
+    width: 295px;
+    margin-top: 1rem;
+
+    input.ng-invalid.ng-touched {
+      border: 1px solid red;
+    }
+  }
+
+  .errorInput {
+    margin: 0.3rem 0 0;
+    font-size: 0.7rem;
+    color: red;
+  }
+}
+
+// .mat-datepicker-content .mat-calendar {
+//   width: 100px;
+//   height: 100px;
+// }
