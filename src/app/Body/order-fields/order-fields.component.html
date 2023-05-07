@@ -1,66 +1,167 @@
 <div class="m-0 p-0" style="background-image: linear-gradient(to left, #d7d2cc 0%, #304352 100%);">
     <div class="container justify-content-center">
-        <p>please fill fields to delivery</p>
-        <form (ngSubmit)="onSubmit(f)" #f="ngForm">
-            <div id="user-data" ngModelGroup="userData" #userData="ngModelGroup">
-                <div class="row d-flex justify-content-center">
-                    <label for="name" class="col-6">Name</label>
-
-                    <input type="text" id="name" class="col-6" ngModel name="name" #name="ngModel" required
-                        minlength="4" pattern="^[a-zA-Z0-9.]*$">
-
-                    <p class="errorInput" *ngIf="!name.valid && name.touched">The length not less than 4 symbols,
-                        strings only, without spaces.</p>
-                </div>
-                <div class="row d-flex justify-content-between">
-                    <label for="surname" class="col-6">Surname</label>
-                    <input type="text" id="surname" class="col-6" ngModel name="surname" #surname="ngModel" required
-                        minlength="5" pattern="^[a-zA-Z.]*$">
-                    <p class="errorInput" *ngIf="!surname.valid && surname.touched">The length not less than 5 symbols,
-                        strings only, without spaces.</p>
-                </div>
-                <div class="row d-flex justify-content-between">
-                    <label for="date" class="col-6">Delivery Date</label>
-                    <mat-form-field appearance="fill" class="col-6 p-0">
-                        <mat-label>Choose a date</mat-label>
-                        <input matInput [matDatepicker]="picker" (dateChange)="dateChanged($event)">
-                        <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
-                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-                <div class=" row d-flex justify-content-between">
-                    <label for="street" class="col-6">Street</label>
-                    <input type="text" id="street" class="col-6" ngModel name="street">
-                </div>
-                <div class="row d-flex justify-content-between">
-                    <label for="houseNumber" class="col-6">House Number</label>
-                    <input type="text" id="houseNumber" class="col-6" ngModel name="houseNumber">
-                </div>
-                <div class="row d-flex justify-content-between">
-                    <label for="flatNumber" class="col-6">Flat Number</label>
-                    <input type="text" id="flatNumber" class="col-6" ngModel name="flatNumber">
-                </div>
-                <div class="row d-flex justify-content-between">
-                    <p class="col-6 m-0 p-0">Choose The Payment Type:</p>
-                    <div class="radio col-3 m-0 p-0" *ngFor="let paymentType of paymentTypes">
-                        <input type="radio" name="paymentType" ngModel value="{{paymentType}}">
-                        {{paymentType}}
+        <p class="headerOrder">please fill fields to delivery</p>
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+            <div formGroupName="orderData">
+                <div class="form-group">
+                    <div class="row mt-1 d-flex justify-content-center">
+                        <label for="name" class="col-6">Name</label>
+                        <input type="text" id="name" class="col-6" formControlName="name">
+                        <span class="m-1 p-0 d-flex justify-content-end"
+                            *ngIf="!signupForm.get('orderData.name')?.valid && signupForm.get('orderData.name')?.touched">
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('orderData.name')?.errors?.['required']">The
+                                This field is required.</span>
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('orderData.name')?.errors?.['pattern']">
+                                Strings only, without spaces and numbers.</span>
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('orderData.name')?.errors?.['minLength']">
+                                The length not less than 4 symbols.</span>
+                        </span>
+                    </div>
+                    <div class="row mt-1 d-flex justify-content-between">
+                        <label for="surname" class="col-6">Surname</label>
+                        <input type="text" id="surname" class="col-6" formControlName="surname">
+                        <span class="m-1 p-0 d-flex justify-content-end"
+                            *ngIf="!signupForm.get('orderData.surname')?.valid && signupForm.get('orderData.surname')?.touched">
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('orderData.surname')?.errors?.['required']">The
+                                This field is required.</span>
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('orderData.surname')?.errors?.['pattern']">
+                                Strings only, without spaces and numbers.</span>
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('orderData.surname')?.errors?.['minLength']">
+                                The length not less than 5 symbols.</span>
+                        </span>
                     </div>
                 </div>
-                <div class="row d-flex justify-content-between">
-                    <label for="name" class="col-6">Choose 2 gifts:</label>
-                    <input type="text" id="name" class="col-6" #nameInput>
-                </div>
-                <div class="row d-flex">
-                    <p>Additional information to order</p>
-                    <textarea name="additionalInformation" [(ngModel)]="additionalInformation" maxlength="5"></textarea>
-                    <!-- <p>{{}} / 200</p> -->
-                </div>
-                <div class="row m-0 p-0 d-flex justify-content-between">
-                    <button class="" type="submit" [disabled]="!f.valid">Order</button>
+            </div>
+            <div class="row d-flex justify-content-between">
+                <label for="date" class="col-6">Delivery Date</label>
+                <mat-form-field appearance="fill" class="col-6 p-0">
+                    <!-- [ngStyle]="{'height.px': 50}" -->
+                    <input matInput [matDatepicker]="picker" min="{{miniumDeliveryDate | date: 'yyy-MM-dd'}}"
+                        formControlName="deliveryDate">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <span class="m-1 p-0 d-flex justify-content-end"
+                    *ngIf="!signupForm.get('deliveryDate')?.valid && signupForm.get('deliveryDate')?.touched">
+                    <span class="errorInput m-0 p-0" *ngIf="signupForm.get('deliveryDate')?.errors?.['required']">The
+                        This field is required.</span>
+                </span>
+            </div>
+            <div formGroupName="deliveryAdrress">
+                <div class="form-group">
+                    <div class="row d-flex justify-content-between">
+                        <label for="street" class="col-6">Street</label>
+                        <input type="text" id="street" class="col-6" formControlName="street">
+                        <span class="m-1 p-0 d-flex justify-content-end"
+                            *ngIf="!signupForm.get('deliveryAdrress.street')?.valid && signupForm.get('deliveryAdrress.street')?.touched">
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('deliveryAdrress.street')?.errors?.['required']">The
+                                This field is required.</span>
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('deliveryAdrress.street')?.errors?.['pattern']">
+                                Strings and numbers, without spaces.</span>
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('deliveryAdrress.street')?.errors?.['minLength']">
+                                The length not less than 5 symbols.</span>
+                        </span>
+                    </div>
+                    <div class="row d-flex justify-content-between">
+                        <label for="houseNumber" class="col-6">House Number</label>
+                        <input type="text" id="houseNumber" class="col-6" formControlName="houseNumber">
+                        <span class="m-1 p-0 d-flex justify-content-end"
+                            *ngIf="!signupForm.get('deliveryAdrress.houseNumber')?.valid && signupForm.get('deliveryAdrress.houseNumber')?.touched">
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('deliveryAdrress.houseNumber')?.errors?.['required']">The
+                                This field is required.</span>
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('deliveryAdrress.houseNumber')?.errors?.['pattern']">
+                                Numbers only.</span>
+                        </span>
+                    </div>
+                    <div class="row d-flex justify-content-between">
+                        <label for="flatNumber" class="col-6">Flat Number</label>
+                        <input type="text" id="flatNumber" class="col-6" formControlName="flatNumber">
+                        <span class="m-1 p-0 d-flex justify-content-end"
+                            *ngIf="!signupForm.get('deliveryAdrress.flatNumber')?.valid && signupForm.get('deliveryAdrress.flatNumber')?.touched">
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('deliveryAdrress.flatNumber')?.errors?.['required']">The
+                                This field is required.</span>
+                            <span class="errorInput m-0 p-0"
+                                *ngIf="signupForm.get('deliveryAdrress.flatNumber')?.errors?.['pattern']">
+                                Numbers only.</span>
+                        </span>
+                    </div>
                 </div>
             </div>
+            <div class="row d-flex justify-content-between">
+                <p class="col-6 m-0">Choose The Payment Type:</p>
+                <div class="radio col-3 m-0 p-0 d-flex align-items-center justify-content-center"
+                    *ngFor="let paymentType of paymentTypes">
+                    <input type="radio" name="paymentType" ngModel value="{{paymentType}}"
+                        formControlName="paymentType">
+                    {{paymentType}}
+                </div>
+                <span class="m-1 p-0 d-flex justify-content-end"
+                    *ngIf="!signupForm.get('paymentType')?.valid && signupForm.get('paymentType')?.touched">
+                    <span class="errorInput m-0 p-0" *ngIf="signupForm.get('paymentType')?.errors?.['required']">The
+                        This field is required.</span>
+                </span>
+            </div>
+            <div class="row d-flex justify-content-between">
+                <!-- <label for="name" class="col-6">Choose 2 gifts:</label> -->
+                <section class="example-section">
+                    <h4>Choose 2 gifts:</h4>
+                    <p *ngFor="let gift of gifts">
+                        <mat-checkbox formControlName="pepperoni">{{gift}}</mat-checkbox>
+                    </p>
+                    <!-- <p><mat-checkbox formControlName="pepperoni">Pepperoni</mat-checkbox></p>
+                    <p><mat-checkbox formControlName="extracheese">Extra Cheese</mat-checkbox></p>
+                    <p><mat-checkbox formControlName="mushroom">Mushroom</mat-checkbox></p> -->
+                </section>
+            </div>
+            <!-- <div class="row d-flex">
+                        <p>Additional information to order</p>
+                        <textarea name="additionalInformation" [(ngModel)]="additionalInformation"
+                            maxlength="5"></textarea>
+                        <p>{{}} / 200</p>
+                    </div> -->
+
+            <div class="row m-0 p-0 d-flex justify-content-between">
+                <button class="" type="submit" [disabled]="!signupForm.valid">Order</button>
+            </div>
+
         </form>
     </div>
 </div>
+
+
+
+
+<!-- handling forms in angular apps/ Template-driven method
+
+<form (ngSubmit)="onSubmit(f)" #f="ngForm">
+    <div id="user-data" ngModelGroup="userData" #userData="ngModelGroup">
+        <div class="row d-flex justify-content-center">
+            <label for="name" class="col-6">Name</label>
+
+            <input type="text" id="name" class="col-6" ngModel name="name" #name="ngModel" required minlength="4"
+                pattern="^[a-zA-Z0-9.]*$">
+
+            <p class="errorInput" *ngIf="!name.valid && name.touched">The length not less than 4 symbols,
+                strings only, without spaces.</p>
+        </div>
+        <div class="row d-flex justify-content-between">
+            <label for="surname" class="col-6">Surname</label>
+            <input type="text" id="surname" class="col-6" ngModel name="surname" #surname="ngModel" required
+                minlength="5" pattern="^[a-zA-Z.]*$">
+            <p class="errorInput" *ngIf="!surname.valid && surname.touched">The length not less than 5 symbols,
+                strings only, without spaces.</p>
+        </div>
+    </div>
+</form> -->

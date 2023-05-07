@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // CALENDAR
 // import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,6 +22,7 @@ import { BookitemComponent } from './Body/sales-window/main/bookitem/bookitem.co
 import { AsideComponent } from './Body/sales-window/aside/aside.component';
 import { BookinbagComponent } from './Body/sales-window/aside/bookinbag/bookinbag.component';
 import { OrderFieldsComponent } from './Body/order-fields/order-fields.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,8 @@ import { OrderFieldsComponent } from './Body/order-fields/order-fields.component
     MatNativeDateModule,
     MatInputModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
   ],
   providers: [BooksService, MatDatepickerModule, MatNativeDateModule],
   bootstrap: [AppComponent],
