@@ -6,7 +6,6 @@ import {
   Validators,
   NgForm,
 } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -20,17 +19,12 @@ export class OrderFieldsComponent implements OnInit {
   additionalInformation = '';
   todayDate = new Date();
   miniumDeliveryDate = this.todayDate.setDate(this.todayDate.getDate() + 2);
-  gifts = [
-    'Pack as a gift',
-    'Add postcard',
-    'Provide 2% discount to the next time',
-    'Branded pen or pencil',
-  ];
-
-  get hobbyControls() {
-    return (this.signupForm.get('hobbies') as FormArray).controls;
-  }
-
+  gifts = this._formBuilder.group({
+    packAsAgift: false,
+    addPostcard: false,
+    provide: false,
+    brandedPenOrPencil: false,
+  });
   constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit() {
@@ -68,11 +62,9 @@ export class OrderFieldsComponent implements OnInit {
     });
   }
 
-  // toppings = this._formBuilder.group({
-  //   pepperoni: false,
-  //   extracheese: false,
-  //   mushroom: false,
-  // });
+  onAddGift() {
+    console.log(this.gifts.value);
+  }
 
   onSubmit() {
     console.log(this.signupForm);
