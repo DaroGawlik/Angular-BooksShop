@@ -113,28 +113,13 @@
                 </span>
             </div>
             <div class="row d-flex justify-content-between">
-                <!-- <label for="name" class="col-6">Choose 2 gifts:</label> -->
-                <section class="example-section" [formGroup]="gifts">
-                    <h4>Choose 2 gifts:</h4>
-                    <p><mat-checkbox formControlName="packAsAgift" (click)="onAddGift()">Pack as a
-                            gift</mat-checkbox>
-                    </p>
-                    <p><mat-checkbox formControlName="addPostcard" (click)="onAddGift()">Add postcard</mat-checkbox></p>
-                    <p><mat-checkbox formControlName="provide" (click)="onAddGift()">Provide 2% discount to the next
-                            time</mat-checkbox></p>
-                    <p><mat-checkbox formControlName="brandedPenOrPencil" (click)="onAddGift()">Branded pen or
-                            pencil</mat-checkbox></p>
-                </section>
+                <label for="name" class="col-6">Choose 2 gifts:</label>
+                <p *ngFor="let gift of gifts" class="m-0 p-0">
+                    <input type="checkbox" class="m-2" [disabled]="!gift.isClick && howClickedGifts > 1"
+                        (click)="clickGift(gift)">
+                    {{gift.text}}
+                </p>
             </div>
-            <!--
-            <section class="example-section" [formGroup]="gifts">
-                <h4>Select your toppings:</h4>
-                <p><mat-checkbox formControlName="pepperoni">Pepperoni</mat-checkbox></p>
-                <p><mat-checkbox formControlName="extracheese">Extra Cheese</mat-checkbox></p>
-                <p><mat-checkbox formControlName="mushroom">Mushroom</mat-checkbox></p>
-            </section> -->
-
-
 
             <!-- <div class="row d-flex">
                         <p>Additional information to order</p>

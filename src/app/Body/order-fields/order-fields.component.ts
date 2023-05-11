@@ -1,31 +1,59 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
 import {
+  AbstractControl,
   FormArray,
   FormControl,
   FormGroup,
   Validators,
+  FormsModule,
+  ReactiveFormsModule,
   NgForm,
+  FormBuilder,
 } from '@angular/forms';
-import { FormBuilder } from '@angular/forms';
+
+// import {
+//   AbstractControl,
+//   FormArray,
+//   FormBuilder,
+//   FormControl,
+//   FormGroup,
+//   FormsModule,
+//   ReactiveFormsModule,
+// } from '@angular/forms';
 
 @Component({
   selector: 'app-order-fields',
   templateUrl: './order-fields.component.html',
   styleUrls: ['./order-fields.component.scss'],
 })
-export class OrderFieldsComponent implements OnInit {
+export class OrderFieldsComponent implements OnInit, DoCheck {
   signupForm: FormGroup;
   paymentTypes = ['Cash', 'Card'];
   additionalInformation = '';
   todayDate = new Date();
   miniumDeliveryDate = this.todayDate.setDate(this.todayDate.getDate() + 2);
-  gifts = this._formBuilder.group({
-    packAsAgift: false,
-    addPostcard: false,
-    provide: false,
-    brandedPenOrPencil: false,
-  });
-  constructor(private _formBuilder: FormBuilder) {}
+  gifts = [
+    {
+      text: 'Pack as a gift',
+      isClick: false,
+    },
+    {
+      text: 'Add postcard',
+      isClick: false,
+    },
+    {
+      text: 'Provide 2% discount to the next time',
+      isClick: false,
+    },
+    {
+      text: 'Branded pen or pencil',
+      isClick: false,
+    },
+  ];
+
+  howClickedGifts: number = 0;
+
+  constructor() {}
 
   ngOnInit() {
     this.signupForm = new FormGroup({
@@ -62,13 +90,32 @@ export class OrderFieldsComponent implements OnInit {
     });
   }
 
-  onAddGift() {
-    console.log(this.gifts.value);
+  clickGift(gift: any) {
+    gift.isClick = !gift.isClick;
+
+    this.howClickedGifts = this.gifts.filter(
+      (gift) => gift.isClick === true
+    ).length;
+  }
+
+  pushGiftsToControlArray(arr: any) {
+    for (let gift of arr) {
+      {
+        let test = new FormControl(gift);
+        console.log(gift);
+        (<FormArray>this.signupForm.get('gifts')).push(test);
+      }
+    }
   }
 
   onSubmit() {
-    console.log(this.signupForm);
+    const checkedGifts = this.gifts.filter((gift) => gift.isClick === true);
+    const giftsArr: any = [];
+    checkedGifts.forEach((gift) => giftsArr.push(gift.text));
+    this.pushGiftsToControlArray(giftsArr);
+    console.log(this.signupForm.value);
   }
+  ngDoCheck(): void {}
 }
 
 // handling forms in angular apps/ Template-driven method
