@@ -32,6 +32,10 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   additionalInformation = '';
   todayDate = new Date();
   miniumDeliveryDate = this.todayDate.setDate(this.todayDate.getDate() + 2);
+  maxCharsOfArea = 80;
+  textOfArea = '';
+  // chars = 0;
+
   gifts = [
     {
       text: 'Pack as a gift',
@@ -87,6 +91,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
       }),
       paymentType: new FormControl(null, [Validators.required]),
       gifts: new FormArray([]),
+      additionalInformation: new FormControl(),
     });
   }
 

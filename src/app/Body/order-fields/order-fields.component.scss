@@ -20,4 +20,20 @@
     font-size: 0.7rem;
     color: red;
   }
+
+  .textarea-wrapper {
+    position: relative;
+    .additionalInformation {
+      margin-left: 0.4rem;
+      height: 100px;
+      padding: 0.2rem 0.4rem;
+    }
+    span {
+      padding: 0;
+      max-width: 3rem;
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+    }
+  }
 }

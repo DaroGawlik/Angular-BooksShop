@@ -67,7 +67,7 @@
                                 *ngIf="signupForm.get('deliveryAdrress.street')?.errors?.['pattern']">
                                 Strings and numbers, without spaces.</span>
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('deliveryAdrress.street')?.errors?.['minLength']">
+                                *ngIf="signupForm.get('deliveryAdrress.street')?.errors?.['minlength']">
                                 The length not less than 5 symbols.</span>
                         </span>
                     </div>
@@ -121,15 +121,16 @@
                 </p>
             </div>
 
-            <!-- <div class="row d-flex">
-                        <p>Additional information to order</p>
-                        <textarea name="additionalInformation" [(ngModel)]="additionalInformation"
-                            maxlength="5"></textarea>
-                        <p>{{}} / 200</p>
-                    </div> -->
+            <div class="row d-flex justify-content-center textarea-wrapper">
+                <p class="mb-1">Additional information to order:</p>
+                <textarea class="additionalInformation justify-content-center" name="additionalInformation"
+                    value="{{additionalInformation}}" formControlName="additionalInformation" placeholder="text..."
+                    [(ngModel)]="textOfArea" [maxlength]="maxCharsOfArea">></textarea>
+                <span>{{textOfArea.length}} /{{maxCharsOfArea}}</span>
+            </div>
 
             <div class="row m-0 p-0 d-flex justify-content-between">
-                <button class="" type="submit" [disabled]="!signupForm.valid">Order</button>
+                <!-- <button class="" type="submit" [disabled]="signupForm.valid">Order</button> -->
             </div>
 
         </form>
