@@ -23,6 +23,7 @@ import { AsideComponent } from './Body/sales-window/aside/aside.component';
 import { BookinbagComponent } from './Body/sales-window/aside/bookinbag/bookinbag.component';
 import { OrderFieldsComponent } from './Body/order-fields/order-fields.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { OrderFieldsBookInBagComponent } from './Body/order-fields/order-fields-book-in-bag/order-fields-book-in-bag.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     BookinbagComponent,
     CheckWidthPageDirective,
     OrderFieldsComponent,
+    OrderFieldsBookInBagComponent,
   ],
   imports: [
     BrowserModule,

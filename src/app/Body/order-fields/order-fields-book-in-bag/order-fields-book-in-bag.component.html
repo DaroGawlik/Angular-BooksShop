@@ -1,0 +1,26 @@
+<div class="areBooksMobile">
+    <button class="closeAsideBtn" type="button" (click)="closeAside()">Close</button>
+    <p>Your Bag</p>
+    <ul class="m-0 p-0">
+        <li class="container row m-0 p-0 mt-4" *ngFor="let bookEl of uniqueBooksArr;">
+
+            <div class=" col-5">
+                <img class="img-fluid" src="{{bookEl.imageLink}}" alt="book's image">
+            </div>
+            <div class="d-flex flex-column justify-content-between col-7 p-0" [ngStyle]="{'font-size': '0.7rem'}">
+                <div class="mt-2">{{bookEl.title}}</div>
+                <div class="mt-2">{{bookEl.author}}</div>
+                <div class="mt-2" [ngStyle]="{'font-weight': 'bold'}">{{bookEl.price}} $</div>
+
+                <div *ngIf="countSameBook(bookEl)" class="d-flex m-0 p-0 mt-2"
+                    [ngClass]=" {'justify-content-end': howMoreSameBook < 2, 'justify-content-between' : howMoreSameBook> 1}">
+                    <p *ngIf="howMoreSameBook > 1" class="d-flex align-items-center m-0 p-0"
+                        [ngStyle]="{'font-weight': 'bold'}">
+                        Amount: {{ howMoreSameBook}}</p>
+                </div>
+            </div>
+
+        </li>
+    </ul>
+    <div class="totalCost"> Total: {{totalCost}}$</div>
+</div>

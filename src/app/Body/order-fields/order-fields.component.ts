@@ -1,4 +1,11 @@
-import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  DoCheck,
+  OnInit,
+  ViewChild,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -10,16 +17,8 @@ import {
   NgForm,
   FormBuilder,
 } from '@angular/forms';
-
-// import {
-//   AbstractControl,
-//   FormArray,
-//   FormBuilder,
-//   FormControl,
-//   FormGroup,
-//   FormsModule,
-//   ReactiveFormsModule,
-// } from '@angular/forms';
+import { BooksService } from 'src/app/service/books.service';
+import { BookModel } from 'src/app/shared/book.model';
 
 @Component({
   selector: 'app-order-fields',
@@ -34,7 +33,12 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   miniumDeliveryDate = this.todayDate.setDate(this.todayDate.getDate() + 2);
   maxCharsOfArea = 80;
   textOfArea = '';
-  // chars = 0;
+  howClickedGifts: number = 0;
+
+  // BAGBAR
+  public bagOfBooksArr: BookModel[] = [];
+  countAllBookInBag: number = 0;
+  isAsideOpen: boolean = false;
 
   gifts = [
     {
@@ -55,9 +59,14 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     },
   ];
 
-  howClickedGifts: number = 0;
+  // @Output()
+  // isAsideOpen = new EventEmitter<boolean>();
 
-  constructor() {}
+  constructor(private bookService: BooksService) {
+    this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
+      this.countAllBookInBag = booksInBag.length;
+    });
+  }
 
   ngOnInit() {
     this.signupForm = new FormGroup({
@@ -82,7 +91,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
         ]),
         houseNumber: new FormControl(null, [
           Validators.required,
-          Validators.pattern('[0-9.]*$'),
+          Validators.pattern('[a-zA-Z0-9.]*$'),
         ]),
         flatNumber: new FormControl(null, [
           Validators.required,
@@ -120,6 +129,11 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     this.pushGiftsToControlArray(giftsArr);
     console.log(this.signupForm.value);
   }
+
+  openAside() {
+    this.isAsideOpen = true;
+  }
+
   ngDoCheck(): void {}
 }
 
