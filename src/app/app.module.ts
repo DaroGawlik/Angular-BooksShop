@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 // CALENDAR
 // import { MatFormFieldModule } from '@angular/material/form-field';
@@ -51,6 +52,7 @@ import { OrderFieldsBookInBagComponent } from './Body/order-fields/order-fields-
     BrowserAnimationsModule,
     ReactiveFormsModule,
     MatCheckboxModule,
+    HttpClientModule,
   ],
   providers: [BooksService, MatDatepickerModule, MatNativeDateModule],
   bootstrap: [AppComponent],

@@ -9,6 +9,8 @@ import {
 import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
 import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-order-fields',
@@ -53,7 +55,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     },
   ];
 
-  constructor(private bookService: BooksService) {
+  constructor(private bookService: BooksService, private http: HttpClient) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooksArr = booksInBag;
       this.countAllBookInBag = booksInBag.length;
@@ -95,6 +97,8 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
       additionalInformation: new FormControl(),
       books: new FormArray([]),
     });
+
+    this.fetchPosts();
   }
 
   clickGift(gift: any) {
@@ -122,7 +126,49 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     this.getUniqueBooks();
     this.doArrayBooksToOrder(this.bagOfBooksArr);
     console.log(this.signupForm.value);
+
+    this.onCreatePost(this.signupForm.value);
   }
+
+  // START API
+  onCreatePost(postData: any) {
+    this.http
+      .post(
+        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        postData
+      )
+      .subscribe((responseData) => {
+        console.log(responseData);
+      });
+  }
+
+  private fetchPosts() {
+    this.http
+      .get(
+        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json'
+      )
+      .pipe(
+        map((responseData) => {
+          const postsArray = [];
+          for (const key in responseData) {
+            if (responseData.hasOwnProperty(key)) {
+              // postsArray.push({ ...responseData[key], id: key });
+              console.log(responseData);
+              // responseData.key = [key];
+              postsArray.push(responseData);
+            }
+          }
+          return postsArray;
+        })
+      )
+
+      .subscribe((posts) => {
+        //
+        console.log(posts);
+      });
+  }
+
+  // STOP API
 
   openAside() {
     this.isAsideOpen = true;
