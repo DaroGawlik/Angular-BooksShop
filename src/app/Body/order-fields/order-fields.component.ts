@@ -1,24 +1,14 @@
-import {
-  Component,
-  DoCheck,
-  OnInit,
-  ViewChild,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
   FormControl,
   FormGroup,
   Validators,
-  FormsModule,
-  ReactiveFormsModule,
-  NgForm,
-  FormBuilder,
 } from '@angular/forms';
 import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
+import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 
 @Component({
   selector: 'app-order-fields',
@@ -26,6 +16,9 @@ import { BookModel } from 'src/app/shared/book.model';
   styleUrls: ['./order-fields.component.scss'],
 })
 export class OrderFieldsComponent implements OnInit, DoCheck {
+  public bagOfBooksArr: BookModel[] = [];
+  public BooksModelToOrder: BookModelToOrder[] = [];
+
   signupForm: FormGroup;
   paymentTypes = ['Cash', 'Card'];
   additionalInformation = '';
@@ -34,9 +27,10 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   maxCharsOfArea = 80;
   textOfArea = '';
   howClickedGifts: number = 0;
+  howMoreSameBook: number;
+  howUniqueBooks: number;
 
   // BAGBAR
-  public bagOfBooksArr: BookModel[] = [];
   countAllBookInBag: number = 0;
   isAsideOpen: boolean = false;
 
@@ -59,11 +53,9 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     },
   ];
 
-  // @Output()
-  // isAsideOpen = new EventEmitter<boolean>();
-
   constructor(private bookService: BooksService) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
+      this.bagOfBooksArr = booksInBag;
       this.countAllBookInBag = booksInBag.length;
     });
   }
@@ -101,6 +93,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
       paymentType: new FormControl(null, [Validators.required]),
       gifts: new FormArray([]),
       additionalInformation: new FormControl(),
+      books: new FormArray([]),
     });
   }
 
@@ -115,9 +108,8 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   pushGiftsToControlArray(arr: any) {
     for (let gift of arr) {
       {
-        let test = new FormControl(gift);
-        console.log(gift);
-        (<FormArray>this.signupForm.get('gifts')).push(test);
+        let giftForm = new FormControl(gift);
+        (<FormArray>this.signupForm.get('gifts')).push(giftForm);
       }
     }
   }
@@ -127,11 +119,51 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     const giftsArr: any = [];
     checkedGifts.forEach((gift) => giftsArr.push(gift.text));
     this.pushGiftsToControlArray(giftsArr);
+    this.getUniqueBooks();
+    this.doArrayBooksToOrder(this.bagOfBooksArr);
     console.log(this.signupForm.value);
   }
 
   openAside() {
     this.isAsideOpen = true;
+  }
+
+  doArrayBooksToOrder(booksInBag: any) {
+    let cloneBook: any;
+    for (let book = 0; book < this.bagOfBooksArr.length; book++) {
+      const bookModel = booksInBag[book];
+      cloneBook = (({ imageLink, description, price, ...rest }) => rest)(
+        bookModel
+      );
+      cloneBook.amount = this.countSameBook(cloneBook);
+      if (
+        this.BooksModelToOrder.filter((book) => book.title === cloneBook.title)
+          .length < 1
+      ) {
+        this.BooksModelToOrder.push(cloneBook);
+      }
+    }
+    this.pushOrderBooksToControlArray(this.BooksModelToOrder);
+  }
+
+  pushOrderBooksToControlArray(arr: any) {
+    for (let book of arr) {
+      {
+        let bookForm = new FormControl(book);
+        (<FormArray>this.signupForm.get('books')).push(bookForm);
+      }
+    }
+  }
+
+  countSameBook(cloneBook: any) {
+    return this.bagOfBooksArr.filter((book) => book.title === cloneBook.title)
+      .length;
+  }
+
+  getUniqueBooks() {
+    this.howUniqueBooks = this.bagOfBooksArr.filter(
+      (book, i, arr) => arr.findIndex((b) => b.author === book.author) === i
+    ).length;
   }
 
   ngDoCheck(): void {}
