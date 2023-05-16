@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -9,8 +9,13 @@ import {
 import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
 import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
+
+import { Subscription } from 'rxjs';
+
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+
+import { Order } from 'src/app/shared/order.model';
+import { OrdersService } from 'src/app/service/orders.service';
 
 @Component({
   selector: 'app-order-fields',
@@ -18,6 +23,11 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./order-fields.component.scss'],
 })
 export class OrderFieldsComponent implements OnInit, DoCheck {
+  loadedOrders: Order[] = [];
+  isFetching = false;
+  error: string | null = null;
+  private errorSub: Subscription;
+
   public bagOfBooksArr: BookModel[] = [];
   public BooksModelToOrder: BookModelToOrder[] = [];
 
@@ -55,7 +65,10 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     },
   ];
 
-  constructor(private bookService: BooksService, private http: HttpClient) {
+  constructor(
+    private bookService: BooksService,
+    private ordersService: OrdersService
+  ) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooksArr = booksInBag;
       this.countAllBookInBag = booksInBag.length;
@@ -63,6 +76,10 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   }
 
   ngOnInit() {
+    this.errorSub = this.ordersService.error.subscribe((errorMessage) => {
+      this.error = errorMessage;
+    });
+
     this.signupForm = new FormGroup({
       orderData: new FormGroup({
         name: new FormControl(null, [
@@ -97,8 +114,16 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
       additionalInformation: new FormControl(),
       books: new FormArray([]),
     });
-
-    this.fetchPosts();
+    this.isFetching = true;
+    this.ordersService.fetchOrders().subscribe(
+      (orders) => {
+        this.isFetching = false;
+        this.loadedOrders = orders;
+      },
+      (error) => {
+        this.error = error.message;
+      }
+    );
   }
 
   clickGift(gift: any) {
@@ -127,45 +152,32 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     this.doArrayBooksToOrder(this.bagOfBooksArr);
     console.log(this.signupForm.value);
 
-    this.onCreatePost(this.signupForm.value);
+    // this.onCreatePost(this.signupForm.value);
   }
 
   // START API
-  onCreatePost(postData: any) {
-    this.http
-      .post(
-        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
-        postData
-      )
-      .subscribe((responseData) => {
-        console.log(responseData);
-      });
+  onCreatePost(postData: Order) {
+    this.ordersService.createAndStoreOrder(postData);
   }
 
-  private fetchPosts() {
-    this.http
-      .get(
-        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json'
-      )
-      .pipe(
-        map((responseData) => {
-          const postsArray = [];
-          for (const key in responseData) {
-            if (responseData.hasOwnProperty(key)) {
-              // postsArray.push({ ...responseData[key], id: key });
-              console.log(responseData);
-              // responseData.key = [key];
-              postsArray.push(responseData);
-            }
-          }
-          return postsArray;
-        })
-      )
+  fetchOrders() {
+    this.isFetching = true;
+    this.ordersService.fetchOrders().subscribe(
+      (orders) => {
+        this.isFetching = false;
+        this.loadedOrders = orders;
+      },
+      (error) => {
+        this.error = error.message;
+        console.log(error);
+      }
+    );
+  }
 
-      .subscribe((posts) => {
-        //
-        console.log(posts);
-      });
+  deleteOrders() {
+    this.ordersService.deleteOrders().subscribe(() => {
+      this.loadedOrders = [];
+    });
   }
 
   // STOP API
