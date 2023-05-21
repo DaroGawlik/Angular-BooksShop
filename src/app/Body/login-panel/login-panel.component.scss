@@ -1,0 +1,18 @@
+.container {
+  width: 300px;
+  padding-top: 1rem;
+
+  .headerPanelLogin {
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .row {
+    width: 295px;
+    margin-top: 1rem;
+  }
+
+  .btn-login {
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+}

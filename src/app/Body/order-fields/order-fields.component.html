@@ -18,7 +18,8 @@
     <!-- ORDER-FILEDS -->
     <div class="container justify-content-center">
         <p class="headerOrder">please fill fields to delivery</p>
-        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <!-- <form [formGroup]="signupForm" (ngSubmit)="onSubmit()"> -->
+        <form [formGroup]="signupForm">
             <div formGroupName="orderData">
                 <div class="form-group">
                     <div class="row mt-1 d-flex justify-content-center">
@@ -145,10 +146,11 @@
                     [(ngModel)]="textOfArea" [maxlength]="maxCharsOfArea">></textarea>
                 <span>{{textOfArea.length}} /{{maxCharsOfArea}}</span>
             </div>
-            <button class="btn-order" type="submit" [disabled]="!signupForm.valid">Order</button>
+            <button class="btn-order" type="submit" [disabled]="!signupForm.valid" (click)="order()">Order</button>
             <button class="btn-exit-order" routerLink="/sales-window">Back to Book Shop</button>
             <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button>
             <button class="btn-exit-order" (click)="fetchOrders()">Fetch Orders</button>
+            <button class="btn-exit-order" (click)="fetchOrder()">Fetch Order</button>
         </form>
     </div>
 </div>

@@ -38,6 +38,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   miniumDeliveryDate = this.todayDate.setDate(this.todayDate.getDate() + 2);
   maxCharsOfArea = 80;
   textOfArea = '';
+
   howClickedGifts: number = 0;
   howMoreSameBook: number;
   howUniqueBooks: number;
@@ -143,7 +144,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     }
   }
 
-  onSubmit() {
+  order() {
     const checkedGifts = this.gifts.filter((gift) => gift.isClick === true);
     const giftsArr: any = [];
     checkedGifts.forEach((gift) => giftsArr.push(gift.text));
@@ -152,7 +153,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     this.doArrayBooksToOrder(this.bagOfBooksArr);
     console.log(this.signupForm.value);
 
-    // this.onCreatePost(this.signupForm.value);
+    this.onCreatePost(this.signupForm.value);
   }
 
   // START API
@@ -173,6 +174,8 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
       }
     );
   }
+
+  fetchOrder() {}
 
   deleteOrders() {
     this.ordersService.deleteOrders().subscribe(() => {

@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Order } from '../shared/order.model';
-import { map, catchError } from 'rxjs/operators';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  HttpEventType,
+} from '@angular/common/http';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs';
 
+import { Order } from '../shared/order.model';
 @Injectable({ providedIn: 'root' })
 export class OrdersService {
   error = new Subject<string>();
@@ -15,7 +20,10 @@ export class OrdersService {
     this.http
       .post<{ orderData: object }>(
         'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
-        postData
+        postData,
+        {
+          observe: 'response',
+        }
       )
       .subscribe(
         (responseData) => {
@@ -28,9 +36,19 @@ export class OrdersService {
   }
 
   fetchOrders() {
+    let serachParams = new HttpParams();
+    serachParams = serachParams.append('print', 'pretty');
+    serachParams = serachParams.append('custom', 'key');
     return this.http
       .get<{ [key: string]: Order }>(
-        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json'
+        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        {
+          headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
+          //   params: new HttpParams().set('print', 'pretty'),
+          params: serachParams,
+          responseType: 'json',
+        //   can change for another format^
+        }
       )
       .pipe(
         map((responseData) => {
@@ -52,8 +70,21 @@ export class OrdersService {
   }
 
   deleteOrders() {
-    return this.http.delete(
-      'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json'
-    );
+    return this.http
+      .delete(
+        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        { observe: 'events' }
+      )
+      .pipe(
+        tap((event) => {
+          console.log(event);
+          if (event.type === HttpEventType.Sent) {
+            //...
+          }
+          if (event.type === HttpEventType.Response) {
+            console.log(event.body);
+          }
+        })
+      );
   }
 }

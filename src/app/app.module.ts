@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // CALENDAR
 // import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +25,9 @@ import { BookinbagComponent } from './Body/sales-window/aside/bookinbag/bookinba
 import { OrderFieldsComponent } from './Body/order-fields/order-fields.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { OrderFieldsBookInBagComponent } from './Body/order-fields/order-fields-book-in-bag/order-fields-book-in-bag.component';
+import { AuthInterceptorService } from './auth/auth.interceptor.service';
+import { LoggingInterceptorService } from './auth/logging-interceptor.service';
+import { LoginPanelComponent } from './Body/login-panel/login-panel.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +42,7 @@ import { OrderFieldsBookInBagComponent } from './Body/order-fields/order-fields-
     CheckWidthPageDirective,
     OrderFieldsComponent,
     OrderFieldsBookInBagComponent,
+    LoginPanelComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +58,21 @@ import { OrderFieldsBookInBagComponent } from './Body/order-fields/order-fields-
     MatCheckboxModule,
     HttpClientModule,
   ],
-  providers: [BooksService, MatDatepickerModule, MatNativeDateModule],
+  providers: [
+    BooksService,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoggingInterceptorService,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
