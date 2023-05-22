@@ -20,10 +20,10 @@ export class OrdersService {
     this.http
       .post<{ orderData: object }>(
         'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
-        postData,
-        {
-          observe: 'response',
-        }
+        postData
+        // {
+        //   observe: 'response',
+        // }
       )
       .subscribe(
         (responseData) => {
@@ -36,18 +36,18 @@ export class OrdersService {
   }
 
   fetchOrders() {
-    let serachParams = new HttpParams();
-    serachParams = serachParams.append('print', 'pretty');
-    serachParams = serachParams.append('custom', 'key');
+    // let serachParams = new HttpParams();
+    // serachParams = serachParams.append('print', 'pretty');
+    // serachParams = serachParams.append('custom', 'key');
     return this.http
       .get<{ [key: string]: Order }>(
         'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
         {
-          headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
+          // headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
           //   params: new HttpParams().set('print', 'pretty'),
-          params: serachParams,
-          responseType: 'json',
-        //   can change for another format^
+          // params: serachParams,
+          // responseType: 'json',
+          //   can change for another format^
         }
       )
       .pipe(

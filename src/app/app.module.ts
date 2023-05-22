@@ -25,9 +25,10 @@ import { BookinbagComponent } from './Body/sales-window/aside/bookinbag/bookinba
 import { OrderFieldsComponent } from './Body/order-fields/order-fields.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { OrderFieldsBookInBagComponent } from './Body/order-fields/order-fields-book-in-bag/order-fields-book-in-bag.component';
-import { AuthInterceptorService } from './auth/auth.interceptor.service';
-import { LoggingInterceptorService } from './auth/logging-interceptor.service';
+// import { AuthInterceptorService } from './auth/auth.interceptor.service';
+// import { LoggingInterceptorService } from './auth/logging-interceptor.service';
 import { LoginPanelComponent } from './Body/login-panel/login-panel.component';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { LoginPanelComponent } from './Body/login-panel/login-panel.component';
     OrderFieldsComponent,
     OrderFieldsBookInBagComponent,
     LoginPanelComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,16 +64,16 @@ import { LoginPanelComponent } from './Body/login-panel/login-panel.component';
     BooksService,
     MatDatepickerModule,
     MatNativeDateModule,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LoggingInterceptorService,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptorService,
-      multi: true,
-    },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: LoggingInterceptorService,
+    //   multi: true,
+    // },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: AuthInterceptorService,
+    //   multi: true,
+    // },
   ],
   bootstrap: [AppComponent],
 })

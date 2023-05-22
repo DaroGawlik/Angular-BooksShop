@@ -1,8 +1,11 @@
 <div class="m-0 p-0 pb-4"
     style="background-image: linear-gradient(to left, #d7d2cc 0%, #304352 100%); position: relative;">
+    <div *ngIf="isLoading" style="text-align: center;">
+        <app-loading-spinner></app-loading-spinner>
+    </div>
     <div class="container justify-content-center">
         <p class="headerPanelLogin">Please Login to your account</p>
-        <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+        <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
             <div class="form-group">
                 <label for="email" class="col-12 mb-3">E-Mail:</label>
                 <input type="email" class="col-12 mb-3" id="email" ngModel name="email" required email />
@@ -12,9 +15,14 @@
                 <input type="password" class="col-12 mb-3" id="password" ngModel name="password" required
                     minlength="6" />
             </div>
-
-            <button class="btn-login" type="submit" [disabled]="!authForm.valid">Login</button>
-
+            <div *ngIf="error" class="text-center">
+                <p [ngStyle]=" { 'color' : 'red' }">{{ error }}</p>
+            </div>
+            <button class="btn-login" type="submit" [disabled]="!authForm.valid"> {{ isLoginMode ? 'Login' : 'Sign Up'
+                }}</button>
+            <button class="btn-login" type="button" [disabled]="!authForm.valid" (click)="onSwitchMode()">Switch to {{
+                isLoginMode ? 'Sign Up' :
+                'Login' }}</button>
         </form>
     </div>
 </div>
