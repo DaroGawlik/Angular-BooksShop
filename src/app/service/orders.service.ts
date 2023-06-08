@@ -19,7 +19,8 @@ export class OrdersService {
     // const orderData: Order = {};
     this.http
       .post<{ orderData: object }>(
-        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        // 'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        '',
         postData
         // {
         //   observe: 'response',
@@ -41,7 +42,8 @@ export class OrdersService {
     // serachParams = serachParams.append('custom', 'key');
     return this.http
       .get<{ [key: string]: Order }>(
-        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        '',
+        // 'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
         {
           // headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
           //   params: new HttpParams().set('print', 'pretty'),
@@ -72,7 +74,8 @@ export class OrdersService {
   deleteOrders() {
     return this.http
       .delete(
-        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        // 'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        '',
         { observe: 'events' }
       )
       .pipe(

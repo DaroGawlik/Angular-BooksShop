@@ -77,9 +77,9 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   }
 
   ngOnInit() {
-    this.errorSub = this.ordersService.error.subscribe((errorMessage) => {
-      this.error = errorMessage;
-    });
+    // this.errorSub = this.ordersService.error.subscribe((errorMessage) => {
+    //   this.error = errorMessage;
+    // });
 
     this.signupForm = new FormGroup({
       orderData: new FormGroup({
