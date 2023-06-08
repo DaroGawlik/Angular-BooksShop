@@ -26,18 +26,17 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   loadedOrders: Order[] = [];
   isFetching = false;
   error: string | null = null;
-  private errorSub: Subscription;
+  // private errorSub: Subscription;
 
   public bagOfBooksArr: BookModel[] = [];
   public BooksModelToOrder: BookModelToOrder[] = [];
 
   signupForm: FormGroup;
   paymentTypes = ['Cash', 'Card'];
-  additionalInformation = '';
+  additionalInformation: string = '';
   todayDate = new Date();
   miniumDeliveryDate = this.todayDate.setDate(this.todayDate.getDate() + 2);
-  maxCharsOfArea = 80;
-  textOfArea = '';
+  maxCharsOfArea: number = 80;
 
   howClickedGifts: number = 0;
   howMoreSameBook: number;
@@ -125,6 +124,8 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
         this.error = error.message;
       }
     );
+    // this.additionalInformationControl =
+    //   this.signupForm.controls['additionalInformation'];
   }
 
   clickGift(gift: any) {
@@ -227,7 +228,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     ).length;
   }
 
-  ngDoCheck(): void {}
+  ngDoCheck() {}
 }
 
 // handling forms in angular apps/ Template-driven method

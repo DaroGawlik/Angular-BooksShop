@@ -141,11 +141,21 @@
 
             <div class="row d-flex justify-content-center textarea-wrapper">
                 <p class="mb-1">Additional information to order:</p>
-                <textarea class="additionalInformation justify-content-center" name="additionalInformation"
+                <textarea class=" additionalInformation justify-content-center" name="additionalInformation"
                     value="{{additionalInformation}}" formControlName="additionalInformation" placeholder="text..."
-                    [(ngModel)]="textOfArea" [maxlength]="maxCharsOfArea">></textarea>
-                <span>{{textOfArea.length}} /{{maxCharsOfArea}}</span>
+                    [maxlength]="maxCharsOfArea"></textarea>
+                <!--
+                <span
+                    *ngIf="signupForm.controls['additionalInformation'] && signupForm.controls['additionalInformation'].value.length">
+
+                    {{signupForm.controls['additionalInformation'].value.length}} /{{maxCharsOfArea}}</span> -->
+                <span>
+
+                    {{signupForm.controls['additionalInformation'].value?.length ?? 0}} /{{maxCharsOfArea}}</span>
             </div>
+
+
+
             <button class="btn-order" type="submit" [disabled]="!signupForm.valid" (click)="order()">Order</button>
             <button class="btn-exit-order" routerLink="/sales-window">Back to Book Shop</button>
             <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button>
