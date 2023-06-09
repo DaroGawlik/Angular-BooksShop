@@ -5,22 +5,22 @@ import {
   HttpParams,
   HttpEventType,
 } from '@angular/common/http';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError, tap, take, exhaustMap } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs';
 
 import { Order } from '../shared/order.model';
+import { AuthService } from '../Body/login-panel/auth.service';
 @Injectable({ providedIn: 'root' })
 export class OrdersService {
   error = new Subject<string>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   createAndStoreOrder(postData: Order) {
     // const orderData: Order = {};
     this.http
       .post<{ orderData: object }>(
-        // 'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
-        '',
+        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
         postData
         // {
         //   observe: 'response',
@@ -40,13 +40,12 @@ export class OrdersService {
     // let serachParams = new HttpParams();
     // serachParams = serachParams.append('print', 'pretty');
     // serachParams = serachParams.append('custom', 'key');
+
     return this.http
       .get<{ [key: string]: Order }>(
-        '',
-        // 'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
         {
           // headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
-          //   params: new HttpParams().set('print', 'pretty'),
           // params: serachParams,
           // responseType: 'json',
           //   can change for another format^
@@ -74,8 +73,7 @@ export class OrdersService {
   deleteOrders() {
     return this.http
       .delete(
-        // 'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
-        '',
+        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
         { observe: 'events' }
       )
       .pipe(

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
+import { AuthService } from '../../login-panel/auth.service';
 
 @Component({
   selector: 'app-aside',
@@ -19,12 +20,18 @@ export class AsideComponent implements OnInit {
   public totalCost: any;
   public uniqueBooksArr: any;
 
+  isAuthenticated: boolean;
+  isLogin: string;
+
   @Output()
   countAllBookInBag = new EventEmitter<number>();
   @Output()
   isAsideOpen = new EventEmitter<boolean>();
 
-  constructor(private bookService: BooksService) {
+  constructor(
+    private bookService: BooksService,
+    private authService: AuthService
+  ) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooksArr = booksInBag;
       this.getUniqueBooks();
@@ -37,6 +44,14 @@ export class AsideComponent implements OnInit {
 
   ngOnInit() {
     this.innerWidth = window.innerWidth;
+    if (this.authService.user) {
+      this.isLogin = '/login-panel';
+    }
+    if (!this.authService.user.getValue()) {
+      this.isLogin = '/login-panel';
+    } else {
+      this.isLogin = '/order-fields';
+    }
   }
 
   closeAside() {
@@ -54,7 +69,6 @@ export class AsideComponent implements OnInit {
     );
   }
 
-  confirmOrder() {}
 
   clearAllBooks() {
     this.bookService.deleteAllBookFromBag();

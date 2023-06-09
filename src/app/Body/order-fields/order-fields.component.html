@@ -23,6 +23,7 @@
             <div formGroupName="orderData">
                 <div class="form-group">
                     <div class="row mt-1 d-flex justify-content-center">
+
                         <label for="name" class="col-6">Name</label>
                         <input type="text" id="name" class="col-6" formControlName="name">
                         <span class="m-1 p-0 d-flex justify-content-end"
@@ -37,6 +38,7 @@
                                 *ngIf="signupForm.get('orderData.name')?.errors?.['minlength']">
                                 The length not less than 4 symbols.</span>
                         </span>
+
                     </div>
                     <div class="row mt-1 d-flex justify-content-between">
                         <label for="surname" class="col-6">Surname</label>
