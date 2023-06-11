@@ -4,23 +4,30 @@ import {
   OnInit,
   Output,
   HostListener,
+  OnDestroy,
 } from '@angular/core';
 import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
-import { AuthService } from '../../login-panel/auth.service';
+import { AuthService } from '../../../service/auth.service';
+
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-aside',
   templateUrl: './aside.component.html',
   styleUrls: ['./aside.component.scss'],
 })
-export class AsideComponent implements OnInit {
+export class AsideComponent implements OnInit, OnDestroy {
+  isAuthenticated: boolean = false;
+  private userSub: Subscription;
+
   public bagOfBooksArr: BookModel[] = [];
   public innerWidth: any;
   public totalCost: any;
   public uniqueBooksArr: any;
+  public isBook: boolean;
 
-  isAuthenticated: boolean;
+  // isAuthenticated: boolean;
   isLogin: string;
 
   @Output()
@@ -36,6 +43,7 @@ export class AsideComponent implements OnInit {
       this.bagOfBooksArr = booksInBag;
       this.getUniqueBooks();
       this.countAllBookInBag.emit(this.bagOfBooksArr.length);
+      this.isBook = this.bagOfBooksArr.length > 0 ? true : false;
     });
     this.bookService.getTotalCosts().subscribe((booksInBag: number) => {
       this.totalCost = booksInBag;
@@ -43,6 +51,9 @@ export class AsideComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userSub = this.authService.user.subscribe((user) => {
+      this.isAuthenticated = !!user;
+    });
     this.innerWidth = window.innerWidth;
     if (this.authService.user) {
       this.isLogin = '/login-panel';
@@ -69,9 +80,12 @@ export class AsideComponent implements OnInit {
     );
   }
 
-
   clearAllBooks() {
     this.bookService.deleteAllBookFromBag();
     this.bagOfBooksArr = [];
+  }
+
+  ngOnDestroy() {
+    this.userSub.unsubscribe();
   }
 }

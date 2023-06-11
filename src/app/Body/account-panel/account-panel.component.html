@@ -1,0 +1,10 @@
+<!-- <div [ngClass]="innerWidth < 992 ? 'mobile' : 'desktop'" [ngClass]="isBook ? 'bookIs' : ''"> -->
+<div [ngClass]="{
+        'mobile': innerWidth < 992,
+        'desktop': innerWidth >= 992,
+        'bookIsMobile': isBook && innerWidth < 992,
+        'bookIsDesktop': isBook && innerWidth >= 992
+      }">
+    <div>You aren't login to your account</div>
+    <button class="btn-login" type="submit"> {{ isAuthenticated ? 'Login' : 'Sign Up'}}</button>
+</div>

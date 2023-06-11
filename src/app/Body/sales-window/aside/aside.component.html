@@ -2,8 +2,9 @@
 <ng-template #areBooks>
     <div class="container">
         <div [ngClass]="innerWidth < 992 ? 'areBooksMobile' : 'areBooksDesktop'">
+            <app-account-panel [isBook]="isBook"></app-account-panel>
             <button class="closeAsideBtn d-lg-none" type="button" (click)="closeAside()">Close</button>
-            <p>Your Bag</p>
+            <p>Your Bag:</p>
             <ul class="m-0 p-0">
                 <app-bookinbag *ngFor="let bookEl of uniqueBooksArr" [bookItem]="bookEl"></app-bookinbag>
             </ul>
@@ -20,6 +21,7 @@
 
 <ng-template #noBooks>
     <div [ngClass]="innerWidth < 992 ? 'noBooksMobile' : 'noBooksDesktop'">
+        <app-account-panel [isBook]="isBook"></app-account-panel>
         <p>No books in your bag</p>
         <button class="closeBtn" type="button" (click)="closeAside()">Close</button>
     </div>

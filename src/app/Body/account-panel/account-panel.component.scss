@@ -1,0 +1,50 @@
+.mobile {
+  height: 100px;
+  padding: 1rem 1rem;
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 1rem;
+
+  button {
+    margin-top: 1rem;
+  }
+}
+
+.bookIsMobile {
+  padding: 3rem 0rem 0rem 0rem;
+  font-size: 14px;
+}
+
+.desktop {
+  height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 0;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 1px solid black;
+
+  button {
+    margin-top: 0.5rem;
+  }
+}
+
+.bookIsDesktop {
+  text-align: center;
+  border: 0px;
+  margin-bottom: 2rem;
+}
+
+button {
+  position: static;
+  right: 5px;
+  bottom: 5px;
+  width: 4.5rem;
+  font-size: 0.7rem;
+  border-radius: 5px;
+  padding: 0;
+}

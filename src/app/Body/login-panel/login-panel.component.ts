@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import { AuthService, AuthResponseData } from './auth.service';
+import { AuthService, AuthResponseData } from '../../service/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
