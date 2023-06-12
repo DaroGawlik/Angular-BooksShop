@@ -1,5 +1,9 @@
 <div class="areBooksMobile">
-    <button class="closeAsideBtn" type="button" (click)="closeAside()">Close</button>
+    <div class="d-flex flex-row justify-content-around align-items-cente mt-2">
+        <button class="" routerLink="/user-panel">Your Account</button>
+        <button class="" routerLink="/sales-window">Book Shop</button>
+        <button class="" (click)="closeAside()">Close</button>
+    </div>
     <p>Your Bag</p>
     <ul class="m-0 p-0">
         <li class="container row m-0 p-0 mt-4" *ngFor="let bookEl of uniqueBooksArr;">

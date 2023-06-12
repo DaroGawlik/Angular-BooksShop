@@ -152,36 +152,12 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     this.pushGiftsToControlArray(giftsArr);
     this.getUniqueBooks();
     this.doArrayBooksToOrder(this.bagOfBooksArr);
-    console.log(this.signupForm.value);
-
     this.onCreatePost(this.signupForm.value);
   }
 
   // START API
   onCreatePost(postData: Order) {
     this.ordersService.createAndStoreOrder(postData);
-  }
-
-  fetchOrders() {
-    this.isFetching = true;
-    this.ordersService.fetchOrders().subscribe(
-      (orders) => {
-        this.isFetching = false;
-        this.loadedOrders = orders;
-      },
-      (error) => {
-        this.error = error.message;
-        console.log(error);
-      }
-    );
-  }
-
-  fetchOrder() {}
-
-  deleteOrders() {
-    this.ordersService.deleteOrders().subscribe(() => {
-      this.loadedOrders = [];
-    });
   }
 
   // STOP API

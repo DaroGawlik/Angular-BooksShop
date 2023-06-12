@@ -155,30 +155,8 @@
 
                     {{signupForm.controls['additionalInformation'].value?.length ?? 0}} /{{maxCharsOfArea}}</span>
             </div>
-
-
-
             <button class="btn-order" type="submit" [disabled]="!signupForm.valid" (click)="order()">Order</button>
-            <button class="btn-exit-order" routerLink="/sales-window">Back to Book Shop</button>
-            <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button>
-            <button class="btn-exit-order" (click)="fetchOrders()">Fetch Orders</button>
-            <button class="btn-exit-order" (click)="fetchOrder()">Fetch Order</button>
         </form>
-    </div>
-</div>
-
-<div class="col-xs-12 col-md-6 col-md-offset-3">
-    <p *ngIf="loadedOrders.length < 1 && !isFetching">No posts available!</p>
-    <ul class="list-group" *ngIf="loadedOrders.length >= 1 && !isFetching">
-        <li class="list-group-item" *ngFor="let order of loadedOrders">
-            <h3>{{ order.id }}</h3>
-            <p>{{ order.books }}</p>
-        </li>
-    </ul>
-    <p *ngIf="isFetching && !error">Loading...</p>
-    <div class="alert alert-danger" *ngIf="error">
-        <p>An error occurred!</p>
-        <p>{{error}}</p>
     </div>
 </div>
 

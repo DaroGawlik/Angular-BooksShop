@@ -1,60 +1,47 @@
-.noBooksMobile {
-  position: absolute;
-  position: fixed;
-  height: 5rem;
-  width: 15rem;
-  right: 1rem;
-  background-color: grey;
-  border: 1px solid black;
+button {
+  min-width: 4.5rem;
+  font-size: 0.7rem;
   border-radius: 5px;
-  font-size: 1rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  z-index: 1;
-
-  p {
-    padding-top: 0.5rem;
-    text-align: center;
-  }
-
-  button {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    width: 4.5rem;
-    font-size: 0.7rem;
-    border-radius: 5px;
-    padding: 0;
-  }
-
-  .test {
-    button {
-      position: static;
-      right: 5px;
-      bottom: 5px;
-      width: 4.5rem;
-      font-size: 0.7rem;
-      border-radius: 5px;
-      padding: 0;
-    }
-  }
 }
-
-// .noBooksDesktop {
-//   height: 100%;
-//   border-left: 1px solid black;
-//   padding: 5rem 2rem 0 2rem;
-//   font-size: 4rem;
-//   text-align: center;
+// .noBooksMobile {
+//   position: absolute;
+//   position: fixed;
+//   height: 5rem;
+//   width: 15rem;
+//   right: 1rem;
+//   background-color: grey;
+//   border: 1px solid black;
+//   border-radius: 5px;
+//   font-size: 1rem;
+//   font-weight: bold;
 //   text-transform: uppercase;
-//   p {
-//     position: none;
+//   z-index: 1;
+
+//   .test {
+//     height: 10rem;
 //   }
 
-//   .closeBtn {
-//     visibility: hidden;
+//   p {
+//     padding-top: 0.5rem;
+//     text-align: center;
 //   }
 // }
+
+.noBooksDesktop {
+  height: 100%;
+  border-left: 1px solid black;
+  padding: 5rem 2rem 0 2rem;
+  font-size: 4rem;
+  text-align: center;
+  text-transform: uppercase;
+  p {
+    position: none;
+  }
+
+  .closeBtn {
+    visibility: hidden;
+  }
+}
 
 .areBooksMobile {
   position: absolute;
@@ -77,16 +64,6 @@
 
   ul {
     list-style-type: none;
-  }
-
-  .closeAsideBtn {
-    width: 4.5rem;
-    font-size: 0.7rem;
-    border-radius: 5px;
-    padding: 0;
-    position: absolute;
-    top: 0.6rem;
-    right: 0.5rem;
   }
 }
 .totalCost {
