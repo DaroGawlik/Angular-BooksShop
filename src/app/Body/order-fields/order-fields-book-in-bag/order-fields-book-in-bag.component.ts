@@ -1,10 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output,
-  HostListener,
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
 
@@ -25,15 +20,20 @@ export class OrderFieldsBookInBagComponent implements OnInit {
   @Output()
   isAsideOpen = new EventEmitter<boolean>();
 
-  constructor(private bookService: BooksService) {
+  constructor(private bookService: BooksService, private router: Router) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooksArr = booksInBag;
       this.getUniqueBooks();
       this.countAllBookInBag.emit(this.bagOfBooksArr.length);
+      console.log(this.uniqueBooksArr);
     });
     this.bookService.getTotalCosts().subscribe((booksInBag: number) => {
       this.totalCost = booksInBag;
     });
+  }
+
+  isActive(route: string): boolean {
+    return this.router.isActive(route, true);
   }
 
   ngOnInit() {}

@@ -1,6 +1,11 @@
 <div class="areBooksMobile">
     <div class="d-flex flex-row justify-content-around align-items-cente mt-2">
-        <button class="" routerLink="/user-panel">Your Account</button>
+        <button [ngClass]="{'active': isActive('/user-panel')}"
+            [routerLink]="isActive('/user-panel') ? '/order-fields' : '/user-panel'"
+            [disabled]="isActive('/user-panel') && uniqueBooksArr === 0">
+            {{ isActive('/user-panel') ? 'Order Fields' : 'Your Account' }}
+        </button>
+
         <button class="" routerLink="/sales-window">Book Shop</button>
         <button class="" (click)="closeAside()">Close</button>
     </div>
