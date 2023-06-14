@@ -6,7 +6,7 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { take, exhaustMap } from 'rxjs/operators';
-import { AuthService } from '../Body/login-panel/auth.service';
+import { AuthService } from '../service/auth.service';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
@@ -15,8 +15,11 @@ export class AuthInterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     return this.authService.user.pipe(
       take(1),
+      // sprawdzamy czy user jest zalogowany czy nie (sprawdzi pierwszą wartość); take(3) => sprawdzi pierwsze trzy(niezależnie czy jest zalogowany czy nie)
       exhaustMap((user) => {
+        //operuje na zwróconym obiekcie, czeka aż poprzednia operacja "take(1)" się wykona. Używamy w przypadku gdy chcemy ograniczyć równoległe wykonywanie operacji i zapewniamy sobie sekwencyjność.
         if (!user) {
+          // console.log(req);
           return next.handle(req);
         }
 
@@ -25,6 +28,7 @@ export class AuthInterceptorService implements HttpInterceptor {
           modifiedReq = req.clone({
             params: new HttpParams().set('auth', user.token),
           });
+          // console.log(modifiedReq);
         }
 
         return next.handle(modifiedReq);

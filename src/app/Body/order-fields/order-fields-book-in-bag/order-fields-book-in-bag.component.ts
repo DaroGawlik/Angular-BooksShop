@@ -25,7 +25,6 @@ export class OrderFieldsBookInBagComponent implements OnInit {
       this.bagOfBooksArr = booksInBag;
       this.getUniqueBooks();
       this.countAllBookInBag.emit(this.bagOfBooksArr.length);
-      console.log(this.uniqueBooksArr);
     });
     this.bookService.getTotalCosts().subscribe((booksInBag: number) => {
       this.totalCost = booksInBag;

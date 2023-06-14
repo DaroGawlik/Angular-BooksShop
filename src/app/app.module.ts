@@ -29,6 +29,8 @@ import { AuthInterceptorService } from './auth/auth.interceptor.service';
 // import { LoggingInterceptorService } from './auth/logging-interceptor.service';
 import { LoginPanelComponent } from './Body/login-panel/login-panel.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { AccountPanelComponent } from './Body/sales-window/aside/account-panel/account-panel.component';
+import { UserPanelComponent } from './Body/user-panel/user-panel.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
     OrderFieldsBookInBagComponent,
     LoginPanelComponent,
     LoadingSpinnerComponent,
+    AccountPanelComponent,
+    UserPanelComponent,
   ],
   imports: [
     BrowserModule,

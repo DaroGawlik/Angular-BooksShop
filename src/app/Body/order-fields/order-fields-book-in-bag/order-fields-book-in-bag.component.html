@@ -2,7 +2,9 @@
     <div class="d-flex flex-row justify-content-around align-items-cente mt-2">
         <button [ngClass]="{'active': isActive('/user-panel')}"
             [routerLink]="isActive('/user-panel') ? '/order-fields' : '/user-panel'"
-            [disabled]="isActive('/user-panel') && uniqueBooksArr === 0">
+            [disabled]="isActive('/user-panel') && bagOfBooksArr.length === 0">
+
+
             {{ isActive('/user-panel') ? 'Order Fields' : 'Your Account' }}
         </button>
 

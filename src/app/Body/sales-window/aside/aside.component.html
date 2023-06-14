@@ -10,9 +10,8 @@
             </ul>
             <div class="totalCost"> Total: {{totalCost}}$</div>
             <div class="d-flex justify-content-around mt-3 mb-3">
-
-                <button class="confirmBtn" type="button" routerLink="{{isLogin}}">Confirm
-                    Order</button>
+                <button class="confirmBtn" type="button" (click)="redirectToLoginPanel(isLogin, 'confirmBtn')">Confirm Order
+                </button>
                 <button class="clearBtn" type="button" (click)="clearAllBooks()">Clear All</button>
             </div>
         </div>

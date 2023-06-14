@@ -11,6 +11,7 @@ import { BookModel } from 'src/app/shared/book.model';
 import { AuthService } from '../../../service/auth.service';
 
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-aside',
@@ -37,7 +38,8 @@ export class AsideComponent implements OnInit, OnDestroy {
 
   constructor(
     private bookService: BooksService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooksArr = booksInBag;
@@ -83,6 +85,11 @@ export class AsideComponent implements OnInit, OnDestroy {
   clearAllBooks() {
     this.bookService.deleteAllBookFromBag();
     this.bagOfBooksArr = [];
+  }
+
+  redirectToLoginPanel(route: string, source: string) {
+    const queryParams = { source: source };
+    this.router.navigate([route], { queryParams: queryParams });
   }
 
   ngOnDestroy() {

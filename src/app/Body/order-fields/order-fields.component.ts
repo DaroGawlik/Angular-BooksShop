@@ -10,12 +10,9 @@ import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
 import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 
-import { Subscription } from 'rxjs';
-
-import { HttpClient } from '@angular/common/http';
-
 import { Order } from 'src/app/shared/order.model';
 import { OrdersService } from 'src/app/service/orders.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order-fields',
@@ -67,7 +64,8 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
 
   constructor(
     private bookService: BooksService,
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    private router: Router
   ) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooksArr = booksInBag;
@@ -114,16 +112,16 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
       additionalInformation: new FormControl(),
       books: new FormArray([]),
     });
-    this.isFetching = true;
-    this.ordersService.fetchOrders().subscribe(
-      (orders) => {
-        this.isFetching = false;
-        this.loadedOrders = orders;
-      },
-      (error) => {
-        this.error = error.message;
-      }
-    );
+    // this.isFetching = true;
+    // this.ordersService.fetchOrders().subscribe(
+    //   (orders) => {
+    //     this.isFetching = false;
+    //     this.loadedOrders = orders;
+    //   },
+    //   (error) => {
+    //     this.error = error.message;
+    //   }
+    // );
     // this.additionalInformationControl =
     //   this.signupForm.controls['additionalInformation'];
   }
@@ -153,6 +151,13 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     this.getUniqueBooks();
     this.doArrayBooksToOrder(this.bagOfBooksArr);
     this.onCreatePost(this.signupForm.value);
+    this.clearOrderFieldsAfterSend();
+  }
+
+  clearOrderFieldsAfterSend() {
+    this.router.navigate(['/user-panel']);
+    this.signupForm.reset();
+    this.bookService.deleteAllBookFromBag();
   }
 
   // START API

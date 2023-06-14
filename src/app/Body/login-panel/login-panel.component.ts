@@ -4,18 +4,41 @@ import { Observable } from 'rxjs';
 
 import { AuthService, AuthResponseData } from '../../service/auth.service';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { BooksService } from 'src/app/service/books.service';
+import { BookModel } from 'src/app/shared/book.model';
 
 @Component({
   selector: 'app-login-panel',
   templateUrl: './login-panel.component.html',
   styleUrls: ['./login-panel.component.scss'],
 })
-export class LoginPanelComponent {
+export class LoginPanelComponent implements OnInit {
+  bagOfBooksArr: boolean;
   isLoginMode = true;
   isLoading = false;
+  source: string;
   error: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private booksService: BooksService
+  ) {
+    this.booksService
+      .getBagOfBooksObs()
+      .subscribe((booksInBag: BookModel[]) => {
+        this.bagOfBooksArr = booksInBag.length > 0 ? true : false;
+      });
+  }
+
+  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.source = params['source'];
+      // Możesz teraz użyć wartości 'source' w dalszej części komponentu
+    });
+  }
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
@@ -39,9 +62,13 @@ export class LoginPanelComponent {
 
     authObs.subscribe(
       (resData) => {
-        console.log(resData);
+        // console.log(resData);
         this.isLoading = false;
-        this.router.navigate(['/order-fields']);
+        if (this.source == 'confirmBtn') {
+          this.router.navigate(['/order-fields']);
+        } else {
+          this.router.navigate(['/user-panel']);
+        }
       },
       (errorMessage) => {
         // console.log(errorMessage);

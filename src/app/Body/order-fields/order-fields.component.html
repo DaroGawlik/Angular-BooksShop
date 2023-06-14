@@ -18,8 +18,7 @@
     <!-- ORDER-FILEDS -->
     <div class="container justify-content-center">
         <p class="headerOrder">please fill fields to delivery</p>
-        <!-- <form [formGroup]="signupForm" (ngSubmit)="onSubmit()"> -->
-        <form [formGroup]="signupForm">
+        <form [formGroup]="signupForm" (ngSubmit)="order()">
             <div formGroupName="orderData">
                 <div class="form-group">
                     <div class="row mt-1 d-flex justify-content-center">
@@ -155,7 +154,7 @@
 
                     {{signupForm.controls['additionalInformation'].value?.length ?? 0}} /{{maxCharsOfArea}}</span>
             </div>
-            <button class="btn-order" type="submit" [disabled]="!signupForm.valid" (click)="order()">Order</button>
+            <button class="btn-order" type="submit" [disabled]="!signupForm.valid">Order</button>
         </form>
     </div>
 </div>
