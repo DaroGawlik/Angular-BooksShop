@@ -1,5 +1,6 @@
 .container {
   width: 300px;
+  height: 75vh;
   padding-top: 1rem;
 
   .headerPanelLogin {
@@ -13,6 +14,14 @@
 
   .btn-login {
     margin-top: 0.5rem;
-    width: 100%;
   }
+}
+
+button {
+  right: 5px;
+  bottom: 5px;
+  width: 100%;
+  font-size: 1rem;
+  border-radius: 5px;
+  padding: 0;
 }

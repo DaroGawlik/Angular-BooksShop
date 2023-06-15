@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/service/auth.service';
 import { OrdersService } from 'src/app/service/orders.service';
 import { Order } from 'src/app/shared/order.model';
@@ -7,7 +7,7 @@ import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
 import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 import { AccountSettingsService } from 'src/app/service/account-settings.service';
-
+import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -15,6 +15,11 @@ import { AccountSettingsService } from 'src/app/service/account-settings.service
 })
 export class UserPanelComponent implements OnInit {
   isAsideOpen: boolean = false;
+
+  openNgContainer: boolean;
+
+  @ViewChild('f', { static: false })
+  signupForm: NgForm;
 
   countAllBookInBag: number = 0;
   public bagOfBooksArr: BookModel[] = [];
@@ -27,7 +32,7 @@ export class UserPanelComponent implements OnInit {
 
   constructor(
     private bookService: BooksService,
-    private ordersService: OrdersService,
+    // private ordersService: OrdersService,
     private authService: AuthService,
     private authAccountSettings: AccountSettingsService
   ) {
@@ -43,6 +48,11 @@ export class UserPanelComponent implements OnInit {
   ngOnInit(): void {}
   openAside() {
     this.isAsideOpen = true;
+  }
+
+  changeUserName() {
+    const newUserName = this.signupForm.value.setName;
+    this.authAccountSettings.changeUserName(newUserName, this.user?.token);
   }
 
   fetchOrders() {

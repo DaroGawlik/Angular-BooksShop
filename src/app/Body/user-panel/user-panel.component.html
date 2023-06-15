@@ -1,5 +1,5 @@
 <div routerLinkActive='active' class="m-0 p-0 pb-4"
-    style="background-image: linear-gradient(to left, #d7d2cc 0%, #304352 100%); position: relative;">
+    style="background-image: linear-gradient(to left, #d7d2cc 0%, #304352 100%); position: relative; height: 100vh;">
     <!-- BAG-BAR -->
     <div class="m-0 p-0 bagBar">
         <svg class='fontawesomesvg' class="fa fa-solid fa-bars" *ngIf="!isAsideOpen" (click)="openAside()"
@@ -16,11 +16,31 @@
     </div>
     <h2 class="text-center pt-2">You are logged as : {{user?.email}}</h2>
     <div class="container-fluid">
+        <button class="" (click)="openNgContainer = true">Set your account name</button>
         <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button>
         <button class="btn-exit-order" (click)="fetchOrders()">Fetch Orders</button>
         <button class="btn-exit-order" (click)="logout()">Logout</button>
         <!-- <button class="btn-exit-order" (click)="fetchOrder()">Fetch Order</button> -->
     </div>
+
+    <ng-container *ngIf="openNgContainer">
+
+        <form (ngSubmit)="changeUserName()" #f="ngForm">
+            <div class="mt-2 d-flex flex-column align-items-center">
+
+                <label for="setName" class="col-6 align-items-center mt-1">Set your name:</label>
+                <input type="text" id="setName" class="col-6 mt-1" name="setName" ngModel id="setName" required
+                    minlength="1" maxlength="10">
+                <!-- <p class="errorInput" *ngIf="!setName.valid && setName.touched">The length not less than 1 symbol
+                </p> -->
+
+            </div>
+            <button type="submit" class="">Change</button>
+            <!-- (click)="openNgContainer = false" -->
+        </form>
+    </ng-container>
+
+
 </div>
 
 

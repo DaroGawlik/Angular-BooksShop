@@ -32,7 +32,7 @@ export class OrderFieldsBookInBagComponent implements OnInit {
   }
 
   isActive(route: string): boolean {
-    return this.router.isActive(route, true);
+    return this.router.url.includes(route);
   }
 
   ngOnInit() {}
