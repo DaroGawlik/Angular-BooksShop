@@ -8,6 +8,7 @@ import { BookModel } from 'src/app/shared/book.model';
 import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 import { AccountSettingsService } from 'src/app/service/account-settings.service';
 import { NgForm } from '@angular/forms';
+import { userNameResponse } from 'src/app/shared/account-user.model';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -15,6 +16,8 @@ import { NgForm } from '@angular/forms';
 })
 export class UserPanelComponent implements OnInit {
   isAsideOpen: boolean = false;
+
+  userName: string;
 
   openNgContainer: boolean;
 
@@ -52,7 +55,11 @@ export class UserPanelComponent implements OnInit {
 
   changeUserName() {
     const newUserName = this.signupForm.value.setName;
-    this.authAccountSettings.changeUserName(newUserName, this.user?.token);
+    this.authAccountSettings
+      .changeUserName(newUserName, this.user?.token)
+      .subscribe((response: userNameResponse) => {
+        console.log(response.displayName);
+      });
   }
 
   fetchOrders() {

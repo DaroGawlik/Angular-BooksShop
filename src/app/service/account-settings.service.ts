@@ -3,7 +3,7 @@ import { throwError } from 'rxjs';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Order } from '../shared/order.model';
-import { userName } from '../shared/changeUserName.model';
+import { userName, userNameResponse } from '../shared/account-user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,18 +12,16 @@ export class AccountSettingsService {
   constructor(private http: HttpClient) {}
 
   changeUserName(newUserName: string, idToken: string | null | undefined) {
-    this.http
-      .post<{ orderData: object }>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
-        {
-          idToken: idToken,
-          displayName: newUserName,
-          returnSecureToken: true,
-        }
-      )
-      .subscribe((responseData) => {
-        console.log(responseData);
-      });
+    const requestData: userName = {
+      idToken: idToken!,
+      displayName: newUserName,
+      returnSecureToken: true,
+    };
+
+    return this.http.post<userNameResponse>(
+      'https://identitytoolkit.googleapis.com/v1/accounts:update?key=YOUR_API_KEY',
+      requestData
+    );
   }
 
   fetchOrders() {
