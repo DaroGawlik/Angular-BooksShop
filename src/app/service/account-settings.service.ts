@@ -3,7 +3,12 @@ import { throwError } from 'rxjs';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Order } from '../shared/order.model';
-import { userName, userNameResponse } from '../shared/account-user.model';
+import {
+  postUserData,
+  getUserData,
+  userName,
+  userNameResponse,
+} from '../shared/account-user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,15 +16,24 @@ import { userName, userNameResponse } from '../shared/account-user.model';
 export class AccountSettingsService {
   constructor(private http: HttpClient) {}
 
+  getUserData(idToken: string | null | undefined) {
+    const requestData: postUserData = {
+      idToken: idToken!,
+    };
+    return this.http.post<getUserData>(
+      'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
+      requestData
+    );
+  }
+
   changeUserName(newUserName: string, idToken: string | null | undefined) {
     const requestData: userName = {
       idToken: idToken!,
       displayName: newUserName,
       returnSecureToken: true,
     };
-
     return this.http.post<userNameResponse>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:update?key=YOUR_API_KEY',
+      'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
       requestData
     );
   }

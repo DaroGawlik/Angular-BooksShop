@@ -1,3 +1,13 @@
+export interface postUserData {
+  idToken: string;
+}
+
+export interface getUserData {
+  localId: string;
+  email: string;
+  displayName: string;
+}
+
 export interface userName {
   idToken: string;
   displayName: string;

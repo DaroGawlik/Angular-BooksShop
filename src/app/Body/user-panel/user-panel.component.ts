@@ -8,7 +8,11 @@ import { BookModel } from 'src/app/shared/book.model';
 import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 import { AccountSettingsService } from 'src/app/service/account-settings.service';
 import { NgForm } from '@angular/forms';
-import { userNameResponse } from 'src/app/shared/account-user.model';
+import {
+  getUserData,
+  userNameResponse,
+} from 'src/app/shared/account-user.model';
+import { take, first } from 'rxjs/operators';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -17,7 +21,7 @@ import { userNameResponse } from 'src/app/shared/account-user.model';
 export class UserPanelComponent implements OnInit {
   isAsideOpen: boolean = false;
 
-  userName: string;
+  userData: getUserData;
 
   openNgContainer: boolean;
 
@@ -42,6 +46,12 @@ export class UserPanelComponent implements OnInit {
     this.authService.user.subscribe((user) => {
       this.user = user;
     });
+    this.authAccountSettings
+      .getUserData(this.user?.token)
+      .subscribe((userData: getUserData) => {
+        this.userData = userData;
+      });
+
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooksArr = booksInBag;
       this.countAllBookInBag = booksInBag.length;
@@ -58,8 +68,9 @@ export class UserPanelComponent implements OnInit {
     this.authAccountSettings
       .changeUserName(newUserName, this.user?.token)
       .subscribe((response: userNameResponse) => {
-        console.log(response.displayName);
+        this.userData.displayName = response.displayName;
       });
+    this.signupForm.reset();
   }
 
   fetchOrders() {

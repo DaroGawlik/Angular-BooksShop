@@ -14,7 +14,10 @@
                 (countAllBookInBag)="countAllBookInBag=$event"></app-order-fields-book-in-bag>
         </div>
     </div>
-    <h2 class="text-center pt-2">You are logged as : {{user?.email}}</h2>
+    <h2 class="text-center pt-2">You are logged as:
+        {{ userData && userData.displayName ? userData.displayName : userData && userData.email }}
+    </h2>
+
     <div class="container-fluid">
         <button class="" (click)="openNgContainer = true">Set your account name</button>
         <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button>
@@ -35,7 +38,7 @@
                 </p> -->
 
             </div>
-            <button type="submit" class="">Change</button>
+            <button type="submit" class="" [disabled]="!f.form.valid">Change</button>
             <!-- (click)="openNgContainer = false" -->
         </form>
     </ng-container>

@@ -6,6 +6,11 @@ import { throwError, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { BooksService } from './books.service';
 
+import {
+  AccountSettingsService,
+  // getUserData,
+} from './account-settings.service';
+import { AccountPanelComponent } from '../Body/sales-window/aside/account-panel/account-panel.component';
 export interface AuthResponseData {
   kind: string;
   idToken: string;
