@@ -1,26 +1,30 @@
-export interface postUserData {
+export interface PostUserDataModel {
   idToken: string;
 }
-
-export interface getUserData {
-  localId: string;
-  email: string;
+export interface PostUpdateUserNameModel extends PostUserDataModel {
   displayName: string;
 }
-
-export interface userName {
-  idToken: string;
-  displayName: string;
-  returnSecureToken: boolean;
+export interface PostUpdateUserPhotoModel extends PostUserDataModel {
+  photoUrl: string;
 }
 
-export interface userNameResponse {
+export interface UserDataModel {
   localId: string;
   email: string;
+  emailVerified: boolean;
   displayName: string;
+  providerUserInfo: ProviderUserInfo[];
+  photoUrl: string;
   passwordHash: string;
-  // providerUserInfo:	List of JSON objects;
-  idToken: string;
-  refreshToken: string;
-  expiresIn: string;
+  passwordUpdatedAt: number;
+  validSince: string;
+  disabled: boolean;
+  lastLoginAt: string;
+  createdAt: string;
+  customAuth: boolean;
+}
+
+export interface ProviderUserInfo {
+  providerId: string;
+  federatedId: string;
 }
