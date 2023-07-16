@@ -24,6 +24,10 @@ export interface UserDataModel {
   customAuth: boolean;
 }
 
+export interface GatUpdateUserNameModel {
+  displayName: string;
+}
+
 export interface ProviderUserInfo {
   providerId: string;
   federatedId: string;

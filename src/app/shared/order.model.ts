@@ -7,4 +7,5 @@ export interface Order {
   additionalInformation: string;
   books: object[];
   id?: string;
+  orderDate: string;
 }

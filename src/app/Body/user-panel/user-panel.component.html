@@ -19,29 +19,44 @@
     </h2>
 
     <div class="container-fluid">
-        <button class="" (click)="openNgContainer = true">Set your account name</button>
-        <!-- <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button>
-        <button class="btn-exit-order" (click)="fetchOrders()">Fetch Orders</button> -->
+        <button class="" (click)="openNgContainer = 'name'">Set your account name</button>
+        <button class="btn-exit-order" (click)="fetchOrders(); openNgContainer = 'fetchOrders'">Fetch Orders</button>
         <button class="btn-exit-order" (click)="logout()">Logout</button>
-        <!-- <button class="btn-exit-order" (click)="fetchOrder()">Fetch Order</button> -->
+        <!-- <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button> -->
     </div>
-
-    <ng-container *ngIf="openNgContainer">
-
+    <ng-container *ngIf="openNgContainer === 'name'">
         <form (ngSubmit)="changeUserName()" #f="ngForm">
             <div class="mt-2 d-flex flex-column align-items-center">
-
                 <label for="setName" class="col-6 align-items-center mt-1">Set your name:</label>
-                <input type="text" id="setName" class="col-6 mt-1" name="setName" ngModel id="setName" required
-                    minlength="1" maxlength="10">
-                <!-- <p class="errorInput" *ngIf="!setName.valid && setName.touched">The length not less than 1 symbol
-                </p> -->
-
+                <input type="text" id="setName" class="col-6 mt-1" name="setName" ngModel required minlength="1"
+                    maxlength="10">
             </div>
-            <button type="submit" class="" [disabled]="!f.form.valid">Change</button>
-            <!-- (click)="openNgContainer = false" -->
+            <button type="submit" class="btn-change-name" [disabled]="!f.form.valid">Change</button>
         </form>
     </ng-container>
+    <ng-container *ngIf="openNgContainer === 'fetchOrders'">
+
+        <div>
+
+            <div *ngIf="isFetching">
+                <app-loading-spinner></app-loading-spinner>
+            </div>
+
+
+
+
+            <p *ngIf="isFetching && !error">Loading...</p>
+            <div class="alert alert-danger" *ngIf="error">
+                <p>An error occurred!</p>
+                <p>{{error}}</p>
+            </div>
+            <div *ngIf="userOrders.length > 0">
+                <p *ngIf="userOrders.length < 1 " class="userOrdersInfo"> You don't have any orders yet</p>
+            </div>
+        </div>
+
+    </ng-container>
+
 
 
 </div>

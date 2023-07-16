@@ -9,6 +9,8 @@ import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 import { AccountSettingsService } from 'src/app/service/account-settings.service';
 import { NgForm } from '@angular/forms';
 import {} from 'src/app/shared/account-user.model';
+import { Subscription } from 'rxjs';
+// import '../../shared/loading-spinner/loading-spinner.component';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -18,8 +20,9 @@ export class UserPanelComponent implements OnInit {
   isAsideOpen: boolean = false;
 
   userData: UserDataModel | null;
+  userOrders: Order[];
 
-  openNgContainer: boolean;
+  openNgContainer: string = '';
 
   @ViewChild('f', { static: false })
   signupForm: NgForm;
@@ -28,8 +31,9 @@ export class UserPanelComponent implements OnInit {
   public bagOfBooksArr: BookModel[] = [];
   public BooksModelToOrder: BookModelToOrder[] = [];
 
-  loadedOrders: Order[] = [];
-  isFetching = false;
+  isFetching: boolean;
+  private isFetchingSubscription: Subscription;
+
   error: string | null = null;
 
   constructor(
@@ -44,12 +48,21 @@ export class UserPanelComponent implements OnInit {
     this.accountSettingsService.userDataPublic.subscribe(
       (userData: UserDataModel | null) => {
         this.userData = userData;
-        console.log(this.userData);
+      }
+    );
+    this.accountSettingsService.userOrdersPublic.subscribe(
+      (userOrders: Order[]) => {
+        this.userOrders = userOrders;
       }
     );
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.isFetchingSubscription =
+      this.accountSettingsService.isFetchingPublic.subscribe((isFetching) => {
+        this.isFetching = isFetching;
+      });
+  }
   openAside() {
     this.isAsideOpen = true;
   }
@@ -60,19 +73,13 @@ export class UserPanelComponent implements OnInit {
     this.signupForm.reset();
   }
 
-  // fetchOrders() {
-  //   this.isFetching = true;
-  //   this.authAccountSettings.fetchOrders().subscribe(
-  //     (orders) => {
-  //       this.isFetching = false;
-  //       this.loadedOrders = orders;
-  //     },
-  //     (error) => {
-  //       this.error = error.message;
-  //       console.log(error);
-  //     }
-  //   );
-  // }
+  fetchOrders() {
+    this.isFetching = true;
+    console.log(this.isFetching);
+    this.accountSettingsService.fetchOrders();
+    // this.isFetching = false;
+    console.log(this.isFetching);
+  }
 
   // deleteOrders() {
   //   this.authAccountSettings.deleteOrders().subscribe(() => {
@@ -82,5 +89,9 @@ export class UserPanelComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  ngOnDestroy() {
+    this.isFetchingSubscription.unsubscribe();
   }
 }

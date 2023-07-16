@@ -33,6 +33,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   additionalInformation: string = '';
   todayDate = new Date();
   miniumDeliveryDate = this.todayDate.setDate(this.todayDate.getDate() + 2);
+
   maxCharsOfArea: number = 80;
 
   howClickedGifts: number = 0;
@@ -111,6 +112,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
       gifts: new FormArray([]),
       additionalInformation: new FormControl(),
       books: new FormArray([]),
+      orderDate: new FormControl(this.todayDate, [Validators.required]),
     });
     // this.isFetching = true;
     // this.ordersService.fetchOrders().subscribe(

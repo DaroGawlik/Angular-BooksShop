@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { tap } from 'rxjs/operators';
+import { tap, finalize } from 'rxjs/operators';
 import {
   PostUpdateUserNameModel,
   UserDataModel,
   PostUserDataModel,
+  GatUpdateUserNameModel,
 } from '../shared/account-user.model';
 import { AuthService } from './auth.service';
 import { User } from '../Body/login-panel/user.model';
+import { Order } from '../shared/order.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +21,15 @@ export class AccountSettingsService {
   private userDataSubject = new BehaviorSubject<UserDataModel | null>(null);
   public userDataPublic: Observable<UserDataModel | null> =
     this.userDataSubject.asObservable();
+
+  private userOrdersSubject = new BehaviorSubject<Order[]>([]);
+  public userOrdersPublic: Observable<Order[]> =
+    this.userOrdersSubject.asObservable();
+
+  private isFetchingSubject: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
+  public isFetchingPublic: Observable<boolean> =
+    this.isFetchingSubject.asObservable();
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.authService.user.subscribe((user) => {
@@ -30,6 +41,7 @@ export class AccountSettingsService {
   }
 
   getUserData(idToken: string) {
+    this.isFetchingSubject.next(true);
     const requestData: PostUserDataModel = {
       idToken: idToken,
     };
@@ -41,12 +53,16 @@ export class AccountSettingsService {
       .pipe(
         tap((responseData: UserDataModel) => {
           this.userDataSubject.next(responseData);
+        }),
+        finalize(() => {
+          this.isFetchingSubject.next(false);
         })
       )
       .subscribe();
   }
 
   changeUserName(newUserName: string) {
+    this.isFetchingSubject.next(true);
     const requestData: PostUpdateUserNameModel = {
       idToken: this.user?.token || '',
       displayName: newUserName,
@@ -58,50 +74,47 @@ export class AccountSettingsService {
           'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
           requestData
         )
-        .subscribe((responseData: UserDataModel) => {
-          const updatedUserData: any = {
-            ...this.userDataSubject.value,
-            displayName: responseData.displayName,
-          };
-          this.userDataSubject.next(updatedUserData);
-        });
+        .pipe(
+          tap((responseData: UserDataModel) => {
+            const updatedUserData: any = {
+              ...this.userDataSubject.value,
+              displayName: responseData.displayName,
+            };
+            this.userDataSubject.next(updatedUserData);
+          }),
+          finalize(() => {
+            this.isFetchingSubject.next(false);
+          })
+        )
+
+        .subscribe();
     }
   }
+
+  fetchOrders() {
+    // let serachParams = new HttpParams();
+    // serachParams = serachParams.append('print', 'pretty');
+    // serachParams = serachParams.append('custom', 'key');
+    this.isFetchingSubject.next(true);
+    this.http
+      .get<Order>(
+        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+        {
+          // headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
+          // params: serachParams,
+          // responseType: 'json',
+          //   can change for another format^
+        }
+      )
+      .subscribe((responseData: Order) => {
+        if (responseData) {
+          const getUserOrders: Order[] = Object.values(responseData);
+          this.userOrdersSubject.next(getUserOrders);
+        }
+      });
+    this.isFetchingSubject.next(false);
+  }
 }
-
-//   fetchOrders() {
-//     // let serachParams = new HttpParams();
-//     // serachParams = serachParams.append('print', 'pretty');
-//     // serachParams = serachParams.append('custom', 'key');
-
-//     return this.http
-//       .get<{ [key: string]: Order }>(
-//         'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
-//         {
-//           // headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
-//           // params: serachParams,
-//           // responseType: 'json',
-//           //   can change for another format^
-//         }
-//       )
-//       .pipe(
-//         map((responseData) => {
-//           const postsArray: Order[] = [];
-//           for (const key in responseData) {
-//             if (responseData.hasOwnProperty(key)) {
-//               postsArray.push({ ...responseData[key], id: key });
-//               console.log(responseData);
-//               console.log(postsArray);
-//             }
-//           }
-//           return postsArray;
-//         }),
-//         catchError((errorRes) => {
-//           // Send to analytics server
-//           return throwError(errorRes);
-//         })
-//       );
-//   }
 
 //   deleteOrders() {
 //     return this.http
