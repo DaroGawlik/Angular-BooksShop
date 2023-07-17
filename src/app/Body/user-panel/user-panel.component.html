@@ -24,8 +24,20 @@
         <button class="btn-exit-order" (click)="logout()">Logout</button>
         <!-- <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button> -->
     </div>
+
+    <ng-container *ngIf="openNgContainer === 'name' || openNgContainer === 'fetchOrders'">
+        <div *ngIf="isFetching" class="fetchingView">
+            <app-loading-spinner></app-loading-spinner>
+            <p>Loading...</p>
+        </div>
+        <div class="alert alert-danger fetchingView" *ngIf="error">
+            <p>An error occurred!</p>
+            <p>{{error}}</p>
+        </div>
+    </ng-container>
+
     <ng-container *ngIf="openNgContainer === 'name'">
-        <form (ngSubmit)="changeUserName()" #f="ngForm">
+        <form (ngSubmit)="changeUserName()" #f="ngForm" *ngIf="!isFetching">
             <div class="mt-2 d-flex flex-column align-items-center">
                 <label for="setName" class="col-6 align-items-center mt-1">Set your name:</label>
                 <input type="text" id="setName" class="col-6 mt-1" name="setName" ngModel required minlength="1"
@@ -34,27 +46,13 @@
             <button type="submit" class="btn-change-name" [disabled]="!f.form.valid">Change</button>
         </form>
     </ng-container>
+
     <ng-container *ngIf="openNgContainer === 'fetchOrders'">
-
         <div>
-
-            <div *ngIf="isFetching">
-                <app-loading-spinner></app-loading-spinner>
-            </div>
-
-
-
-
-            <p *ngIf="isFetching && !error">Loading...</p>
-            <div class="alert alert-danger" *ngIf="error">
-                <p>An error occurred!</p>
-                <p>{{error}}</p>
-            </div>
-            <div *ngIf="userOrders.length > 0">
-                <p *ngIf="userOrders.length < 1 " class="userOrdersInfo"> You don't have any orders yet</p>
+            <div *ngIf="userOrders.length === 0 && !isFetching && !error" class="userOrdersInfo">
+                You don't have any orders yet
             </div>
         </div>
-
     </ng-container>
 
 

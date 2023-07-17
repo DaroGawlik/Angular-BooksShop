@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEventType,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { tap, finalize } from 'rxjs/operators';
+import { tap, finalize, catchError } from 'rxjs/operators';
 import {
   PostUpdateUserNameModel,
   UserDataModel,
@@ -28,8 +32,12 @@ export class AccountSettingsService {
 
   private isFetchingSubject: BehaviorSubject<boolean> =
     new BehaviorSubject<boolean>(false);
-  public isFetchingPublic: Observable<boolean> =
-    this.isFetchingSubject.asObservable();
+  public isFetchingPublic = this.isFetchingSubject.asObservable();
+
+  private errorSubject: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  public errorPublic = this.errorSubject.asObservable();
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.authService.user.subscribe((user) => {
@@ -51,6 +59,7 @@ export class AccountSettingsService {
         requestData
       )
       .pipe(
+        catchError(this.handleError),
         tap((responseData: UserDataModel) => {
           this.userDataSubject.next(responseData);
         }),
@@ -75,6 +84,7 @@ export class AccountSettingsService {
           requestData
         )
         .pipe(
+          catchError(this.handleError),
           tap((responseData: UserDataModel) => {
             const updatedUserData: any = {
               ...this.userDataSubject.value,
@@ -86,7 +96,6 @@ export class AccountSettingsService {
             this.isFetchingSubject.next(false);
           })
         )
-
         .subscribe();
     }
   }
@@ -106,13 +115,29 @@ export class AccountSettingsService {
           //   can change for another format^
         }
       )
-      .subscribe((responseData: Order) => {
-        if (responseData) {
-          const getUserOrders: Order[] = Object.values(responseData);
-          this.userOrdersSubject.next(getUserOrders);
-        }
-      });
-    this.isFetchingSubject.next(false);
+      .pipe(
+        catchError(this.handleError),
+        tap((responseData: Order) => {
+          if (responseData) {
+            const getUserOrders: Order[] = Object.values(responseData);
+            this.userOrdersSubject.next(getUserOrders);
+          }
+        }),
+        finalize(() => {
+          this.isFetchingSubject.next(false);
+        })
+      )
+      .subscribe();
+  }
+
+  private handleError(errorRes: HttpErrorResponse) {
+    console.log(errorRes);
+    let errorMessage = 'An unknown error occurred!';
+    if (errorRes.error && errorRes.error.error) {
+      errorMessage = 'Error occurred: ' + errorRes.error.error.message;
+    }
+    this.errorSubject.next(errorMessage);
+    return throwError(errorMessage);
   }
 }
 

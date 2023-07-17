@@ -28,3 +28,21 @@
   text-align: center;
   font-size: 2rem;
 }
+.fetchingView {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  padding: 20px;
+}
+
+.fetchingView p {
+  margin: 10px 0;
+}
+
+.alert-danger {
+  color: #721c24;
+  padding: 10px;
+  margin: 10px 0;
+}

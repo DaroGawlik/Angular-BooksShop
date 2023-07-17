@@ -32,7 +32,6 @@ export class UserPanelComponent implements OnInit {
   public BooksModelToOrder: BookModelToOrder[] = [];
 
   isFetching: boolean;
-  private isFetchingSubscription: Subscription;
 
   error: string | null = null;
 
@@ -55,14 +54,19 @@ export class UserPanelComponent implements OnInit {
         this.userOrders = userOrders;
       }
     );
+    this.accountSettingsService.isFetchingPublic.subscribe(
+      (isFetching: boolean) => {
+        this.isFetching = isFetching;
+      }
+    );
+    this.accountSettingsService.errorPublic.subscribe(
+      (error: string | null) => {
+        this.error = error;
+      }
+    );
   }
 
-  ngOnInit() {
-    this.isFetchingSubscription =
-      this.accountSettingsService.isFetchingPublic.subscribe((isFetching) => {
-        this.isFetching = isFetching;
-      });
-  }
+  ngOnInit() {}
   openAside() {
     this.isAsideOpen = true;
   }
@@ -74,11 +78,7 @@ export class UserPanelComponent implements OnInit {
   }
 
   fetchOrders() {
-    this.isFetching = true;
-    console.log(this.isFetching);
     this.accountSettingsService.fetchOrders();
-    // this.isFetching = false;
-    console.log(this.isFetching);
   }
 
   // deleteOrders() {
@@ -91,7 +91,7 @@ export class UserPanelComponent implements OnInit {
     this.authService.logout();
   }
 
-  ngOnDestroy() {
-    this.isFetchingSubscription.unsubscribe();
-  }
+  // ngOnDestroy() {
+  //   this.isFetchingSubscription.unsubscribe();
+  // }
 }
