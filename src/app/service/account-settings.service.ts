@@ -34,9 +34,9 @@ export class AccountSettingsService {
     new BehaviorSubject<boolean>(false);
   public isFetchingPublic = this.isFetchingSubject.asObservable();
 
-  private errorSubject: BehaviorSubject<string | null> = new BehaviorSubject<
-    string | null
-  >(null);
+  private errorSubject: BehaviorSubject<string> = new BehaviorSubject<string>(
+    ''
+  );
   public errorPublic = this.errorSubject.asObservable();
 
   constructor(private http: HttpClient, private authService: AuthService) {
@@ -59,7 +59,7 @@ export class AccountSettingsService {
         requestData
       )
       .pipe(
-        catchError(this.handleError),
+        // catchError(this.handleError),
         tap((responseData: UserDataModel) => {
           this.userDataSubject.next(responseData);
         }),
@@ -84,7 +84,7 @@ export class AccountSettingsService {
           requestData
         )
         .pipe(
-          catchError(this.handleError),
+          // catchError(this.handleError),
           tap((responseData: UserDataModel) => {
             const updatedUserData: any = {
               ...this.userDataSubject.value,
@@ -130,15 +130,14 @@ export class AccountSettingsService {
       .subscribe();
   }
 
-  private handleError(errorRes: HttpErrorResponse) {
-    console.log(errorRes);
+  private handleError = (errorRes: HttpErrorResponse) => {
     let errorMessage = 'An unknown error occurred!';
     if (errorRes.error && errorRes.error.error) {
       errorMessage = 'Error occurred: ' + errorRes.error.error.message;
     }
     this.errorSubject.next(errorMessage);
     return throwError(errorMessage);
-  }
+  };
 }
 
 //   deleteOrders() {

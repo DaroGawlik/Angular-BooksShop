@@ -33,7 +33,7 @@ export class UserPanelComponent implements OnInit {
 
   isFetching: boolean;
 
-  error: string | null = null;
+  error: string;
 
   constructor(
     private bookService: BooksService,
@@ -59,11 +59,9 @@ export class UserPanelComponent implements OnInit {
         this.isFetching = isFetching;
       }
     );
-    this.accountSettingsService.errorPublic.subscribe(
-      (error: string | null) => {
-        this.error = error;
-      }
-    );
+    this.accountSettingsService.errorPublic.subscribe((error: string) => {
+      this.error = error;
+    });
   }
 
   ngOnInit() {}
