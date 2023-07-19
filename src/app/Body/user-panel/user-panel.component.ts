@@ -8,8 +8,9 @@ import { BookModel } from 'src/app/shared/book.model';
 import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 import { AccountSettingsService } from 'src/app/service/account-settings.service';
 import { NgForm } from '@angular/forms';
+import { Observable, Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
-
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -19,7 +20,7 @@ export class UserPanelComponent implements OnInit {
   isAsideOpen: boolean = false;
 
   userData: UserDataModel | null;
-  userOrders: Order[] = [];
+  userOrders: Order[] | null;
   selectedUserOrder: object;
 
   openNgContainer: string = '';
@@ -32,7 +33,6 @@ export class UserPanelComponent implements OnInit {
   public BooksModelToOrder: BookModelToOrder[] = [];
 
   isFetching: boolean;
-
   error: string;
 
   constructor(
@@ -50,9 +50,8 @@ export class UserPanelComponent implements OnInit {
       }
     );
     this.accountSettingsService.userOrdersPublic.subscribe(
-      (userOrders: Order[]) => {
+      (userOrders: Order[] | null) => {
         this.userOrders = userOrders;
-        console.log(this.userOrders);
       }
     );
     this.accountSettingsService.isFetchingPublic.subscribe(
@@ -77,7 +76,10 @@ export class UserPanelComponent implements OnInit {
   }
 
   fetchOrders() {
-    this.accountSettingsService.fetchOrders();
+    if (this.accountSettingsService.canFetchOrders.getValue()) {
+      this.accountSettingsService.fetchOrders();
+      this.accountSettingsService.canFetchOrders.next(false);
+    }
   }
 
   selectUserOrder(userOrder: object) {
