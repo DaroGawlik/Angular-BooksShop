@@ -8,9 +8,8 @@ import { BookModel } from 'src/app/shared/book.model';
 import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 import { AccountSettingsService } from 'src/app/service/account-settings.service';
 import { NgForm } from '@angular/forms';
-import {} from 'src/app/shared/account-user.model';
-import { Subscription } from 'rxjs';
-// import '../../shared/loading-spinner/loading-spinner.component';
+import { DatePipe } from '@angular/common';
+
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -20,7 +19,8 @@ export class UserPanelComponent implements OnInit {
   isAsideOpen: boolean = false;
 
   userData: UserDataModel | null;
-  userOrders: Order[];
+  userOrders: Order[] = [];
+  selectedUserOrder: object;
 
   openNgContainer: string = '';
 
@@ -52,6 +52,7 @@ export class UserPanelComponent implements OnInit {
     this.accountSettingsService.userOrdersPublic.subscribe(
       (userOrders: Order[]) => {
         this.userOrders = userOrders;
+        console.log(this.userOrders);
       }
     );
     this.accountSettingsService.isFetchingPublic.subscribe(
@@ -79,6 +80,9 @@ export class UserPanelComponent implements OnInit {
     this.accountSettingsService.fetchOrders();
   }
 
+  selectUserOrder(userOrder: object) {
+    this.selectedUserOrder = userOrder;
+  }
   // deleteOrders() {
   //   this.authAccountSettings.deleteOrders().subscribe(() => {
   //     this.loadedOrders = [];
@@ -87,6 +91,10 @@ export class UserPanelComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  removeError() {
+    this.accountSettingsService.errorPublic.next('');
   }
 
   // ngOnDestroy() {

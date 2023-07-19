@@ -19,9 +19,10 @@
     </h2>
 
     <div class="container-fluid">
-        <button class="" (click)="openNgContainer = 'name'">Set your account name</button>
-        <button class="btn-exit-order" (click)="fetchOrders(); openNgContainer = 'fetchOrders'">Fetch Orders</button>
-        <button class="btn-exit-order" (click)="logout()">Logout</button>
+        <button class="" (click)="openNgContainer = 'name'; removeError()">Set your account name</button>
+        <button class="btn-exit-order" (click)="fetchOrders(); removeError(); openNgContainer = 'fetchOrders'">Fetch
+            Orders</button>
+        <button class="btn-exit-order" (click)="logout(); removeError()">Logout</button>
         <!-- <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button> -->
     </div>
 
@@ -32,7 +33,7 @@
         </div>
         <div class="alert alert-danger fetchingView" *ngIf="error">
             <p>An error occurred!</p>
-            <p>{{error}}</p>
+            <p class="alert-danger-errorMsg">{{error}}</p>
         </div>
     </ng-container>
 
@@ -52,11 +53,26 @@
             <div *ngIf="userOrders.length === 0 && !isFetching && !error" class="userOrdersInfo">
                 You don't have any orders yet
             </div>
+
+            <div *ngIf="userOrders.length >= 1 && !isFetching && !error">
+                <div class="m-3 text-center font-weight-bold" style="font-size: 1.2rem;">Check your Orders:</div>
+                <div class="container row m-0 p-0">
+                    <div class="col-4 userOrderEls">
+                        <div *ngFor="let userOrderEl of userOrders">
+                            <div class="userOrderEl p-1" [ngClass]="{ 'selected': userOrderEl === selectedUserOrder }"
+                                (click)="selectUserOrder(userOrderEl)">
+                                {{ userOrderEl.orderDate | date: 'dd.MM.yyyy' }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8 m-0 p-0">
+                        <app-panel-get-orders *ngIf="selectedUserOrder"
+                            [userOrder]="selectedUserOrder"></app-panel-get-orders>
+                    </div>
+                </div>
+            </div>
         </div>
     </ng-container>
-
-
-
 </div>
 
 

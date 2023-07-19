@@ -33,16 +33,37 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  max-height: 200px;
   padding: 20px;
+  margin: 1rem 1rem;
 }
 
 .fetchingView p {
   margin: 10px 0;
 }
+.alert-danger-errorMsg {
+  font-size: 0.6rem;
+}
 
-.alert-danger {
-  color: #721c24;
+.userOrderEls {
+  padding: 0rem 0 0 1rem;
+}
+.userOrderEl {
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.userOrderEl {
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border-radius: 4px;
   padding: 10px;
-  margin: 10px 0;
+  margin-bottom: 5px;
+  transition: background-color 0.2s;
+}
+
+.userOrderEl.selected {
+  background-color: #ffd166;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
