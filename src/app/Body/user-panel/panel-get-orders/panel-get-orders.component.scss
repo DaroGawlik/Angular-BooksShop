@@ -1,0 +1,35 @@
+.order-details {
+  font-size: 1.1rem;
+  padding-right: 0.7rem;
+}
+
+.order-details > div {
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.order-details h3 {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.order-details p {
+  margin-bottom: 0.1rem;
+  font-size: 0.8rem;
+}
+
+.books li,
+.gifts li {
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+  padding-right: 0.3rem;
+}
+.books ul,
+.gifts ul {
+  margin-bottom: 4px;
+}
+
+.info__text {
+  word-wrap: break-word; /* zawijaj długi tekst do następnej linijki */
+  white-space: normal; /* nie utrzymuj tekstu w jednej linii, zawijaj go */
+}

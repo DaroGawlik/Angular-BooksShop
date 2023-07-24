@@ -31,6 +31,8 @@ import { LoginPanelComponent } from './Body/login-panel/login-panel.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AccountPanelComponent } from './Body/sales-window/aside/account-panel/account-panel.component';
 import { UserPanelComponent } from './Body/user-panel/user-panel.component';
+import { PanelGetOrdersComponent } from './Body/user-panel/panel-get-orders/panel-get-orders.component';
+import { AccountSettingsService } from './service/account-settings.service';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { UserPanelComponent } from './Body/user-panel/user-panel.component';
     LoadingSpinnerComponent,
     AccountPanelComponent,
     UserPanelComponent,
+    PanelGetOrdersComponent,
   ],
   imports: [
     BrowserModule,

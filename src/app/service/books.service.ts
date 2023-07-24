@@ -50,6 +50,6 @@ export class BooksService {
   deleteAllBookFromBag() {
     this.bagOfBooks = [];
     this.bagOfBooksObs.next(this.bagOfBooks.slice());
-    this.totalCost = 0;
+    this.totalCostObs.next(0);
   }
 }

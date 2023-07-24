@@ -9,7 +9,5 @@ export class PanelGetOrdersComponent implements OnInit {
   @Input() userOrder: any;
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.userOrder);
-  }
+  ngOnInit(): void {}
 }

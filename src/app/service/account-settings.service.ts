@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import {
   HttpClient,
   HttpEventType,
@@ -26,18 +26,14 @@ export class AccountSettingsService {
   public userDataPublic: Observable<UserDataModel | null> =
     this.userDataSubject.asObservable();
 
-  private userOrdersSubject = new BehaviorSubject<Order[]>([]);
-  public userOrdersPublic: Observable<Order[]> =
+  private userOrdersSubject = new BehaviorSubject<Order[] | null>(null);
+  public userOrdersPublic: Observable<Order[] | null> =
     this.userOrdersSubject.asObservable();
 
-  private isFetchingSubject: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
-  public isFetchingPublic = this.isFetchingSubject.asObservable();
+  public canFetchOrders = new BehaviorSubject<boolean>(true);
 
-  private errorSubject: BehaviorSubject<string> = new BehaviorSubject<string>(
-    ''
-  );
-  public errorPublic = this.errorSubject.asObservable();
+  public isFetchingPublic = new Subject<boolean>();
+  public errorPublic = new Subject<string>();
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.authService.user.subscribe((user) => {
@@ -49,7 +45,7 @@ export class AccountSettingsService {
   }
 
   getUserData(idToken: string) {
-    this.isFetchingSubject.next(true);
+    this.isFetchingPublic.next(true);
     const requestData: PostUserDataModel = {
       idToken: idToken,
     };
@@ -59,19 +55,19 @@ export class AccountSettingsService {
         requestData
       )
       .pipe(
-        // catchError(this.handleError),
+        catchError(this.handleError),
         tap((responseData: UserDataModel) => {
           this.userDataSubject.next(responseData);
         }),
         finalize(() => {
-          this.isFetchingSubject.next(false);
+          this.isFetchingPublic.next(false);
         })
       )
       .subscribe();
   }
 
   changeUserName(newUserName: string) {
-    this.isFetchingSubject.next(true);
+    this.isFetchingPublic.next(true);
     const requestData: PostUpdateUserNameModel = {
       idToken: this.user?.token || '',
       displayName: newUserName,
@@ -84,7 +80,7 @@ export class AccountSettingsService {
           requestData
         )
         .pipe(
-          // catchError(this.handleError),
+          catchError(this.handleError),
           tap((responseData: UserDataModel) => {
             const updatedUserData: any = {
               ...this.userDataSubject.value,
@@ -93,7 +89,7 @@ export class AccountSettingsService {
             this.userDataSubject.next(updatedUserData);
           }),
           finalize(() => {
-            this.isFetchingSubject.next(false);
+            this.isFetchingPublic.next(false);
           })
         )
         .subscribe();
@@ -104,7 +100,7 @@ export class AccountSettingsService {
     // let serachParams = new HttpParams();
     // serachParams = serachParams.append('print', 'pretty');
     // serachParams = serachParams.append('custom', 'key');
-    this.isFetchingSubject.next(true);
+    this.isFetchingPublic.next(true);
     this.http
       .get<Order>(
         'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
@@ -119,43 +115,49 @@ export class AccountSettingsService {
         catchError(this.handleError),
         tap((responseData: Order) => {
           if (responseData) {
-            const getUserOrders: Order[] = Object.values(responseData);
+            const getUserOrders: Order[] = Object.keys(responseData).map(
+              (id) => ({
+                id,
+                ...responseData[id],
+              })
+            );
             this.userOrdersSubject.next(getUserOrders);
           }
         }),
         finalize(() => {
-          this.isFetchingSubject.next(false);
+          this.isFetchingPublic.next(false);
+        })
+      )
+      .subscribe();
+  }
+
+  deleteOrder(idOrder: string) {
+    this.isFetchingPublic.next(true);
+    this.http
+      .delete<{}>(
+        `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts/${idOrder}.json/`
+      )
+      .pipe(
+        catchError(this.handleError),
+        tap((responseData: any) => {
+          // console.log(responseData);
+        }),
+        finalize(() => {
+          const currentOrders = this.userOrdersSubject.getValue() ?? [];
+          const filteredOrders = currentOrders.filter(
+            (order) => order.id !== idOrder
+          );
+
+          this.userOrdersSubject.next(filteredOrders);
+          this.isFetchingPublic.next(false);
         })
       )
       .subscribe();
   }
 
   private handleError = (errorRes: HttpErrorResponse) => {
-    let errorMessage = 'An unknown error occurred!';
-    if (errorRes.error && errorRes.error.error) {
-      errorMessage = 'Error occurred: ' + errorRes.error.error.message;
-    }
-    this.errorSubject.next(errorMessage);
+    let errorMessage = errorRes.message;
+    this.errorPublic.next(errorMessage);
     return throwError(errorMessage);
   };
 }
-
-//   deleteOrders() {
-//     return this.http
-//       .delete(
-//         'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
-//         { observe: 'events' }
-//       )
-//       .pipe(
-//         tap((event) => {
-//           console.log(event);
-//           if (event.type === HttpEventType.Sent) {
-//             //...
-//           }
-//           if (event.type === HttpEventType.Response) {
-//             console.log(event.body);
-//           }
-//         })
-//       );
-//   }
-// }

@@ -1,5 +1,5 @@
 <div routerLinkActive='active' class="m-0 p-0 pb-4"
-    style="background-image: linear-gradient(to left, #d7d2cc 0%, #304352 100%); position: relative; height: 100vh;">
+    style="background-image: linear-gradient(to left, #d7d2cc 0%, #304352 100%); position: relative; min-height: 100vh;">
     <!-- BAG-BAR -->
     <div class="m-0 p-0 bagBar">
         <svg class='fontawesomesvg' class="fa fa-solid fa-bars" *ngIf="!isAsideOpen" (click)="openAside()"
@@ -48,7 +48,7 @@
         </form>
     </ng-container>
 
-    <ng-container *ngIf="openNgContainer === 'fetchOrders'">
+    <ng-container *ngIf="openNgContainer === 'fetchOrders'" class="userOrders">
         <div>
             <div *ngIf="userOrders?.length === 0 && !isFetching && !error" class="userOrdersInfo">
                 You don't have any orders yet
@@ -58,6 +58,9 @@
                 <div class="m-3 text-center font-weight-bold" style="font-size: 1.2rem;">Check your Orders:</div>
                 <div class="container row m-0 p-0">
                     <div class="col-4 userOrderEls">
+                        <button *ngIf="selectedUserOrder" class="btn-cancel-order"
+                            (click)="cancelOrder(selectedUserOrder)">Cancel
+                            selected</button>
                         <div *ngFor="let userOrderEl of userOrders">
                             <div class="userOrderEl p-1" [ngClass]="{ 'selected': userOrderEl === selectedUserOrder }"
                                 (click)="selectUserOrder(userOrderEl)">

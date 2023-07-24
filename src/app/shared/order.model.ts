@@ -1,4 +1,5 @@
 export interface Order {
+  [key: string]: any;
   orderData: object;
   deliveryDate: string;
   deliveryAdrress: object;

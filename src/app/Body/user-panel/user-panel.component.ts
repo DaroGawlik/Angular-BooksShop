@@ -21,7 +21,7 @@ export class UserPanelComponent implements OnInit {
 
   userData: UserDataModel | null;
   userOrders: Order[] | null;
-  selectedUserOrder: object;
+  selectedUserOrder: Order | null;
 
   openNgContainer: string = '';
 
@@ -81,10 +81,15 @@ export class UserPanelComponent implements OnInit {
       this.accountSettingsService.canFetchOrders.next(false);
     }
   }
-
-  selectUserOrder(userOrder: object) {
-    this.selectedUserOrder = userOrder;
+  selectUserOrder(userOrder: Order) {
+    this.selectedUserOrder =
+      this.selectedUserOrder === userOrder ? null : userOrder;
   }
+
+  cancelOrder(userOrder: Order) {
+    userOrder?.id && this.accountSettingsService.deleteOrder(userOrder.id);
+  }
+
   // deleteOrders() {
   //   this.authAccountSettings.deleteOrders().subscribe(() => {
   //     this.loadedOrders = [];

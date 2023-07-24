@@ -1,1 +1,46 @@
-<div>{{userOrder.additionalInformation}}</div>
+<div class="order-details">
+    <div class="order-data">
+        <h3>Order Data</h3>
+        <p><strong>Name:</strong> {{ userOrder.orderData.name }}</p>
+        <p><strong>Surname:</strong> {{ userOrder.orderData.surname }}</p>
+    </div>
+    <div class="books">
+        <h3>Books</h3>
+        <ul>
+            <li *ngFor="let book of userOrder.books">
+                {{ book.amount }} x {{ book.title }} by {{ book.author }}
+            </li>
+        </ul>
+    </div>
+
+    <div class="delivery-address">
+        <h3>Delivery Address</h3>
+        <p><strong>Street:</strong> {{ userOrder.deliveryAdrress.street }}</p>
+        <p><strong>House Number:</strong> {{ userOrder.deliveryAdrress.houseNumber }}</p>
+        <p><strong>Flat Number:</strong> {{ userOrder.deliveryAdrress.flatNumber }}</p>
+    </div>
+
+    <div class="delivery-date">
+        <h3>Delivery Date</h3>
+        <p>{{ userOrder.deliveryDate | date: 'dd.MM.yyyy' }}</p>
+    </div>
+
+    <div class="gifts">
+        <h3>Gifts</h3>
+        <ul>
+            <li *ngFor="let gift of userOrder.gifts">{{ gift }}</li>
+        </ul>
+    </div>
+
+
+
+    <div class="payment-type">
+        <h3>Payment Type</h3>
+        <p>{{ userOrder.paymentType }}</p>
+    </div>
+    <div class="additional-info">
+        <h3>Additional Information</h3>
+        <p class="info__text">{{ userOrder.additionalInformation }}</p>
+    </div>
+
+</div>
