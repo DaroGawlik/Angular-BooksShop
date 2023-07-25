@@ -20,10 +20,10 @@
 
     <div class="container-fluid">
         <button class="" (click)="openNgContainer = 'name'; removeError()">Set your account name</button>
-        <button class="btn-exit-order" (click)="fetchOrders(); removeError(); openNgContainer = 'fetchOrders'">Fetch
+        <button class="btn-fetch-orders" (click)="fetchOrders(); removeError(); openNgContainer = 'fetchOrders'">Fetch
             Orders</button>
-        <button class="btn-exit-order" (click)="logout(); removeError()">Logout</button>
-        <!-- <button class="btn-exit-order" (click)="deleteOrders()">Delete Orders</button> -->
+        <button class="btn-exit-userPanel" (click)="logout(); removeError()">Logout</button>
+        <button class="btn-delete-userAccount" (click)="deleteAccount()">Delete Account</button>
     </div>
 
     <ng-container *ngIf="openNgContainer === 'name' || openNgContainer === 'fetchOrders'">
@@ -77,19 +77,3 @@
         </div>
     </ng-container>
 </div>
-
-
-<!-- <div class="col-xs-12 col-md-6 col-md-offset-3">
-    <p *ngIf="loadedOrders.length < 1 && !isFetching">No posts available!</p>
-    <ul class="list-group" *ngIf="loadedOrders.length >= 1 && !isFetching">
-        <li class="list-group-item" *ngFor="let order of loadedOrders">
-            <h3>{{ order.id }}</h3>
-            <p>{{ order.books }}</p>
-        </li>
-    </ul>
-    <p *ngIf="isFetching && !error">Loading...</p>
-    <div class="alert alert-danger" *ngIf="error">
-        <p>An error occurred!</p>
-        <p>{{error}}</p>
-    </div>
-</div> -->

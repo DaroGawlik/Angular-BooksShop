@@ -11,6 +11,7 @@ import { NgForm } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -38,6 +39,7 @@ export class UserPanelComponent implements OnInit {
   constructor(
     private bookService: BooksService,
     private authService: AuthService,
+    private router: Router,
     private accountSettingsService: AccountSettingsService
   ) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
@@ -90,11 +92,10 @@ export class UserPanelComponent implements OnInit {
     userOrder?.id && this.accountSettingsService.deleteOrder(userOrder.id);
   }
 
-  // deleteOrders() {
-  //   this.authAccountSettings.deleteOrders().subscribe(() => {
-  //     this.loadedOrders = [];
-  //   });
-  // }
+  deleteAccount() {
+    this.accountSettingsService.deleteAccountApi();
+    this.logout();
+  }
 
   logout() {
     this.authService.logout();
@@ -103,8 +104,4 @@ export class UserPanelComponent implements OnInit {
   removeError() {
     this.accountSettingsService.errorPublic.next('');
   }
-
-  // ngOnDestroy() {
-  //   this.isFetchingSubscription.unsubscribe();
-  // }
 }

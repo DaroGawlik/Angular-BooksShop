@@ -155,6 +155,28 @@ export class AccountSettingsService {
       .subscribe();
   }
 
+  deleteAccountApi() {
+    this.isFetchingPublic.next(true);
+    const requestData: PostUserDataModel = {
+      idToken: this.user?.token || '',
+    };
+    this.http
+      .post<PostUserDataModel>(
+        'https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
+        requestData
+      )
+      .pipe(
+        catchError(this.handleError),
+        tap((responseData: any) => {
+          console.log(responseData);
+        }),
+        finalize(() => {
+          this.isFetchingPublic.next(false);
+        })
+      )
+      .subscribe();
+  }
+
   private handleError = (errorRes: HttpErrorResponse) => {
     let errorMessage = errorRes.message;
     this.errorPublic.next(errorMessage);

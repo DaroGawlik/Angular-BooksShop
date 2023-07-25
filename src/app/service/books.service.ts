@@ -22,7 +22,6 @@ export class BooksService {
   addTobagList(book: BookModel) {
     this.bagOfBooks.push(book);
     this.bagOfBooksObs.next(this.bagOfBooks);
-
     this.totalCost += book.price;
     this.totalCostObs.next(this.totalCost);
   }
@@ -50,6 +49,7 @@ export class BooksService {
   deleteAllBookFromBag() {
     this.bagOfBooks = [];
     this.bagOfBooksObs.next(this.bagOfBooks.slice());
-    this.totalCostObs.next(0);
+    this.totalCost = 0;
+    this.totalCostObs.next(this.totalCost);
   }
 }
