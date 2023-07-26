@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, Subject, throwError, of, concat } from 'rxjs';
 import {
   HttpClient,
   HttpEventType,
   HttpErrorResponse,
 } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { tap, finalize, catchError } from 'rxjs/operators';
+import {
+  tap,
+  finalize,
+  catchError,
+  filter,
+  switchMap,
+  concatMap,
+} from 'rxjs/operators';
 import {
   PostUpdateUserNameModel,
   UserDataModel,
@@ -16,7 +23,6 @@ import {
 import { AuthService } from './auth.service';
 import { User } from '../Body/login-panel/user.model';
 import { Order } from '../shared/order.model';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -101,80 +107,95 @@ export class AccountSettingsService {
     // serachParams = serachParams.append('print', 'pretty');
     // serachParams = serachParams.append('custom', 'key');
     this.isFetchingPublic.next(true);
-    this.http
-      .get<Order>(
-        'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
-        {
-          // headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
-          // params: serachParams,
-          // responseType: 'json',
-          //   can change for another format^
-        }
-      )
+    this.authService.user
       .pipe(
+        filter((user): user is User => !!user), // Filtrujemy użytkowników, żeby pominąć null i undefined
+        switchMap((user) =>
+          this.http.get<Order>(
+            `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${user.id}.json`,
+            {
+              // headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
+              // params: serachParams,
+              // responseType: 'json',
+              //   can change for another format^
+            }
+          )
+        ),
         catchError(this.handleError),
         tap((responseData: Order) => {
-          if (responseData) {
-            const getUserOrders: Order[] = Object.keys(responseData).map(
-              (id) => ({
-                id,
-                ...responseData[id],
-              })
-            );
-            this.userOrdersSubject.next(getUserOrders);
-          }
-        }),
-        finalize(() => {
+          const getUserOrders: Order[] = Object.keys(responseData).map(
+            (id) => ({
+              id,
+              ...responseData[id],
+            })
+          );
+          this.userOrdersSubject.next(getUserOrders);
           this.isFetchingPublic.next(false);
         })
+        // finalize(() => {
+        //   this.isFetchingPublic.next(false);
+        //   // NIE WYWOŁUJE SIĘ
+        // })
       )
       .subscribe();
   }
 
   deleteOrder(idOrder: string) {
     this.isFetchingPublic.next(true);
-    this.http
-      .delete<{}>(
-        `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts/${idOrder}.json/`
-      )
-      .pipe(
-        catchError(this.handleError),
-        tap((responseData: any) => {
-          // console.log(responseData);
-        }),
-        finalize(() => {
-          const currentOrders = this.userOrdersSubject.getValue() ?? [];
-          const filteredOrders = currentOrders.filter(
-            (order) => order.id !== idOrder
-          );
+    if (this.user) {
+      this.http
+        .delete<{}>(
+          `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${this.user.id}/${idOrder}.json`
+        )
+        .pipe(
+          catchError(this.handleError),
+          tap((responseData: any) => {
+            // console.log(responseData);
+          }),
+          finalize(() => {
+            const currentOrders = this.userOrdersSubject.getValue() ?? [];
+            const filteredOrders = currentOrders.filter(
+              (order) => order.id !== idOrder
+            );
 
-          this.userOrdersSubject.next(filteredOrders);
-          this.isFetchingPublic.next(false);
-        })
-      )
-      .subscribe();
+            this.userOrdersSubject.next(filteredOrders);
+            this.isFetchingPublic.next(false);
+          })
+        )
+        .subscribe();
+    }
   }
 
   deleteAccountApi() {
     this.isFetchingPublic.next(true);
-    const requestData: PostUserDataModel = {
-      idToken: this.user?.token || '',
-    };
-    this.http
-      .post<PostUserDataModel>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
-        requestData
-      )
-      .pipe(
-        catchError(this.handleError),
-        tap((responseData: any) => {
-          console.log(responseData);
-        }),
-        finalize(() => {
-          this.isFetchingPublic.next(false);
-        })
-      )
-      .subscribe();
+
+    if (this.user) {
+      const requestData: PostUserDataModel = {
+        idToken: this.user.token || '',
+      };
+
+      this.http
+        .delete<{}>(
+          `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${this.user.id}.json`
+        )
+        .pipe(
+          catchError(this.handleError),
+          tap((responseData: any) => {
+            if (responseData == null) {
+              this.http
+                .post<PostUserDataModel>(
+                  'https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
+                  requestData
+                )
+                .subscribe();
+            }
+          }),
+          finalize(() => {
+            this.isFetchingPublic.next(false);
+          })
+        )
+        .subscribe();
+    }
   }
 
   private handleError = (errorRes: HttpErrorResponse) => {

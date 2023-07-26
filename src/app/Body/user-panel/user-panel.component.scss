@@ -43,6 +43,10 @@
 }
 .alert-danger-errorMsg {
   font-size: 0.6rem;
+  max-width: 200px; /* Ustaw maksymalną szerokość */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; /* Pokaż "..." na końcu, jeśli tekst zostanie przycięty */
 }
 
 .userOrderEls {
