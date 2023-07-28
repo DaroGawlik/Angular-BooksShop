@@ -18,7 +18,7 @@
         {{ userData && userData.displayName ? userData.displayName : userData && userData.email }}
     </h2>
 
-    <div class="container-fluid">
+    <div class="panelBtns">
         <button class="" (click)="openNgContainer = 'name'; removeError()">Set your account name</button>
         <button class="btn-fetch-orders" (click)="fetchOrders(); removeError(); openNgContainer = 'fetchOrders'">Fetch
             Orders</button>
@@ -37,20 +37,20 @@
         </div>
     </ng-container>
 
-    <ng-container *ngIf="openNgContainer === 'name'">
+    <ng-container *ngIf="openNgContainer === 'name'" class="containerSetName">
         <form (ngSubmit)="changeUserName()" #f="ngForm" *ngIf="!isFetching">
             <div class="mt-2 d-flex flex-column align-items-center">
-                <label for="setName" class="col-6 align-items-center mt-1">Set your name:</label>
-                <input type="text" id="setName" class="col-6 mt-1" name="setName" ngModel required minlength="1"
-                    maxlength="10">
+                <label for="setName" class="align-items-center mt-1">Set your name:</label>
+                <input type="text" id="setName" class="inputSetName col-6 mt-1" name="setName" ngModel required
+                    minlength="1" maxlength="10">
+                <button type="submit" class="btn-change-name" [disabled]="!f.form.valid">Change</button>
             </div>
-            <button type="submit" class="btn-change-name" [disabled]="!f.form.valid">Change</button>
         </form>
     </ng-container>
 
-    <ng-container *ngIf="openNgContainer === 'fetchOrders'" class="userOrders">
-        <div>
-            <div *ngIf="userOrders?.length === 0 && !isFetching && !error" class="userOrdersInfo">
+    <ng-container *ngIf="openNgContainer === 'fetchOrders'">
+        <div class=" userOrders">
+            <div *ngIf="userOrders == null || userOrders.length === 0 && !isFetching && !error" class="userOrdersInfo">
                 You don't have any orders yet
             </div>
 

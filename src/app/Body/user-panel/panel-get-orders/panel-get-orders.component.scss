@@ -33,3 +33,9 @@
   word-wrap: break-word; /* zawijaj długi tekst do następnej linijki */
   white-space: normal; /* nie utrzymuj tekstu w jednej linii, zawijaj go */
 }
+
+@media screen and (min-width: 900px) {
+  h3 {
+    margin-top: 1rem;
+  }
+}

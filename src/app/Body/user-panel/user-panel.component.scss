@@ -19,8 +19,30 @@
   }
 }
 
+.panelBtns {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 300px;
+  margin: auto;
+
+  button {
+    width: 200px;
+    margin: 5px 0;
+  }
+}
+
+.inputSetName {
+  width: 200px;
+}
+
 .btn-change-name {
-  margin: 1rem 0 0 1rem;
+  margin-top: 1rem;
+}
+
+.userOrders {
+  width: 320px;
+  margin: auto;
 }
 
 .userOrdersInfo {
@@ -43,10 +65,10 @@
 }
 .alert-danger-errorMsg {
   font-size: 0.6rem;
-  max-width: 200px; /* Ustaw maksymalną szerokość */
+  max-width: 200px;
   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis; /* Pokaż "..." na końcu, jeśli tekst zostanie przycięty */
+  text-overflow: ellipsis;
 }
 
 .userOrderEls {
@@ -70,4 +92,25 @@
 .userOrderEl.selected {
   background-color: #ffd166;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (min-width: 500px) {
+  .panelBtns {
+    width: 440px;
+
+    button {
+      margin: 5px 5px 5px 5px;
+    }
+  }
+}
+@media screen and (min-width: 900px) {
+  .panelBtns {
+    width: 880px;
+  }
+  .userOrders {
+    width: 500px;
+  }
+  .userOrderEl {
+    width: 130px;
+  }
 }

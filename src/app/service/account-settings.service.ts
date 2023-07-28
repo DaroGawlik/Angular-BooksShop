@@ -123,13 +123,15 @@ export class AccountSettingsService {
         ),
         catchError(this.handleError),
         tap((responseData: Order) => {
-          const getUserOrders: Order[] = Object.keys(responseData).map(
-            (id) => ({
-              id,
-              ...responseData[id],
-            })
-          );
-          this.userOrdersSubject.next(getUserOrders);
+          if (responseData) {
+            const getUserOrders: Order[] = Object.keys(responseData).map(
+              (id) => ({
+                id,
+                ...responseData[id],
+              })
+            );
+            this.userOrdersSubject.next(getUserOrders);
+          }
           this.isFetchingPublic.next(false);
         })
         // finalize(() => {

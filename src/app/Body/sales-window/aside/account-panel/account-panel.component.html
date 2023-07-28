@@ -5,8 +5,14 @@
         'bookIsMobile': isBook && innerWidth < 992,
         'bookIsDesktop': isBook && innerWidth >= 992
       }">
-  <div> {{ isAuthenticated ? 'You are logged in to your account as'
-    :'You are not logged in to your account' }}</div>
+  <div>
+    {{ isAuthenticated ? 'You are logged in as: ' + (userData && userData.displayName ? userData.displayName : (userData
+    && userData.email ? userData.email : '')) : 'You are not logged in to your account' }}
+  </div>
+
+
+
+
   <button class="btnLogin" type="submit"
     (click)="redirectToLoginPanel(isAuthenticated ? '/user-panel' : '/login-panel', 'btnLogin')">
     {{ isAuthenticated ? 'Go to your account' : 'Login' }}

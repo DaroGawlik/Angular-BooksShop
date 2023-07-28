@@ -25,7 +25,7 @@
         <p>{{ userOrder.deliveryDate | date: 'dd.MM.yyyy' }}</p>
     </div>
 
-    <div class="gifts">
+    <div *ngIf="userOrder.gifts" class="gifts">
         <h3>Gifts</h3>
         <ul>
             <li *ngFor="let gift of userOrder.gifts">{{ gift }}</li>
@@ -38,7 +38,7 @@
         <h3>Payment Type</h3>
         <p>{{ userOrder.paymentType }}</p>
     </div>
-    <div class="additional-info">
+    <div *ngIf="userOrder.additionalInformation" class="additional-info">
         <h3>Additional Information</h3>
         <p class="info__text">{{ userOrder.additionalInformation }}</p>
     </div>
