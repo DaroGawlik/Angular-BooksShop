@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, throwError, of, concat } from 'rxjs';
+import {
+  Observable,
+  BehaviorSubject,
+  Subject,
+  throwError,
+  of,
+  concat,
+} from 'rxjs';
 import {
   HttpClient,
   HttpEventType,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import {
   tap,
   finalize,
