@@ -55,7 +55,9 @@
             </div>
 
             <div *ngIf="userOrders?.length && !isFetching && !error">
-                <div class="m-3 text-center font-weight-bold" style="font-size: 1.2rem;">Check your Orders:</div>
+                <div class="m-3 text-center font-weight-bold" style="font-size: 1.2rem;">
+                    Check your Orders {{ '(' + (countOrders$ | async) + ')' }} :
+                </div>
                 <div class="container row m-0 p-0">
                     <div class="col-4 userOrderEls">
                         <button *ngIf="selectedUserOrder" class="btn-cancel-order"

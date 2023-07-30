@@ -29,6 +29,9 @@ import {
 import { AuthService } from './auth.service';
 import { User } from '../Body/login-panel/user.model';
 import { Order } from '../shared/order.model';
+import { Store } from '@ngrx/store';
+import { increment, decrement } from '../store/example.actions';
+// import { IncrementAction } from '../store/example.actions';
 @Injectable({
   providedIn: 'root',
 })
@@ -47,7 +50,11 @@ export class AccountSettingsService {
   public isFetchingPublic = new Subject<boolean>();
   public errorPublic = new Subject<string>();
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private store: Store
+  ) {
     this.authService.user.subscribe((user) => {
       this.user = user;
       if (this.user?.token) {
@@ -137,6 +144,8 @@ export class AccountSettingsService {
               })
             );
             this.userOrdersSubject.next(getUserOrders);
+            this.store.dispatch(increment({ orders: getUserOrders.length }));
+            // this.store.dispatch(new IncrementAction(getUserOrders.length));
           }
           this.isFetchingPublic.next(false);
         })
@@ -167,6 +176,7 @@ export class AccountSettingsService {
             );
 
             this.userOrdersSubject.next(filteredOrders);
+            this.store.dispatch(decrement({ order: 1 }));
             this.isFetchingPublic.next(false);
           })
         )

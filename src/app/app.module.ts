@@ -69,7 +69,7 @@ import { counterRedcuer } from './store/example.reducer';
     MatCheckboxModule,
     HttpClientModule,
     StoreModule.forRoot({
-      counter: counterRedcuer,
+      example: counterRedcuer,
       // auth:  authReducer
     }),
   ],

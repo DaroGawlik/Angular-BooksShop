@@ -11,7 +11,11 @@ import { NgForm } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import {
+  selectDoubleOrders,
+  selectOrders,
+} from 'src/app/store/example.selectros';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -21,8 +25,11 @@ export class UserPanelComponent implements OnInit {
   isAsideOpen: boolean = false;
 
   userData: UserDataModel | null;
-  userOrders: Order[] | null;
+  userOrders: Order[];
   selectedUserOrder: Order | null;
+
+  countOrders$: Observable<number>;
+  countOrdersDouble$: Observable<number>;
 
   openNgContainer: string = '';
 
@@ -39,8 +46,8 @@ export class UserPanelComponent implements OnInit {
   constructor(
     private bookService: BooksService,
     private authService: AuthService,
-    private router: Router,
-    private accountSettingsService: AccountSettingsService
+    private accountSettingsService: AccountSettingsService,
+    private store: Store<{ example: number }>
   ) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooksArr = booksInBag;
@@ -53,7 +60,7 @@ export class UserPanelComponent implements OnInit {
     );
     this.accountSettingsService.userOrdersPublic.subscribe(
       (userOrders: Order[] | null) => {
-        this.userOrders = userOrders;
+        this.userOrders = userOrders !== null ? userOrders : this.userOrders;
       }
     );
     this.accountSettingsService.isFetchingPublic.subscribe(
@@ -64,6 +71,8 @@ export class UserPanelComponent implements OnInit {
     this.accountSettingsService.errorPublic.subscribe((error: string) => {
       this.error = error;
     });
+    this.countOrders$ = store.select('example');
+    this.countOrdersDouble$ = store.select(selectDoubleOrders);
   }
 
   ngOnInit() {}
