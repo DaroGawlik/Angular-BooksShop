@@ -33,6 +33,8 @@ import { AccountPanelComponent } from './Body/sales-window/aside/account-panel/a
 import { UserPanelComponent } from './Body/user-panel/user-panel.component';
 import { PanelGetOrdersComponent } from './Body/user-panel/panel-get-orders/panel-get-orders.component';
 import { AccountSettingsService } from './service/account-settings.service';
+import { StoreModule } from '@ngrx/store';
+import { counterRedcuer } from './store/example.reducer';
 
 @NgModule({
   declarations: [
@@ -66,6 +68,10 @@ import { AccountSettingsService } from './service/account-settings.service';
     ReactiveFormsModule,
     MatCheckboxModule,
     HttpClientModule,
+    StoreModule.forRoot({
+      counter: counterRedcuer,
+      // auth:  authReducer
+    }),
   ],
   providers: [
     BooksService,
