@@ -19,6 +19,7 @@ export class AccountPanelComponent implements OnInit {
   @Input() isBook: boolean;
 
   isAuthenticated: boolean = false;
+  
   private userSub: Subscription;
   constructor(
     private authService: AuthService,
