@@ -1,6 +1,9 @@
 import { Action, createAction, props } from '@ngrx/store';
-// import { Action } from 'rxjs/internal/scheduler/Action';
+// import { Action } from 'rxjs/internal/scheduler/Action'
 
+export const init = createAction('[Example] Init');
+
+export const set = createAction('[Counter] Set', props<{ value: number }>());
 // APPROACH 1
 
 export const increment = createAction(
@@ -9,7 +12,7 @@ export const increment = createAction(
 );
 export const decrement = createAction(
   '[Example] Decrement',
-  props<{ order: number }>()
+  props<{ orders: number }>()
 );
 
 // APPROACH 2

@@ -35,6 +35,8 @@ import { PanelGetOrdersComponent } from './Body/user-panel/panel-get-orders/pane
 import { AccountSettingsService } from './service/account-settings.service';
 import { StoreModule } from '@ngrx/store';
 import { counterRedcuer } from './store/example.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { ExampleEffects } from './store/example.effects';
 
 @NgModule({
   declarations: [
@@ -72,6 +74,7 @@ import { counterRedcuer } from './store/example.reducer';
       example: counterRedcuer,
       // auth:  authReducer
     }),
+    EffectsModule.forRoot([ExampleEffects]),
   ],
   providers: [
     BooksService,

@@ -176,7 +176,7 @@ export class AccountSettingsService {
             );
 
             this.userOrdersSubject.next(filteredOrders);
-            this.store.dispatch(decrement({ order: 1 }));
+            this.store.dispatch(decrement({ orders: 1 }));
             this.isFetchingPublic.next(false);
           })
         )

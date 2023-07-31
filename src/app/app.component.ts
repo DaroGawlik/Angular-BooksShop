@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './service/auth.service';
+import { Store } from '@ngrx/store';
+import { init } from './store/example.actions';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +11,10 @@ import { AuthService } from './service/auth.service';
 export class AppComponent implements OnInit {
   title = 'BooksShop-Project-Angular';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private store: Store) {}
 
   ngOnInit() {
     this.authService.autoLogin();
+    this.store.dispatch(init());
   }
 }
