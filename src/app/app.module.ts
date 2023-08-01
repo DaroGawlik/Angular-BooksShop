@@ -37,6 +37,7 @@ import { StoreModule } from '@ngrx/store';
 import { counterRedcuer } from './store/example.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ExampleEffects } from './store/example.effects';
+import { booksInBagReducer } from './service/store-ngrx/booksInbag.reducer';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { ExampleEffects } from './store/example.effects';
     HttpClientModule,
     StoreModule.forRoot({
       example: counterRedcuer,
+      bag: booksInBagReducer,
       // auth:  authReducer
     }),
     EffectsModule.forRoot([ExampleEffects]),
