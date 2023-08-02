@@ -19,6 +19,7 @@ import {
   uniqueBooksInBag,
 } from 'src/app/service/store-ngrx/booksInbag.selectors';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
+import * as BooksInBagActions from '../../../service/store-ngrx/booksInbag.actions';
 
 @Component({
   selector: 'app-aside',
@@ -41,7 +42,7 @@ export class AsideComponent implements OnInit, OnDestroy {
   isLogin: string;
 
   @Output()
-  countAllBookInBag = new EventEmitter<number>();
+  // countAllBookInBag = new EventEmitter<number>();
   @Output()
   isAsideOpen = new EventEmitter<boolean>();
 
@@ -73,8 +74,7 @@ export class AsideComponent implements OnInit, OnDestroy {
   }
 
   clearAllBooks() {
-    this.bookService.deleteAllBookFromBag();
-    this.bagOfBooksArr = [];
+    this.store.dispatch(BooksInBagActions.RemoveAllBooks());
   }
 
   closeAside() {

@@ -14,5 +14,8 @@ export const booksInBagReducer = createReducer(
   on(BooksInBagActions.AddBook, (state, action) => ({
     ...state,
     booksInbag: [...state.booksInbag, action.book],
+  })),
+  on(BooksInBagActions.RemoveAllBooks, () => ({
+    booksInbag: [],
   }))
 );

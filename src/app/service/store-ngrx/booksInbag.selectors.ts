@@ -22,3 +22,15 @@ export const uniqueBooksInBag = createSelector(
       (book, i, arr) => arr.findIndex((b) => b.author === book.author) === i
     )
 );
+
+export const lengthBooksInBag = createSelector(
+  selectBooksInbag,
+  (booksInbag: BookModel[]) => booksInbag?.length
+);
+
+export const countSameBooksInBag = (bookItem: BookModel) =>
+  createSelector(
+    selectBooksInbag,
+    (booksInbag: BookModel[]) =>
+      booksInbag?.filter((book) => book.title === bookItem.title).length
+  );
