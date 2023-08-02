@@ -1,12 +1,12 @@
-
 // NGRX APPROACH
 
 import { Component, OnInit, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
 
 import * as BooksInBagActions from '../../../../service/store-ngrx/booksInbag.actions';
+import { State } from 'src/app/service/store-ngrx/booksInbag.reducer';
 
 @Component({
   selector: 'app-bookitem',
@@ -19,8 +19,9 @@ export class BookitemComponent implements OnInit {
 
   constructor(
     private booksService: BooksService,
-    private store: Store<{ bag: { booksInbag: BookModel[] } }>
-  ) {}
+    private store: Store<State> //
+  ) //  private store: Store<{ bag: { booksInbag: BookModel[] } }>
+  {}
 
   ngOnInit(): void {}
 
@@ -36,10 +37,7 @@ export class BookitemComponent implements OnInit {
   }
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 // import { Component, OnInit, Input } from '@angular/core';
 // import { BooksService } from 'src/app/service/books.service';

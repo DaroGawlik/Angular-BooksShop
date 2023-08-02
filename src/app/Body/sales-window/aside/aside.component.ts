@@ -6,13 +6,19 @@ import {
   HostListener,
   OnDestroy,
 } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
 import { AuthService } from '../../../service/auth.service';
 
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import {
+  areBooksInBag,
+  selectBooksInbag,
+  uniqueBooksInBag,
+} from 'src/app/service/store-ngrx/booksInbag.selectors';
+import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 
 @Component({
   selector: 'app-aside',
@@ -20,18 +26,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./aside.component.scss'],
 })
 
-
 // NGRX APPROACH
 export class AsideComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   private userSub: Subscription;
 
-  public bagOfBooksArr$: Observable<{ booksInbag: BookModel[] }>;
+  public areBooksInBag$: Observable<boolean>;
+  public uniqueBooksArr$: Observable<BookModel[]>;
 
   public innerWidth: any;
   public totalCost: any;
-  public uniqueBooksArr: any;
-  public isBook: boolean;
 
   // isAuthenticated: boolean;
   isLogin: string;
@@ -45,26 +49,15 @@ export class AsideComponent implements OnInit, OnDestroy {
     private bookService: BooksService,
     private authService: AuthService,
     private router: Router,
-    private store: Store<{ bag: { booksInbag: BookModel[] } }>
-  ) {
-    // this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
-    //   this.bagOfBooksArr = booksInBag;
-    //   this.getUniqueBooks();
-    //   this.countAllBookInBag.emit(this.bagOfBooksArr.length);
-    //   this.isBook = this.bagOfBooksArr.length > 0 ? true : false;
-    // });
-    this.bookService.getTotalCosts().subscribe((booksInBag: number) => {
-      this.totalCost = booksInBag;
-    });
-  }
+    private store: Store<{ bag: BooksInBagState }>
+  ) {}
 
   ngOnInit() {
-    this.bagOfBooksArr$ = this.store.select('bag');
-
-    //   this.countAllBookInBag.emit(this.bagOfBooksArr.length);
-    //   this.isBook = this.bagOfBooksArr.length > 0 ? true : false;
-    // });
-
+    this.areBooksInBag$ = this.store.select(areBooksInBag);
+    this.uniqueBooksArr$ = this.store.select(uniqueBooksInBag);
+    //
+    //
+    //
     this.userSub = this.authService.user.subscribe((user) => {
       this.isAuthenticated = !!user;
     });
@@ -79,6 +72,11 @@ export class AsideComponent implements OnInit, OnDestroy {
     }
   }
 
+  clearAllBooks() {
+    this.bookService.deleteAllBookFromBag();
+    this.bagOfBooksArr = [];
+  }
+
   closeAside() {
     this.isAsideOpen.emit(false);
   }
@@ -87,9 +85,6 @@ export class AsideComponent implements OnInit, OnDestroy {
   onResize() {
     this.innerWidth = window.innerWidth;
   }
-
-
-
 
   redirectToLoginPanel(route: string, source: string) {
     const queryParams = { source: source };
@@ -100,7 +95,6 @@ export class AsideComponent implements OnInit, OnDestroy {
     this.userSub.unsubscribe();
   }
 }
-
 
 // import {
 //   Component,

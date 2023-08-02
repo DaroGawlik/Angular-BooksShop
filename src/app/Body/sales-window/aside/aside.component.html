@@ -1,21 +1,21 @@
 <!-- // NGRX APPROACH -->
-<div *ngIf="(bagOfBooksArr$ | async)?.booksInbag?.length || 1 > 0; then areBooks; else noBooks"></div>
+<div *ngIf="(areBooksInBag$ | async); then areBooks else noBooks"></div>
+
 <ng-template #areBooks>
     <div class=" container">
         <div [ngClass]="innerWidth < 992 ? 'areBooksMobile' : 'areBooksDesktop'">
-            <app-account-panel [isBook]="isBook"></app-account-panel>
+            <app-account-panel [isBook]="!!(areBooksInBag$ | async)"></app-account-panel>
             <button class="closeAsideBtn d-lg-none" type="button" (click)="closeAside()">Close</button>
             <p>Your Bag:</p>
             <ul class="m-0 p-0">
-                <app-bookinbag *ngFor="let bookEl of (bagOfBooksArr$ | async)?.booksInbag"
-                    [bookItem]="bookEl"></app-bookinbag>
+                <app-bookinbag *ngFor="let bookEl of (uniqueBooksArr$ | async)" [bookItem]="bookEl"></app-bookinbag>
             </ul>
             <div class="totalCost"> Total: {{totalCost}}$</div>
             <div class="d-flex justify-content-around mt-3 mb-3">
                 <button class="confirmBtn" type="button" (click)="redirectToLoginPanel(isLogin, 'confirmBtn')">Confirm
                     Order
                 </button>
-                <!-- <button class="clearBtn" type="button" (click)="clearAllBooks()">Clear All</button> -->
+                <button class="clearBtn" type="button" (click)="clearAllBooks()">Clear All</button>
             </div>
         </div>
     </div>
@@ -23,9 +23,9 @@
 
 <ng-template #noBooks>
     <div [ngClass]="innerWidth < 992 ? 'noBooksMobile' : 'noBooksDesktop'">
-        <app-account-panel [isBook]="isBook"></app-account-panel>
+        <app-account-panel [isBook]="!!(areBooksInBag$ | async)"></app-account-panel>
         <p>No books in your bag</p>
-        <button class="closeBtn" type="button" (click)="closeAside()">Close</button>
+        <button class=" closeBtn" type="button" (click)="closeAside()">Close</button>
     </div>
 </ng-template>
 
