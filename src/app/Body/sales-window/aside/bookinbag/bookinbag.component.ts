@@ -6,6 +6,8 @@ import { BooksService } from 'src/app/service/books.service';
 import { BookModel } from 'src/app/shared/book.model';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import { countSameBooksInBag } from 'src/app/service/store-ngrx/booksInbag.selectors';
+import * as BooksInBagActions from '../../../../service/store-ngrx/booksInbag.actions';
+
 @Component({
   selector: 'app-bookinbag',
   templateUrl: './bookinbag.component.html',
@@ -22,7 +24,6 @@ export class BookinbagComponent implements OnInit {
   ) {
     this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
       this.bagOfBooks = booksInBag;
-      // this.countSameBook();
     });
   }
 
@@ -32,19 +33,14 @@ export class BookinbagComponent implements OnInit {
       countSameBooksInBag(this.bookItem)
     );
   }
-  // public howMoreSameBook$: Observable<number>;
-  // countSameBook() {
-  //   this.howMoreSameBook = this.bagOfBooks.filter(
-  //     (book) => book.title === this.bookItem.title
-  //   ).length;
-  // }
 
-  deleteBook() {
+  removeBook() {
+    this.store.dispatch(BooksInBagActions.RemoveBook({ book: this.bookItem }));
+
     let index = this.bagOfBooks.findIndex(
       (book) => book.title === this.bookItem.title
     );
-    this.bookService.deleteBookFromBag(index, this.bookItem.price);
-    // this.countSameBook();
+    // this.bookService.deleteBookFromBag(index, this.bookItem.price);
   }
 
   @HostListener('window:resize', ['$event'])

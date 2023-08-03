@@ -15,6 +15,17 @@ export const booksInBagReducer = createReducer(
     ...state,
     booksInbag: [...state.booksInbag, action.book],
   })),
+  on(BooksInBagActions.RemoveBook, (state, action) => {
+    const index = state.booksInbag.findIndex(
+      (book) => book.title === action.book.title
+    );
+    const newBooksInbag = [...state.booksInbag];
+    newBooksInbag.splice(index, 1);
+    return {
+      ...state,
+      booksInbag: newBooksInbag,
+    };
+  }),
   on(BooksInBagActions.RemoveAllBooks, () => ({
     booksInbag: [],
   }))

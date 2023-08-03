@@ -8,5 +8,9 @@ export const AddBook = createAction(
   '[Books in Bag] Add book',
   props<{ book: BookModel }>()
 );
+export const RemoveBook = createAction(
+  '[Books in Bag] Remove book',
+  props<{ book: BookModel }>()
+);
 
 export const RemoveAllBooks = createAction('[Books in Bag] Remove all books');
