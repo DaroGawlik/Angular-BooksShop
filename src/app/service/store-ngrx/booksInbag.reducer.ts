@@ -12,6 +12,9 @@ const initialState: State = {
 
 export const booksInBagReducer = createReducer(
   initialState,
+  on(BooksInBagActions.SetBooksInBag, (state, action) => ({
+    booksInbag: action.books,
+  })),
   on(BooksInBagActions.AddBook, (state, action) => ({
     ...state,
     booksInbag: [...state.booksInbag, action.book],

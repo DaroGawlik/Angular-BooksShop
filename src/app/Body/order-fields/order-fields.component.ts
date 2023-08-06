@@ -11,7 +11,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { BookModel } from 'src/app/shared/book.model';
-import { BooksService } from 'src/app/service/books.service';
 import { Order } from 'src/app/shared/order.model';
 import { OrdersService } from 'src/app/service/orders.service';
 import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
@@ -31,8 +30,6 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
 
   lengthBooksInBag$: Observable<number>;
   bagOfBooksArr$: Observable<BookModel[]>;
-
-  public BooksModelToOrder: BookModelToOrder[] = [];
 
   signupForm: FormGroup;
   paymentTypes = ['Cash', 'Card'];
@@ -65,7 +62,6 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   ];
 
   constructor(
-    private bookService: BooksService,
     private ordersService: OrdersService,
     private router: Router,
     private store: Store<{ bag: BooksInBagState }>
@@ -169,7 +165,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   }
 
   doArrayBooksToOrder() {
-    const uniqueBooks: any[] = []; // Tymczasowa tablica na unikatowe książki
+    const uniqueBooks: BookModelToOrder[] = [];
 
     this.bagOfBooksArr$.subscribe((booksInBag: BookModel[]) => {
       for (let book = 0; book < booksInBag.length; book++) {
@@ -182,20 +178,15 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
           .subscribe((amount: number) => {
             cloneBook.amount = amount;
 
-            // Sprawdzamy, czy książka już istnieje w tablicy unikatowych książek
             const existingBook = uniqueBooks.find(
               (book) => book.title === cloneBook.title
             );
-
-            // Jeśli książka nie istnieje, dodajemy ją do tablicy unikatowych książek
             if (!existingBook) {
               uniqueBooks.push(cloneBook);
             }
 
-            // Sprawdzamy, czy przetworzyliśmy już wszystkie książki, aby uniknąć powielania
             if (book === booksInBag.length - 1) {
-              console.log(uniqueBooks);
-              this.pushOrderBooksToControlArray(uniqueBooks); // Przekazujemy tablicę unikatowych książek do funkcji
+              this.pushOrderBooksToControlArray(uniqueBooks);
             }
           });
       }

@@ -33,7 +33,6 @@ export class ExampleEffects {
         ofType(increment, decrement),
         withLatestFrom(this.store.select(selectOrders)),
         tap(([action, example]) => {
-          console.log(action);
           localStorage.setItem('example', example.toString());
         })
       ),

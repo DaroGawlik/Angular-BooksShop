@@ -1,8 +1,13 @@
-import { Action } from '@ngrx/store';
-
 import { BookModel } from 'src/app/shared/book.model';
 
 import { createAction, props } from '@ngrx/store';
+
+export const InitBooksInBag = createAction('[Books in Bag] InitBooksInBag');
+
+export const SetBooksInBag = createAction(
+  '[Books in Bag] SetBooksInBag',
+  props<{ books: BookModel[] }>()
+);
 
 export const AddBook = createAction(
   '[Books in Bag] Add book',
