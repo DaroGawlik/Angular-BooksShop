@@ -6,14 +6,19 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { BooksService } from 'src/app/service/books.service';
-import { BookModel } from 'src/app/shared/book.model';
-import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
+import { BookModel } from 'src/app/shared/book.model';
+import { BooksService } from 'src/app/service/books.service';
 import { Order } from 'src/app/shared/order.model';
 import { OrdersService } from 'src/app/service/orders.service';
-import { Router } from '@angular/router';
+import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 
+import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
+import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
+import * as BooksInBagActions from 'src/app/service/store-ngrx/booksInbag.actions';
 @Component({
   selector: 'app-order-fields',
   templateUrl: './order-fields.component.html',
@@ -23,9 +28,10 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   loadedOrders: Order[] = [];
   isFetching = false;
   error: string | null = null;
-  // private errorSub: Subscription;
 
-  public bagOfBooksArr: BookModel[] = [];
+  lengthBooksInBag$: Observable<number>;
+  bagOfBooksArr$: Observable<BookModel[]>;
+
   public BooksModelToOrder: BookModelToOrder[] = [];
 
   signupForm: FormGroup;
@@ -33,15 +39,10 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   additionalInformation: string = '';
   todayDate = new Date();
   miniumDeliveryDate = this.todayDate.setDate(this.todayDate.getDate() + 2);
-
   maxCharsOfArea: number = 80;
-
   howClickedGifts: number = 0;
-  howMoreSameBook: number;
-  howUniqueBooks: number;
 
   // BAGBAR
-  countAllBookInBag: number = 0;
   isAsideOpen: boolean = false;
 
   gifts = [
@@ -66,18 +67,13 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   constructor(
     private bookService: BooksService,
     private ordersService: OrdersService,
-    private router: Router
-  ) {
-    this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
-      this.bagOfBooksArr = booksInBag;
-      this.countAllBookInBag = booksInBag.length;
-    });
-  }
+    private router: Router,
+    private store: Store<{ bag: BooksInBagState }>
+  ) {}
 
   ngOnInit() {
-    // this.errorSub = this.ordersService.error.subscribe((errorMessage) => {
-    //   this.error = errorMessage;
-    // });
+    this.lengthBooksInBag$ = this.store.select(fromBooksInBag.lengthBooksInBag);
+    this.bagOfBooksArr$ = this.store.select(fromBooksInBag.selectBooksInbag);
 
     this.signupForm = new FormGroup({
       orderData: new FormGroup({
@@ -150,8 +146,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     const giftsArr: any = [];
     checkedGifts.forEach((gift) => giftsArr.push(gift.text));
     this.pushGiftsToControlArray(giftsArr);
-    this.getUniqueBooks();
-    this.doArrayBooksToOrder(this.bagOfBooksArr);
+    this.doArrayBooksToOrder();
     this.onCreatePost(this.signupForm.value);
     this.clearOrderFieldsAfterSend();
   }
@@ -159,7 +154,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
   clearOrderFieldsAfterSend() {
     this.router.navigate(['/user-panel']);
     this.signupForm.reset();
-    this.bookService.deleteAllBookFromBag();
+    this.store.dispatch(BooksInBagActions.RemoveAllBooks());
   }
 
   // START API
@@ -173,22 +168,38 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
     this.isAsideOpen = true;
   }
 
-  doArrayBooksToOrder(booksInBag: any) {
-    let cloneBook: any;
-    for (let book = 0; book < this.bagOfBooksArr.length; book++) {
-      const bookModel = booksInBag[book];
-      cloneBook = (({ imageLink, description, price, ...rest }) => rest)(
-        bookModel
-      );
-      cloneBook.amount = this.countSameBook(cloneBook);
-      if (
-        this.BooksModelToOrder.filter((book) => book.title === cloneBook.title)
-          .length < 1
-      ) {
-        this.BooksModelToOrder.push(cloneBook);
+  doArrayBooksToOrder() {
+    const uniqueBooks: any[] = []; // Tymczasowa tablica na unikatowe książki
+
+    this.bagOfBooksArr$.subscribe((booksInBag: BookModel[]) => {
+      for (let book = 0; book < booksInBag.length; book++) {
+        const bookModel = booksInBag[book];
+        const cloneBook: any = (({ imageLink, description, price, ...rest }) =>
+          rest)(bookModel);
+
+        this.store
+          .select(fromBooksInBag.countSameBooksInBag(bookModel))
+          .subscribe((amount: number) => {
+            cloneBook.amount = amount;
+
+            // Sprawdzamy, czy książka już istnieje w tablicy unikatowych książek
+            const existingBook = uniqueBooks.find(
+              (book) => book.title === cloneBook.title
+            );
+
+            // Jeśli książka nie istnieje, dodajemy ją do tablicy unikatowych książek
+            if (!existingBook) {
+              uniqueBooks.push(cloneBook);
+            }
+
+            // Sprawdzamy, czy przetworzyliśmy już wszystkie książki, aby uniknąć powielania
+            if (book === booksInBag.length - 1) {
+              console.log(uniqueBooks);
+              this.pushOrderBooksToControlArray(uniqueBooks); // Przekazujemy tablicę unikatowych książek do funkcji
+            }
+          });
       }
-    }
-    this.pushOrderBooksToControlArray(this.BooksModelToOrder);
+    });
   }
 
   pushOrderBooksToControlArray(arr: any) {
@@ -198,17 +209,6 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
         (<FormArray>this.signupForm.get('books')).push(bookForm);
       }
     }
-  }
-
-  countSameBook(cloneBook: any) {
-    return this.bagOfBooksArr.filter((book) => book.title === cloneBook.title)
-      .length;
-  }
-
-  getUniqueBooks() {
-    this.howUniqueBooks = this.bagOfBooksArr.filter(
-      (book, i, arr) => arr.findIndex((b) => b.author === book.author) === i
-    ).length;
   }
 
   ngDoCheck() {}

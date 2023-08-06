@@ -6,13 +6,15 @@ import {
   HostListener,
   OnDestroy,
 } from '@angular/core';
-import { Store, select } from '@ngrx/store';
 import { Router } from '@angular/router';
+
 import { Observable, Subscription } from 'rxjs';
+import { Store, select } from '@ngrx/store';
 
 
 import { AuthService } from '../../../service/auth.service';
 import { BookModel } from 'src/app/shared/book.model';
+
 import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import * as BooksInBagActions from '../../../service/store-ngrx/booksInbag.actions';

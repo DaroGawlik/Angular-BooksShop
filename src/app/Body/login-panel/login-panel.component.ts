@@ -5,8 +5,10 @@ import { Observable } from 'rxjs';
 import { AuthService, AuthResponseData } from '../../service/auth.service';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { BooksService } from 'src/app/service/books.service';
-import { BookModel } from 'src/app/shared/book.model';
+
+import { Store } from '@ngrx/store';
+import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
+import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 
 @Component({
   selector: 'app-login-panel',
@@ -14,7 +16,8 @@ import { BookModel } from 'src/app/shared/book.model';
   styleUrls: ['./login-panel.component.scss'],
 })
 export class LoginPanelComponent implements OnInit {
-  bagOfBooksArr: boolean;
+  lengthBooksInBag$: Observable<number>;
+
   isLoginMode = true;
   isLoading = false;
   source: string;
@@ -24,20 +27,15 @@ export class LoginPanelComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private booksService: BooksService
-  ) {
-    this.booksService
-      .getBagOfBooksObs()
-      .subscribe((booksInBag: BookModel[]) => {
-        this.bagOfBooksArr = booksInBag.length > 0 ? true : false;
-      });
-  }
+    private store: Store<{ bag: BooksInBagState }>
+  ) {}
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.source = params['source'];
       // Możesz teraz użyć wartości 'source' w dalszej części komponentu
     });
+    this.lengthBooksInBag$ = this.store.select(fromBooksInBag.lengthBooksInBag);
   }
 
   onSwitchMode() {

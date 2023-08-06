@@ -1,21 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/service/auth.service';
-import { OrdersService } from 'src/app/service/orders.service';
 import { Order } from 'src/app/shared/order.model';
 import { UserDataModel } from '../../shared/account-user.model';
-import { BooksService } from 'src/app/service/books.service';
-import { BookModel } from 'src/app/shared/book.model';
-import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
 import { AccountSettingsService } from 'src/app/service/account-settings.service';
 import { NgForm } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
-import { DatePipe } from '@angular/common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Store } from '@ngrx/store';
-import {
-  selectDoubleOrders,
-  selectOrders,
-} from 'src/app/store/example.selectros';
+import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
+import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
+import * as fromExample from 'src/app/store/example.selectros';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -30,29 +23,21 @@ export class UserPanelComponent implements OnInit {
 
   countOrders$: Observable<number>;
   countOrdersDouble$: Observable<number>;
+  lengthBooksInBag$: Observable<number>;
 
   openNgContainer: string = '';
 
   @ViewChild('f', { static: false })
   signupForm: NgForm;
 
-  countAllBookInBag: number = 0;
-  public bagOfBooksArr: BookModel[] = [];
-  public BooksModelToOrder: BookModelToOrder[] = [];
-
   isFetching: boolean;
   error: string;
 
   constructor(
-    private bookService: BooksService,
     private authService: AuthService,
     private accountSettingsService: AccountSettingsService,
-    private store: Store<{ example: number }>
+    private store: Store<{ example: number; bag: BooksInBagState }>
   ) {
-    this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
-      this.bagOfBooksArr = booksInBag;
-      this.countAllBookInBag = booksInBag.length;
-    });
     this.accountSettingsService.userDataPublic.subscribe(
       (userData: UserDataModel | null) => {
         this.userData = userData;
@@ -71,11 +56,13 @@ export class UserPanelComponent implements OnInit {
     this.accountSettingsService.errorPublic.subscribe((error: string) => {
       this.error = error;
     });
-    this.countOrders$ = store.select('example');
-    this.countOrdersDouble$ = store.select(selectDoubleOrders);
+    this.countOrders$ = this.store.select(fromExample.selectOrders);
+    this.countOrdersDouble$ = this.store.select(fromExample.selectDoubleOrders);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.lengthBooksInBag$ = this.store.select(fromBooksInBag.lengthBooksInBag);
+  }
   openAside() {
     this.isAsideOpen = true;
   }

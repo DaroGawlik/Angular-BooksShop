@@ -2,7 +2,7 @@
     <div class="d-flex flex-row justify-content-around align-items-cente mt-2">
         <button [ngClass]="{'active': isActive('/user-panel')}"
             [routerLink]="isActive('/user-panel') ? '/order-fields' : '/user-panel'"
-            [disabled]="isActive('/user-panel') && bagOfBooksArr.length === 0">
+            [disabled]="isActive('/user-panel') && (( lengthBooksInBag$ | async)) == 0">
 
 
             {{ isActive('/user-panel') ? 'Order Fields' : 'Your Account' }}
@@ -13,7 +13,7 @@
     </div>
     <p>Your Bag</p>
     <ul class="m-0 p-0">
-        <li class="container row m-0 p-0 mt-4" *ngFor="let bookEl of uniqueBooksArr;">
+        <li class="container row m-0 p-0 mt-4" *ngFor="let bookEl of (uniqueBooksArr$ | async)">
 
             <div class=" col-5">
                 <img class="img-fluid" src="{{bookEl.imageLink}}" alt="book's image">
@@ -23,15 +23,15 @@
                 <div class="mt-2">{{bookEl.author}}</div>
                 <div class="mt-2" [ngStyle]="{'font-weight': 'bold'}">{{bookEl.price}} $</div>
 
-                <div *ngIf="countSameBook(bookEl)" class="d-flex m-0 p-0 mt-2"
-                    [ngClass]=" {'justify-content-end': howMoreSameBook < 2, 'justify-content-between' : howMoreSameBook> 1}">
+                <div *ngIf="(countSameBook(bookEl) | async) as howMoreSameBook" class="d-flex m-0 p-0 mt-2"
+                    [ngClass]="{'justify-content-end': howMoreSameBook < 2, 'justify-content-between': howMoreSameBook > 1}">
                     <p *ngIf="howMoreSameBook > 1" class="d-flex align-items-center m-0 p-0"
                         [ngStyle]="{'font-weight': 'bold'}">
-                        Amount: {{ howMoreSameBook}}</p>
+                        Amount: {{ howMoreSameBook }}</p>
                 </div>
             </div>
 
         </li>
     </ul>
-    <div class="totalCost"> Total: {{totalCost}}$</div>
+    <div class="totalCost"> Total: {{(( ultimatePrice$ | async))}}$</div>
 </div>

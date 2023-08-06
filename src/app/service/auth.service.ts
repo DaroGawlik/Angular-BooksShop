@@ -1,16 +1,18 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { User } from '../Body/login-panel/user.model';
-import { catchError, tap } from 'rxjs/operators';
-import { throwError, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+
+import { throwError, BehaviorSubject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { catchError, tap } from 'rxjs/operators';
+
+import { User } from '../Body/login-panel/user.model';
+
 import { BooksService } from './books.service';
 
-import {
-  AccountSettingsService,
-  // getUserData,
-} from './account-settings.service';
-import { AccountPanelComponent } from '../Body/sales-window/aside/account-panel/account-panel.component';
+import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
+import * as BooksInBagActions from 'src/app/service/store-ngrx/booksInbag.actions';
+
 export interface AuthResponseData {
   kind: string;
   idToken: string;
@@ -28,7 +30,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private booksService: BooksService
+    private booksService: BooksService,
+    private store: Store<{ bag: BooksInBagState }>
   ) {}
 
   signup(email: string, password: string) {
@@ -118,7 +121,7 @@ export class AuthService {
       clearTimeout(this.tokenExpirationTimer);
     }
     this.tokenExpirationTimer = null;
-    this.booksService.deleteAllBookFromBag();
+    this.store.dispatch(BooksInBagActions.RemoveAllBooks());
   }
 
   autoLogout(expirationDuration: number) {
