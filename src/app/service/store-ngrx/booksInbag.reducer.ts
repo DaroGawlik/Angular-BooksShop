@@ -9,6 +9,7 @@ export interface State {
 const initialState: State = {
   booksInbag: [],
 };
+
 export const booksInBagReducer = createReducer(
   initialState,
   on(BooksInBagActions.AddBook, (state, action) => ({

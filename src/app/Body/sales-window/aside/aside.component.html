@@ -10,7 +10,7 @@
             <ul class="m-0 p-0">
                 <app-bookinbag *ngFor="let bookEl of (uniqueBooksArr$ | async)" [bookItem]="bookEl"></app-bookinbag>
             </ul>
-            <div class="totalCost"> Total: {{totalCost}}$</div>
+            <div class="totalCost"> Total: {{ ((ultimatePrice$ |async))}}$</div>
             <div class="d-flex justify-content-around mt-3 mb-3">
                 <button class="confirmBtn" type="button" (click)="redirectToLoginPanel(isLogin, 'confirmBtn')">Confirm
                     Order

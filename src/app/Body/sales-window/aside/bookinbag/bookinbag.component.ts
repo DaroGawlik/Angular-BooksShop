@@ -15,17 +15,9 @@ import * as BooksInBagActions from '../../../../service/store-ngrx/booksInbag.ac
 })
 export class BookinbagComponent implements OnInit {
   @Input() bookItem: BookModel;
-  private bagOfBooks: BookModel[];
   public innerWidth: any;
   public howMoreSameBook$: Observable<number>;
-  constructor(
-    private bookService: BooksService,
-    private store: Store<{ bag: BooksInBagState }>
-  ) {
-    this.bookService.getBagOfBooksObs().subscribe((booksInBag: BookModel[]) => {
-      this.bagOfBooks = booksInBag;
-    });
-  }
+  constructor(private store: Store<{ bag: BooksInBagState }>) {}
 
   ngOnInit() {
     this.innerWidth = window.innerWidth;
@@ -36,11 +28,6 @@ export class BookinbagComponent implements OnInit {
 
   removeBook() {
     this.store.dispatch(BooksInBagActions.RemoveBook({ book: this.bookItem }));
-
-    let index = this.bagOfBooks.findIndex(
-      (book) => book.title === this.bookItem.title
-    );
-    // this.bookService.deleteBookFromBag(index, this.bookItem.price);
   }
 
   @HostListener('window:resize', ['$event'])

@@ -34,3 +34,9 @@ export const countSameBooksInBag = (bookItem: BookModel) =>
     (booksInbag: BookModel[]) =>
       booksInbag?.filter((book) => book.title === bookItem.title).length
   );
+
+export const ultimatePrice = createSelector(
+  selectBooksInbag,
+  (booksInBag: BookModel[]) =>
+    booksInBag?.reduce((totalPrice, book) => totalPrice + book.price, 0)
+);

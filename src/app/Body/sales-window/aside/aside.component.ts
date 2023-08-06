@@ -7,17 +7,13 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { BooksService } from 'src/app/service/books.service';
-import { BookModel } from 'src/app/shared/book.model';
-import { AuthService } from '../../../service/auth.service';
-
-import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import {
-  areBooksInBag,
-  selectBooksInbag,
-  uniqueBooksInBag,
-} from 'src/app/service/store-ngrx/booksInbag.selectors';
+import { Observable, Subscription } from 'rxjs';
+
+
+import { AuthService } from '../../../service/auth.service';
+import { BookModel } from 'src/app/shared/book.model';
+import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import * as BooksInBagActions from '../../../service/store-ngrx/booksInbag.actions';
 
@@ -34,9 +30,9 @@ export class AsideComponent implements OnInit, OnDestroy {
 
   public areBooksInBag$: Observable<boolean>;
   public uniqueBooksArr$: Observable<BookModel[]>;
+  public ultimatePrice$: Observable<number>;
 
   public innerWidth: any;
-  public totalCost: any;
 
   // isAuthenticated: boolean;
   isLogin: string;
@@ -47,15 +43,15 @@ export class AsideComponent implements OnInit, OnDestroy {
   isAsideOpen = new EventEmitter<boolean>();
 
   constructor(
-    private bookService: BooksService,
     private authService: AuthService,
     private router: Router,
     private store: Store<{ bag: BooksInBagState }>
   ) {}
 
   ngOnInit() {
-    this.areBooksInBag$ = this.store.select(areBooksInBag);
-    this.uniqueBooksArr$ = this.store.select(uniqueBooksInBag);
+    this.areBooksInBag$ = this.store.select(fromBooksInBag.areBooksInBag);
+    this.uniqueBooksArr$ = this.store.select(fromBooksInBag.uniqueBooksInBag);
+    this.ultimatePrice$ = this.store.select(fromBooksInBag.ultimatePrice);
     //
     //
     //
