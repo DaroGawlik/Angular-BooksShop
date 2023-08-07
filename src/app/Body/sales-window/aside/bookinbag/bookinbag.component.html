@@ -1,23 +1,23 @@
 <li class="container row m-0 p-0 mt-4">
     <div class="col-5">
-        <img class="img-fluid" src="{{bookItem.imageLink}}" alt="book's image">
+        <img class="img-fluid" [src]="bookItem.imageLink" alt="book's image">
     </div>
     <div class="d-flex flex-column justify-content-between col-7 p-0"
-        [ngClass]="innerWidth < 992 ? 'areBooksMobile' : 'areBooksDesktop'">
+        [ngClass]="innerWidth < 992 ? 'areBooks' : 'areBooksDesktop'">
         <div class="mt-2">{{bookItem.title}}</div>
         <div class="mt-2">{{bookItem.author}}</div>
         <div class="mt-2" [ngStyle]="{'font-weight': 'bold'}">{{bookItem.price}} $</div>
-
-        <div class=" d-flex m-0 p-0 mt-2" [ngClass]="{'justify-content-end': (howMoreSameBook$ | async)! < 2,
-             'justify-content-between' : (howMoreSameBook$ | async)! > 1}">
-
+        <div class="d-flex m-0 p-0 mt-2"
+            [ngClass]="(howMoreSameBook$ | async)! < 2 ? 'justify-content-end' : 'justify-content-between'">
             <p *ngIf="(howMoreSameBook$ | async)! > 1" class="d-flex align-items-center m-0 p-0"
                 [ngStyle]="{'font-weight': 'bold'}">
-                Amount: {{ (howMoreSameBook$ | async)}}</p>
-            <button class=" m-1" (click)="removeBook()">Remove</button>
+                Amount: {{ howMoreSameBook$ | async }}</p>
+            <button class="m-1" (click)="removeBook()">Remove</button>
         </div>
     </div>
 </li>
+
+
 <!-- <li class="container row m-0 p-0 mt-4">
     <div class="col-5">
         <img class="img-fluid" src="{{bookItem.imageLink}}" alt="book's image">

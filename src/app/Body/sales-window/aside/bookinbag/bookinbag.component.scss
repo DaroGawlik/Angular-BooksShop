@@ -1,33 +1,28 @@
-.areBooksMobile {
-    font-size: 0.7rem;
-  }
+.container {
+  font-size: 0.7rem;
 
   @media (min-width: 992px) {
-    .areBooksDesktop {
-      font-size: 0.7rem;
-    }
-  }
-  @media (min-width: 1194px) {
-    .areBooksDesktop {
-      font-size: 0.7rem;
-    }
-  }
-  @media (min-width: 1250px) {
-    .areBooksDesktop {
-      font-size: 1rem;
-    }
-  }
-  @media (min-width: 1400px) {
-    .areBooksDesktop {
-      font-size: 1.1rem;
-    }
+    font-size: 0.7rem;
   }
 
-  button {
-    right: 5px;
-    bottom: 5px;
-    width: 4.5rem;
+  @media (min-width: 1194px) {
     font-size: 0.7rem;
-    border-radius: 5px;
-    padding: 0;
   }
+
+  @media (min-width: 1250px) {
+    font-size: 1rem;
+  }
+
+  @media (min-width: 1400px) {
+    font-size: 1.1rem;
+  }
+}
+
+button {
+  right: 5px;
+  bottom: 5px;
+  width: 4.5rem;
+  font-size: 0.7rem;
+  border-radius: 5px;
+  padding: 0;
+}
