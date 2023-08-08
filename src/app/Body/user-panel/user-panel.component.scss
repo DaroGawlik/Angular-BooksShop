@@ -114,3 +114,21 @@
     width: 130px;
   }
 }
+
+@media (min-width: 1200px) {
+  .bagBar {
+    svg {
+      width: 5rem;
+      height: 5rem;
+      right: 4rem;
+      path {
+        width: 100px;
+        height: 100%;
+      }
+    }
+    span {
+      right: 8rem;
+      font-size: 4.5rem;
+    }
+  }
+}

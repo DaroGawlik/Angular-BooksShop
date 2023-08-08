@@ -62,3 +62,35 @@
     width: 100%;
   }
 }
+
+@media (min-width: 650px) {
+  .bagBar {
+    svg {
+      width: 4rem;
+      height: 4rem;
+      right: 3rem;
+
+      path {
+        width: 100px;
+        height: 100%;
+      }
+    }
+    span {
+      right: 6.5rem;
+      font-size: 3.5rem;
+    }
+  }
+}
+@media (min-width: 900px) {
+  .bagBar {
+    svg {
+      width: 5rem;
+      height: 5rem;
+      right: 4rem;
+    }
+    span {
+      right: 8rem;
+      font-size: 4.5rem;
+    }
+  }
+}
