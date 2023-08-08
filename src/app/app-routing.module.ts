@@ -9,16 +9,16 @@ import { UserPanelComponent } from './Body/user-panel/user-panel.component';
 const appRoutes: Routes = [
   { path: '', redirectTo: '/sales-window', pathMatch: 'full' },
   {
-    path: '/sales-window',
+    path: 'sales-window',
     component: SalesWindowComponent,
   },
   {
-    path: '/order-fields',
+    path: 'order-fields',
     component: OrderFieldsComponent,
     canActivate: [AuthGuard],
   },
-  { path: '/login-panel', component: LoginPanelComponent },
-  { path: '/user-panel', component: UserPanelComponent },
+  { path: 'login-panel', component: LoginPanelComponent },
+  { path: 'user-panel', component: UserPanelComponent },
 ];
 
 @NgModule({
