@@ -75,4 +75,8 @@ export class LoginPanelComponent implements OnInit {
       }
     );
   }
+
+  backToMenu() {
+    this.router.navigate(['/sales-window']);
+  }
 }
