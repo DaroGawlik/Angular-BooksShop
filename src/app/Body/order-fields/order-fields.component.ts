@@ -97,7 +97,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
         ]),
         flatNumber: new FormControl(null, [
           Validators.required,
-          Validators.pattern('[[1-9](-?[1-9][0-9]*)]*$'),
+          Validators.pattern('[A-Za-z1-9]+'),
         ]),
       }),
       paymentType: new FormControl(null, [Validators.required]),

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { tap, finalize, catchError } from 'rxjs/operators';
 import { Order } from '../shared/order.model';
 import { AuthService } from './auth.service';
@@ -10,6 +10,8 @@ import { User } from '../Body/login-panel/user.model';
 export class OrdersService {
   user: User;
   error = new Subject<string>();
+
+  public isAfteorderWindowOpen = new BehaviorSubject<boolean>(false);
 
   constructor(
     private http: HttpClient,
@@ -38,6 +40,7 @@ export class OrdersService {
         (responseData) => {
           // console.log(responseData);
           this.accountSettingsService.canFetchOrders.next(true);
+          this.isAfteorderWindowOpen.next(true);
         },
         (error) => {
           this.error.next(error.message);

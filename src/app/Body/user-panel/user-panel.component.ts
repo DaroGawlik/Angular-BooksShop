@@ -10,6 +10,7 @@ import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.
 import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
 import * as fromExample from 'src/app/store/example.selectros';
 import { SalesWindowComponent } from '../sales-window/sales-window.component';
+import { OrdersService } from 'src/app/service/orders.service';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -17,7 +18,7 @@ import { SalesWindowComponent } from '../sales-window/sales-window.component';
 })
 export class UserPanelComponent implements OnInit {
   isAsideOpen: boolean = false;
-
+  isAfteorderWindowOpen: boolean;
   userData: UserDataModel | null;
   userOrders: Order[];
   selectedUserOrder: Order | null;
@@ -26,18 +27,20 @@ export class UserPanelComponent implements OnInit {
   countOrdersDouble$: Observable<number>;
   lengthBooksInBag$: Observable<number>;
 
+  isLogoutWindowOpen: boolean;
+  isFetching: boolean;
+  error: string;
+
   openNgContainer: string = '';
 
   @ViewChild('f', { static: false })
   signupForm: NgForm;
 
-  isFetching: boolean;
-  error: string;
-
   constructor(
     private authService: AuthService,
     private accountSettingsService: AccountSettingsService,
-    private store: Store<{ example: number; bag: BooksInBagState }>
+    private store: Store<{ example: number; bag: BooksInBagState }>,
+    private ordersService: OrdersService
   ) {
     this.accountSettingsService.userDataPublic.subscribe(
       (userData: UserDataModel | null) => {
@@ -59,6 +62,10 @@ export class UserPanelComponent implements OnInit {
     });
     this.countOrders$ = this.store.select(fromExample.selectOrders);
     this.countOrdersDouble$ = this.store.select(fromExample.selectDoubleOrders);
+    this.ordersService.isAfteorderWindowOpen.subscribe(
+      (isAfteorderWindowOpen: boolean) =>
+        (this.isAfteorderWindowOpen = isAfteorderWindowOpen)
+    );
   }
 
   ngOnInit() {
@@ -101,5 +108,9 @@ export class UserPanelComponent implements OnInit {
 
   removeError() {
     this.accountSettingsService.errorPublic.next('');
+  }
+
+  closeLogoutPopup() {
+    this.ordersService.isAfteorderWindowOpen.next(false);
   }
 }

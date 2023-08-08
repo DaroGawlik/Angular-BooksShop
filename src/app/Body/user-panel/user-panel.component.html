@@ -77,4 +77,18 @@
             </div>
         </div>
     </ng-container>
+
+    <div class="overlay" *ngIf="isAfteorderWindowOpen">
+        <div class="logoutPopup">
+            <p *ngIf="!error && !isFetching" class="text-center">the order has been received
+            <p>
+            <div *ngIf="error" class="text-center">
+                <p [ngStyle]=" { 'color' : 'red' }">{{ error}}</p>
+            </div>
+            <div *ngIf="isFetching" style="text-align: center;">
+                <app-loading-spinner></app-loading-spinner>
+            </div>
+            <button class="btn-closeLogoutPopup" type="button" (click)="closeLogoutPopup()">OK</button>
+        </div>
+    </div>
 </div>
