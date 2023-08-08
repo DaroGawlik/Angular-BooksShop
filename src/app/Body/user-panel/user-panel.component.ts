@@ -95,6 +95,7 @@ export class UserPanelComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+    // this.accountSettingsService.userOrdersSubject.next(null);
   }
 
   removeError() {

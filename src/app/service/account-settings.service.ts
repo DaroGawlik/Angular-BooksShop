@@ -210,6 +210,7 @@ export class AccountSettingsService {
           }),
           finalize(() => {
             this.isFetchingPublic.next(false);
+            this.userOrdersSubject.next(null);
           })
         )
         .subscribe();
