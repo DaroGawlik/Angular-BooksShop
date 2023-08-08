@@ -50,6 +50,8 @@ export class AccountSettingsService {
   public isFetchingPublic = new Subject<boolean>();
   public errorPublic = new Subject<string>();
 
+  public isLogoutWindowPopup = new BehaviorSubject<boolean>(false);
+
   constructor(
     private http: HttpClient,
     private authService: AuthService,
@@ -211,6 +213,7 @@ export class AccountSettingsService {
           finalize(() => {
             this.isFetchingPublic.next(false);
             this.userOrdersSubject.next(null);
+            this.isLogoutWindowPopup.next(true);
           })
         )
         .subscribe();

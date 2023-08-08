@@ -24,6 +24,7 @@
                 isLoginMode ? 'Sign Up' :
                 'Login' }}</button>
         </form>
-        <button class="btn-backToMenu" type="button" (click)="backToMenu()">Back to Main Menu</button>
+        <button *ngIf="!isLoading" class="btn-backToMenu" type="button" (click)="backToMenu()">Back to Main
+            Menu</button>
     </div>
 </div>

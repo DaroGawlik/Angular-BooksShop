@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
 import * as fromExample from 'src/app/store/example.selectros';
+import { SalesWindowComponent } from '../sales-window/sales-window.component';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -95,7 +96,7 @@ export class UserPanelComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    // this.accountSettingsService.userOrdersSubject.next(null);
+    this.accountSettingsService.isLogoutWindowPopup.next(true);
   }
 
   removeError() {
