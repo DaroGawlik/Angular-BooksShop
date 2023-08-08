@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 import { decrement, increment, init, set } from './example.actions';
-import { selectOrders } from './example.selectros';
+import { selectOrders } from './example.selectors';
 import { AppState } from '../store-ngrx/app.reducer';
 import * as fromApp from '../store-ngrx/app.reducer';
 
