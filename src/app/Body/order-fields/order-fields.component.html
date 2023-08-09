@@ -21,22 +21,20 @@
             <div formGroupName="orderData">
                 <div class="form-group">
                     <div class="row mt-1 d-flex justify-content-center">
-
                         <label for="name" class="col-6">Name</label>
                         <input type="text" id="name" class="col-6" formControlName="name">
                         <span class="m-1 p-0 d-flex justify-content-end"
                             *ngIf="!signupForm.get('orderData.name')?.valid && signupForm.get('orderData.name')?.touched">
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('orderData.name')?.errors?.['required']">The
-                                This field is required.</span>
+                                *ngIf="signupForm.get('orderData.name')?.errors?.['required']">This field is
+                                required.</span>
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('orderData.name')?.errors?.['pattern']">
-                                Strings only, without spaces and numbers.</span>
+                                *ngIf="signupForm.get('orderData.name')?.errors?.['pattern'] && !signupForm.get('orderData.name')?.errors?.['required']">
+                                Only letters, numbers, and dots are allowed.</span>
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('orderData.name')?.errors?.['minlength']">
-                                The length not less than 4 symbols.</span>
+                                *ngIf="signupForm.get('orderData.name')?.errors?.['minlength'] && !signupForm.get('orderData.name')?.errors?.['required'] && !signupForm.get('orderData.name')?.errors?.['pattern']">
+                                The length must be at least 4 symbol.</span>
                         </span>
-
                     </div>
                     <div class="row mt-1 d-flex justify-content-between">
                         <label for="surname" class="col-6">Surname</label>
@@ -44,16 +42,17 @@
                         <span class="m-1 p-0 d-flex justify-content-end"
                             *ngIf="!signupForm.get('orderData.surname')?.valid && signupForm.get('orderData.surname')?.touched">
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('orderData.surname')?.errors?.['required']">The
-                                This field is required.</span>
+                                *ngIf="signupForm.get('orderData.surname')?.errors?.['required']">This field is
+                                required.</span>
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('orderData.surname')?.errors?.['pattern']">
-                                Strings only, without spaces and numbers.</span>
+                                *ngIf="signupForm.get('orderData.surname')?.errors?.['pattern'] && !signupForm.get('orderData.surname')?.errors?.['required']">
+                                Only letters are allowed.</span>
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('orderData.surname')?.errors?.['minlength']">
-                                The length not less than 5 symbols.</span>
+                                *ngIf="signupForm.get('orderData.surname')?.errors?.['minlength'] && !signupForm.get('orderData.surname')?.errors?.['required'] && !signupForm.get('orderData.surname')?.errors?.['pattern']">
+                                The length must be at least 5 symbols.</span>
                         </span>
                     </div>
+
                 </div>
             </div>
             <div class="row d-flex justify-content-between">

@@ -81,6 +81,7 @@
     }
   }
 }
+
 @media (min-width: 900px) {
   .bagBar {
     svg {
@@ -92,5 +93,11 @@
       right: 8rem;
       font-size: 4.5rem;
     }
+  }
+}
+
+@media (min-width: 900px) {
+  .errorInput {
+    font-size: 1rem;
   }
 }
