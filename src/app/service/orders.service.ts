@@ -47,4 +47,27 @@ export class OrdersService {
         }
       );
   }
+
+  // createAndStoreOrder(postData: Order) {
+  //   this.http
+  //     .post<{ orderData: object }>(
+  //       // 'https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+  //       `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${this.user.id}.json`,
+  //       // https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${userId}.json
+  //       postData
+  //       // {
+  //       //   observe: 'response',
+  //       // }
+  //     )
+  //     .subscribe(
+  //       (responseData) => {
+  //         // console.log(responseData);
+  //         this.accountSettingsService.canFetchOrders.next(true);
+  //         this.isAfteorderWindowOpen.next(true);
+  //       },
+  //       (error) => {
+  //         this.error.next(error.message);
+  //       }
+  //     );
+  // }
 }

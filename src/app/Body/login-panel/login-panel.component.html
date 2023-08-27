@@ -6,6 +6,11 @@
     <div class="container justify-content-center">
         <p class="headerPanelLogin">Please Login to your account</p>
         <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
+            <div *ngIf="isLoginMode" class="form-group">
+                <label for="username" class="col-12 mb-3">Username:</label>
+                <input type="username" class="col-12 mb-3" id="username" ngModel name="username" required
+                    minlength="1" />
+            </div>
             <div class="form-group">
                 <label for="email" class="col-12 mb-3">E-Mail:</label>
                 <input type="email" class="col-12 mb-3" id="email" ngModel name="email" required email />
@@ -18,10 +23,10 @@
             <div *ngIf="error" class="text-center">
                 <p [ngStyle]=" { 'color' : 'red' }">{{ error }}</p>
             </div>
-            <button class="btn-login" type="submit" [disabled]="!authForm.valid"> {{ isLoginMode ? 'Login' : 'Sign Up'
+            <button class="btn-login" type="submit" [disabled]="!authForm.valid"> {{ !isLoginMode ? 'Login' : 'Sign Up'
                 }}</button>
-            <button class="btn-login" type="button" [disabled]="!authForm.valid" (click)="onSwitchMode()">Switch to {{
-                isLoginMode ? 'Sign Up' :
+            <button class="btn-login" type="button" (click)="onSwitchMode()">Switch to {{
+                !isLoginMode ? 'Sign Up' :
                 'Login' }}</button>
         </form>
         <button *ngIf="!isLoading" class="btn-backToMenu" type="button" (click)="backToMenu()">Back to Main

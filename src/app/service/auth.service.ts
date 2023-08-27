@@ -1,10 +1,14 @@
 import { Injectable, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { throwError, BehaviorSubject } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 
 import { User } from '../Body/login-panel/user.model';
 
@@ -53,8 +57,25 @@ export class AuthService {
             resData.idToken,
             +resData.expiresIn
           );
+          // this.signupLocalServer(email, password);
         })
       );
+  }
+  signupLocalServer(username: string, email: string, password: string) {
+    return this.http
+      .post('http://localhost:8080/auth/register', {
+        username: username,
+        email: email,
+        password: password,
+        returnSecureToken: true,
+      })
+      .pipe(
+        catchError(this.handleError),
+        tap((resData: any) => {
+          console.log(resData);
+        })
+      )
+      .subscribe();
   }
 
   login(email: string, password: string) {
@@ -146,20 +167,24 @@ export class AuthService {
 
   private handleError(errorRes: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
-    if (!errorRes.error || !errorRes.error.error) {
-      return throwError(errorMessage);
+
+    if (errorRes.error && errorRes.error.error) {
+      switch (errorRes.error.error.message) {
+        case 'EMAIL_EXISTS':
+          errorMessage = 'This email already exists.';
+          break;
+        case 'EMAIL_NOT_FOUND':
+          errorMessage = 'This email does not exist.';
+          break;
+        case 'INVALID_PASSWORD':
+          errorMessage = 'This password is not correct.';
+          break;
+      }
+    } else if (errorRes.error && errorRes.error.message) {
+      errorMessage = errorRes.error.message;
     }
-    switch (errorRes.error.error.message) {
-      case 'EMAIL_EXISTS':
-        errorMessage = 'This email exists already';
-        break;
-      case 'EMAIL_NOT_FOUND':
-        errorMessage = 'This email does not exist.';
-        break;
-      case 'INVALID_PASSWORD':
-        errorMessage = 'This password is not correct.';
-        break;
-    }
-    return throwError(errorMessage);
+
+    const formattedErrorMessage = `${errorRes.status}: ${errorMessage}`;
+    return throwError(formattedErrorMessage);
   }
 }
