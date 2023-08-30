@@ -56,26 +56,26 @@ export class LoginPanelComponent implements OnInit {
     if (!this.isLoginMode) {
       authObs = this.authService.login(email, password);
     } else {
-      // authObs = this.authService.signup(email, password);
-      this.authService.signupLocalServer(username, email, password);
+      authObs = this.authService.signup(email, password);
+      // this.authService.signupLocalServer(username, email, password);
     }
 
-    // authObs.subscribe(
-    //   (resData) => {
-    //     // console.log(resData);
-    //     this.isLoading = false;
-    //     if (this.source == 'confirmBtn') {
-    //       this.router.navigate(['/order-fields']);
-    //     } else {
-    //       this.router.navigate(['/user-panel']);
-    //     }
-    //   },
-    //   (errorMessage) => {
-    //     // console.log(errorMessage);
-    //     this.error = errorMessage;
-    //     this.isLoading = false;
-    //   }
-    // );
+    authObs.subscribe(
+      (resData) => {
+        // console.log(resData);
+        this.isLoading = false;
+        if (this.source == 'confirmBtn') {
+          this.router.navigate(['/order-fields']);
+        } else {
+          this.router.navigate(['/user-panel']);
+        }
+      },
+      (errorMessage) => {
+        // console.log(errorMessage);
+        this.error = errorMessage;
+        this.isLoading = false;
+      }
+    );
   }
 
   backToMenu() {
