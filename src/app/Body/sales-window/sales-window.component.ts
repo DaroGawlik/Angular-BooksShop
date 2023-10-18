@@ -13,29 +13,7 @@ import { lengthBooksInBag } from 'src/app/service/store-ngrx/booksInbag.selector
 export class SalesWindowComponent implements OnInit {
   booksInBagLength$: Observable<number>;
   isAsideOpen: boolean = false;
-
-  isLogoutWindowOpen: boolean;
-  isFetching: boolean;
-  error: string;
-
-  constructor(
-    private store: Store<{ bag: BooksInBagState }>,
-    private accountSettingsService: AccountSettingsService
-  ) {
-    this.accountSettingsService.isLogoutWindowPopup.subscribe(
-      (isLogoutWindowOpen: boolean) => {
-        this.isLogoutWindowOpen = isLogoutWindowOpen;
-      }
-    );
-    this.accountSettingsService.isFetchingPublic.subscribe(
-      (isFetching: boolean) => {
-        this.isFetching = isFetching;
-      }
-    );
-    this.accountSettingsService.errorPublic.subscribe((error: string) => {
-      this.error = error;
-    });
-  }
+  constructor(private store: Store<{ bag: BooksInBagState }>) {}
 
   ngOnInit() {
     this.booksInBagLength$ = this.store.select(lengthBooksInBag);
@@ -43,10 +21,6 @@ export class SalesWindowComponent implements OnInit {
 
   openAside() {
     this.isAsideOpen = true;
-  }
-
-  closeLogoutPopup() {
-    this.accountSettingsService.isLogoutWindowPopup.next(false);
   }
 }
 // import { BooksService } from 'src/app/service/books.service';

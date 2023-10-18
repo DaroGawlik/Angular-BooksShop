@@ -27,7 +27,6 @@ export class UserPanelComponent implements OnInit {
   countOrdersDouble$: Observable<number>;
   lengthBooksInBag$: Observable<number>;
 
-  isLogoutWindowOpen: boolean;
   isFetching: boolean;
   error: string;
 
@@ -39,8 +38,7 @@ export class UserPanelComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private accountSettingsService: AccountSettingsService,
-    private store: Store<{ example: number; bag: BooksInBagState }>,
-    private ordersService: OrdersService
+    private store: Store<{ example: number; bag: BooksInBagState }>
   ) {
     this.accountSettingsService.userDataPublic.subscribe(
       (userData: UserDataModel | null) => {
@@ -62,10 +60,6 @@ export class UserPanelComponent implements OnInit {
     });
     this.countOrders$ = this.store.select(fromExample.selectOrders);
     this.countOrdersDouble$ = this.store.select(fromExample.selectDoubleOrders);
-    this.ordersService.isAfteorderWindowOpen.subscribe(
-      (isAfteorderWindowOpen: boolean) =>
-        (this.isAfteorderWindowOpen = isAfteorderWindowOpen)
-    );
   }
 
   ngOnInit() {
@@ -97,20 +91,17 @@ export class UserPanelComponent implements OnInit {
   }
 
   deleteAccount() {
-    this.accountSettingsService.deleteAccountApi();
+    this.accountSettingsService.deleteUser();
     this.logout();
   }
 
   logout() {
     this.authService.logout();
+    localStorage.removeItem('userData');
     this.accountSettingsService.isLogoutWindowPopup.next(true);
   }
 
   removeError() {
     this.accountSettingsService.errorPublic.next('');
-  }
-
-  closeLogoutPopup() {
-    this.ordersService.isAfteorderWindowOpen.next(false);
   }
 }

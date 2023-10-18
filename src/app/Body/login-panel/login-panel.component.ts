@@ -53,16 +53,14 @@ export class LoginPanelComponent implements OnInit {
     let authObs: Observable<AuthResponseData>;
     this.isLoading = true;
 
-    if (!this.isLoginMode) {
+    if (this.isLoginMode) {
       authObs = this.authService.login(email, password);
     } else {
-      authObs = this.authService.signup(email, password);
-      // this.authService.signupLocalServer(username, email, password);
+      authObs = this.authService.signUp(username, email, password);
     }
 
     authObs.subscribe(
-      (resData) => {
-        // console.log(resData);
+      (resData: AuthResponseData) => {
         this.isLoading = false;
         if (this.source == 'confirmBtn') {
           this.router.navigate(['/order-fields']);
@@ -71,7 +69,6 @@ export class LoginPanelComponent implements OnInit {
         }
       },
       (errorMessage) => {
-        // console.log(errorMessage);
         this.error = errorMessage;
         this.isLoading = false;
       }

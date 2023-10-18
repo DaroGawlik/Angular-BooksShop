@@ -70,21 +70,21 @@
                         This field is required.</span>
                 </span>
             </div>
-            <div formGroupName="deliveryAdrress">
+            <div formGroupName="deliveryAddress">
                 <div class="form-group">
                     <div class="row d-flex justify-content-between">
                         <label for="street" class="col-6">Street</label>
                         <input type="text" id="street" class="col-6" formControlName="street">
                         <span class="m-1 p-0 d-flex justify-content-end"
-                            *ngIf="!signupForm.get('deliveryAdrress.street')?.valid && signupForm.get('deliveryAdrress.street')?.touched">
+                            *ngIf="!signupForm.get('deliveryAddress.street')?.valid && signupForm.get('deliveryAddress.street')?.touched">
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('deliveryAdrress.street')?.errors?.['required']">The
+                                *ngIf="signupForm.get('deliveryAddress.street')?.errors?.['required']">The
                                 This field is required.</span>
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('deliveryAdrress.street')?.errors?.['pattern']">
+                                *ngIf="signupForm.get('deliveryAddress.street')?.errors?.['pattern']">
                                 Strings and numbers, without spaces.</span>
                             <span class="errorInput m-0 p-0"
-                                *ngIf="signupForm.get('deliveryAdrress.street')?.errors?.['minlength']">
+                                *ngIf="signupForm.get('deliveryAddress.street')?.errors?.['minlength']">
                                 The length not less than 5 symbols.</span>
                         </span>
                     </div>

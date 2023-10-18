@@ -85,7 +85,7 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
         ]),
       }),
       deliveryDate: new FormControl(null, [Validators.required]),
-      deliveryAdrress: new FormGroup({
+      deliveryAddress: new FormGroup({
         street: new FormControl(null, [
           Validators.required,
           Validators.pattern('[a-zA-Z0-9.]*$'),
