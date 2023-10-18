@@ -1,41 +1,30 @@
 import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject, Subject, throwError } from 'rxjs';
 import {
-  Observable,
-  BehaviorSubject,
-  Subject,
-  throwError,
-  of,
-  concat,
-} from 'rxjs';
-import {
+  HttpHeaders,
   HttpClient,
-  HttpEventType,
   HttpErrorResponse,
 } from '@angular/common/http';
-import {
-  tap,
-  finalize,
-  catchError,
-  filter,
-  switchMap,
-  concatMap,
-} from 'rxjs/operators';
+import { tap, finalize, catchError, filter, switchMap } from 'rxjs/operators';
 import {
   PostUpdateUserNameModel,
   UserDataModel,
-  PostUserDataModel,
-  GatUpdateUserNameModel,
+  GetUpdateUserNameModel,
 } from '../shared/account-user.model';
 import { AuthService } from './auth.service';
 import { User } from '../Body/login-panel/user.model';
 import { Order } from '../shared/order.model';
 import { Store } from '@ngrx/store';
 import { increment, decrement } from '../store/example.actions';
+import { HttpHeadersService } from './httpHeaders.service';
+
 // import { IncrementAction } from '../store/example.actions';
 @Injectable({
   providedIn: 'root',
 })
 export class AccountSettingsService {
+  private apiUrl = 'http://localhost:8080';
+
   user: User | null;
   private userDataSubject = new BehaviorSubject<UserDataModel | null>(null);
   public userDataPublic: Observable<UserDataModel | null> =
@@ -55,30 +44,31 @@ export class AccountSettingsService {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private store: Store
+    private store: Store,
+    private httpHeadersService: HttpHeadersService
   ) {
     this.authService.user.subscribe((user) => {
       this.user = user;
-      if (this.user?.token) {
-        this.getUserData(this.user.token);
+      if (this.user?.userId) {
+        this.getUserData(this.user.userId);
       }
     });
   }
 
-  getUserData(idToken: string) {
-    this.isFetchingPublic.next(true);
-    const requestData: PostUserDataModel = {
-      idToken: idToken,
-    };
+  getUserData(userId: number) {
+    const httpOptions = this.httpHeadersService.getHttpOptions();
     this.http
-      .post<UserDataModel>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
-        requestData
-      )
+      .post<UserDataModel>(`${this.apiUrl}/userData/${userId}/get`, null, {
+        headers: httpOptions,
+      })
       .pipe(
         catchError(this.handleError),
         tap((responseData: UserDataModel) => {
-          this.userDataSubject.next(responseData);
+          const updatedUserData: any = {
+            ...this.userDataSubject.value,
+            userName: responseData.userName,
+          };
+          this.userDataSubject.next(updatedUserData);
         }),
         finalize(() => {
           this.isFetchingPublic.next(false);
@@ -87,25 +77,26 @@ export class AccountSettingsService {
       .subscribe();
   }
 
-  changeUserName(newUserName: string) {
+  changeUserName(userName: string) {
     this.isFetchingPublic.next(true);
-    const requestData: PostUpdateUserNameModel = {
-      idToken: this.user?.token || '',
-      displayName: newUserName,
-    };
+    if (this.user?.userId) {
+      const requestData: PostUpdateUserNameModel = {
+        userName: userName,
+      };
+      const httpOptions = this.httpHeadersService.getHttpOptions();
 
-    if (this.user?.token) {
       this.http
-        .post<UserDataModel>(
-          'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
-          requestData
+        .put<GetUpdateUserNameModel>(
+          `${this.apiUrl}/userData/${this.user.userId}/updateUserName`,
+          requestData,
+          { headers: httpOptions }
         )
         .pipe(
           catchError(this.handleError),
-          tap((responseData: UserDataModel) => {
+          tap((responseData: GetUpdateUserNameModel) => {
             const updatedUserData: any = {
               ...this.userDataSubject.value,
-              displayName: responseData.displayName,
+              userName: responseData.userName,
             };
             this.userDataSubject.next(updatedUserData);
           }),
@@ -127,7 +118,7 @@ export class AccountSettingsService {
         filter((user): user is User => !!user), // Filtrujemy użytkowników, żeby pominąć null i undefined
         switchMap((user) =>
           this.http.get<Order>(
-            `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${user.id}.json`,
+            `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${user.userId}.json`,
             {
               // headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
               // params: serachParams,
@@ -164,7 +155,7 @@ export class AccountSettingsService {
     if (this.user) {
       this.http
         .delete<{}>(
-          `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${this.user.id}/${idOrder}.json`
+          `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${this.user.userId}/${idOrder}.json`
         )
         .pipe(
           catchError(this.handleError),
@@ -185,40 +176,66 @@ export class AccountSettingsService {
         .subscribe();
     }
   }
-
-  deleteAccountApi() {
+  deleteUser() {
     this.isFetchingPublic.next(true);
-
-    if (this.user) {
-      const requestData: PostUserDataModel = {
-        idToken: this.user.token || '',
-      };
-
-      this.http
-        .delete<{}>(
-          `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${this.user.id}.json`
-        )
-        .pipe(
-          catchError(this.handleError),
-          tap((responseData: any) => {
-            if (responseData == null) {
-              this.http
-                .post<PostUserDataModel>(
-                  'https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
-                  requestData
-                )
-                .subscribe();
-            }
-          }),
-          finalize(() => {
-            this.isFetchingPublic.next(false);
-            this.userOrdersSubject.next(null);
-            this.isLogoutWindowPopup.next(true);
-          })
-        )
-        .subscribe();
+    if (!this.user) {
+      console.error('User data is missing.');
+      this.isFetchingPublic.next(false); // Zakończ tutaj, ponieważ brakuje danych użytkownika
+      return;
     }
+    const httpOptions = this.httpHeadersService.getHttpOptions();
+    this.http
+      .delete(`${this.apiUrl}/auth/users/delete/${this.user.userId}`, {
+        ...httpOptions,
+        responseType: 'text',
+      })
+      .pipe(
+        catchError(this.handleError),
+        tap((responseData: string) => {
+          // console.log(responseData);
+        }),
+        finalize(() => {
+          this.isFetchingPublic.next(false);
+          this.userOrdersSubject.next(null);
+          this.isLogoutWindowPopup.next(true);
+        })
+      )
+      .subscribe();
   }
+
+  // deleteAccountApi() {
+  //   this.isFetchingPublic.next(true);
+
+  //   if (this.user) {
+  //     const requestData: PostUserDataModel = {
+  //       idToken: this.user.token || '',
+  //     };
+
+  //     this.http
+  //       .delete<{}>(
+  //         `https://bookshopangular-82a38-default-rtdb.europe-west1.firebasedatabase.app/users/${this.user.id}.json`
+  //       )
+  //       .pipe(
+  //         catchError(this.handleError),
+  //         tap((responseData: any) => {
+  //           if (responseData == null) {
+  //             this.http
+  //               .post<PostUserDataModel>(
+  //                 'https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyCu0m3745l9Hl1mlAevBNUP84qJuYTVQyU',
+  //                 requestData
+  //               )
+  //               .subscribe();
+  //           }
+  //         }),
+  //         finalize(() => {
+  //           this.isFetchingPublic.next(false);
+  //           this.userOrdersSubject.next(null);
+  //           this.isLogoutWindowPopup.next(true);
+  //         })
+  //       )
+  //       .subscribe();
+  //   }
+  // }
 
   private handleError = (errorRes: HttpErrorResponse) => {
     let errorMessage = errorRes.message;

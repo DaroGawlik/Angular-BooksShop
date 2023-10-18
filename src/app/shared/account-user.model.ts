@@ -1,18 +1,19 @@
 export interface PostUserDataModel {
-  idToken: string;
+  userId: number;
 }
-export interface PostUpdateUserNameModel extends PostUserDataModel {
-  displayName: string;
+export interface PostUpdateUserNameModel {
+  userName: string;
 }
-export interface PostUpdateUserPhotoModel extends PostUserDataModel {
+
+export interface PostUpdateUserPhotoModel {
   photoUrl: string;
 }
 
 export interface UserDataModel {
-  localId: string;
+  userId: number;
   email: string;
   emailVerified: boolean;
-  displayName: string;
+  userName: string;
   providerUserInfo: ProviderUserInfo[];
   photoUrl: string;
   passwordHash: string;
@@ -24,8 +25,8 @@ export interface UserDataModel {
   customAuth: boolean;
 }
 
-export interface GatUpdateUserNameModel {
-  displayName: string;
+export interface GetUpdateUserNameModel {
+  userName: string;
 }
 
 export interface ProviderUserInfo {

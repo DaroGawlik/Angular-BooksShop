@@ -39,6 +39,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { ExampleEffects } from './store/example.effects';
 import { booksInBagReducer } from './service/store-ngrx/booksInbag.reducer';
 import { BooksInBagEffects } from './service/store-ngrx/booksInbag.effects';
+import { PopupComponent } from './Body/popup/popup.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { BooksInBagEffects } from './service/store-ngrx/booksInbag.effects';
     AccountPanelComponent,
     UserPanelComponent,
     PanelGetOrdersComponent,
+    PopupComponent,
   ],
   imports: [
     BrowserModule,
