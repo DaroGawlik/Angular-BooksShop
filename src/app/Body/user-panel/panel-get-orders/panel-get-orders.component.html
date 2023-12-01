@@ -15,9 +15,9 @@
 
     <div class="delivery-address">
         <h3>Delivery Address</h3>
-        <p><strong>Street:</strong> {{ userOrder.deliveryAdrress.street }}</p>
-        <p><strong>House Number:</strong> {{ userOrder.deliveryAdrress.houseNumber }}</p>
-        <p><strong>Flat Number:</strong> {{ userOrder.deliveryAdrress.flatNumber }}</p>
+        <p><strong>Street:</strong> {{ userOrder.deliveryAddress.street }}</p>
+        <p><strong>House Number:</strong> {{ userOrder.deliveryAddress.houseNumber }}</p>
+        <p><strong>Flat Number:</strong> {{ userOrder.deliveryAddress.flatNumber }}</p>
     </div>
 
     <div class="delivery-date">
@@ -32,15 +32,13 @@
         </ul>
     </div>
 
-
-
     <div class="payment-type">
         <h3>Payment Type</h3>
         <p>{{ userOrder.paymentType }}</p>
     </div>
+
     <div *ngIf="userOrder.additionalInformation" class="additional-info">
         <h3>Additional Information</h3>
         <p class="info__text">{{ userOrder.additionalInformation }}</p>
     </div>
-
 </div>

@@ -1,12 +1,20 @@
+import { BookModel } from "./book.model";
 export interface Order {
   [key: string]: any;
-  orderData: object;
-  deliveryDate: string;
-  deliveryAddress: object;
-  paymentType: string;
-  gifts: string[];
-  additionalInformation: string;
-  books: object[];
-  id?: string;
-  orderDate: string;
+  id: number;
+  orderData: {
+    name: string;
+    surname: string;
+  };
+  deliveryDate: string | null;
+  deliveryAddress: {
+    street: string;
+    houseNumber: string;
+    flatNumber: string;
+  };
+  paymentType: string | null;
+  gifts: string[] | null;
+  additionalInformation: string | null;
+  books: BookModel[] | null;
+  orderDate: string | null;
 }

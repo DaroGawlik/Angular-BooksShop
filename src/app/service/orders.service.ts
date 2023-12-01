@@ -33,11 +33,11 @@ export class OrdersService {
 
   createAndStoreOrder(requestData: Order) {
     this.isFetchingPublic.next(true);
-    const httpOptions = this.httpHeadersService.getHttpOptions();
     if (!this.user) {
       this.error.next('User not identified');
       return;
     }
+    const httpOptions = this.httpHeadersService.getHttpOptions();
     const userApiUrl = `${this.apiUrl}/${this.user.userId}/post`;
     this.http
       .post(userApiUrl, requestData, {

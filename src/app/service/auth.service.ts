@@ -18,6 +18,7 @@ import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.
 import * as BooksInBagActions from 'src/app/service/store-ngrx/booksInbag.actions';
 import { TokenService } from './token.service';
 import { Observable } from 'rxjs-compat';
+import { ErrorHandlerService } from './error-handler.service';
 
 // export interface AuthResponseData {
 //   localId: string;
@@ -48,7 +49,8 @@ export class AuthService {
     private router: Router,
     private booksService: BooksService,
     private store: Store<{ bag: BooksInBagState }>,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private errorHandlerService: ErrorHandlerService
   ) {}
 
   signUp(
@@ -65,7 +67,10 @@ export class AuthService {
     return this.http
       .post<AuthResponseData>(`${this.apiUrl}/register`, requestData)
       .pipe(
-        catchError(this.handleError),
+        catchError((errorRes: HttpErrorResponse) => {
+          this.errorHandlerService.handleError(errorRes);
+          return throwError(errorRes.error);
+        }),
         tap((resData: AuthResponseData) => {
           this.handleAuthentication(
             resData.userId,
@@ -78,14 +83,14 @@ export class AuthService {
   }
 
   getNewToken(refreshToken: string) {
-    // Wyślij żądanie do Twojego serwera w celu odświeżenia tokenu.
-    // Zastąp 'twoje_url_odświeżania_tokenu' rzeczywistym adresem URL punktu końcowego serwera do odświeżania tokenu.
     return this.http
       .post<any>('http://localhost:8080/token/refresh', { refreshToken })
       .pipe(
-        catchError(this.handleError),
+        catchError((errorRes: HttpErrorResponse) => {
+          this.errorHandlerService.handleError(errorRes);
+          return throwError(errorRes.error);
+        }),
         tap((tokenResponse: any) => {
-          // Obsłuż odpowiedź z Twojego serwera i zaktualizuj tokeny, jeśli to konieczne.
           this.tokenService.generateJwtToken(tokenResponse.idToken);
           this.tokenService.generateRefreshToken(tokenResponse.refreshToken);
         })
@@ -100,7 +105,10 @@ export class AuthService {
     return this.http
       .post<AuthResponseData>(`${this.apiUrl}/login`, requestData)
       .pipe(
-        catchError(this.handleError),
+        catchError((errorRes: HttpErrorResponse) => {
+          this.errorHandlerService.handleError(errorRes);
+          return throwError(errorRes.error);
+        }),
         tap((resData: AuthResponseData) => {
           this.handleAuthentication(
             resData.userId,
@@ -196,28 +204,5 @@ export class AuthService {
     // this.user.next(user);
     // this.autoLogout(expiresIn * 1000);
     // localStorage.setItem('userData', JSON.stringify(user));
-  }
-
-  private handleError(errorRes: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
-
-    if (errorRes.error && errorRes.error.error) {
-      switch (errorRes.error.error.message) {
-        case 'EMAIL_EXISTS':
-          errorMessage = 'This email already exists.';
-          break;
-        case 'EMAIL_NOT_FOUND':
-          errorMessage = 'This email does not exist.';
-          break;
-        case 'INVALID_PASSWORD':
-          errorMessage = 'This password is not correct.';
-          break;
-      }
-    } else if (errorRes.error && errorRes.error.message) {
-      errorMessage = errorRes.error.message;
-    }
-
-    const formattedErrorMessage = `${errorRes.status}: ${errorMessage}`;
-    return throwError(formattedErrorMessage);
   }
 }
