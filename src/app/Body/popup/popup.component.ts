@@ -1,7 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { AccountSettingsService } from 'src/app/service/account-settings.service';
-import { OrdersService } from 'src/app/service/orders.service';
+import { Observable, Subscription } from 'rxjs';
+import { ErrorHandlerService } from 'src/app/service/errorHandler.service';
+import { FetchingService } from 'src/app/service/fetching.service';
+import { PopUpService } from 'src/app/service/popup.service';
 
 @Component({
   selector: 'app-popup',
@@ -9,36 +10,29 @@ import { OrdersService } from 'src/app/service/orders.service';
   styleUrls: ['./popup.component.scss'],
 })
 export class PopupComponent implements OnDestroy {
-  isLogoutWindowOpen: boolean;
-  isAfterOrderWindowOpen: boolean;
+  isOpen: boolean;
   isFetching: boolean;
-  error: string;
-  orderResponse: string;
-
+  response: string;
+  error$: Observable<string | null>;
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private accountSettingsService: AccountSettingsService,
-    private ordersService: OrdersService
+    private popUp: PopUpService,
+    private fetchingService: FetchingService,
+    private errorService: ErrorHandlerService
   ) {
     this.subscriptions.push(
-      this.accountSettingsService.isLogoutWindowPopup.subscribe((value) => (this.isLogoutWindowOpen = value)),
-      this.accountSettingsService.isFetchingPublic.subscribe((value) => (this.isFetching = value)),
-      this.accountSettingsService.errorPublic.subscribe((value) => (this.error = value)),
-      this.ordersService.isAfterOrderWindowPopup.subscribe((value) => (this.isAfterOrderWindowOpen = value)),
-      this.ordersService.orderResponse.subscribe((value) => (this.orderResponse = value)),
-      this.ordersService.isFetchingPublic.subscribe((value) => (this.isFetching = value)),
-      this.ordersService.errorPublic.subscribe((value) => (this.error = value))
+      this.popUp.isOpen.subscribe((boolean) => (this.isOpen = boolean)),
+      this.popUp.response.subscribe((value) => (this.response = value)),
+      this.fetchingService.isFetchingSubject.subscribe(
+        (value) => (this.isFetching = value)
+      )
     );
+    this.error$ = this.errorService.error$;
   }
 
   closeLogoutPopup() {
-    if (this.isAfterOrderWindowOpen) {
-      this.ordersService.isAfterOrderWindowPopup.next(false);
-    }
-    if (this.isLogoutWindowOpen) {
-      this.accountSettingsService.isLogoutWindowPopup.next(false);
-    }
+    this.popUp.isOpen.next(false);
   }
 
   ngOnDestroy() {

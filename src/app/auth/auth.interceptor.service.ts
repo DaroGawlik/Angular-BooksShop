@@ -14,13 +14,15 @@ import { AuthService } from '../service/auth.service';
 import { TokenService } from '../service/token.service';
 import { TokenResponse } from '../shared/token.model';
 import { Observable } from 'rxjs';
+import { ErrorHandlerService } from '../service/errorHandler.service';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
   constructor(
     private authService: AuthService,
     private tokenService: TokenService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private errorService: ErrorHandlerService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {

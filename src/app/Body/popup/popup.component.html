@@ -1,13 +1,12 @@
-<div class="overlay" *ngIf="isLogoutWindowOpen || isAfterOrderWindowOpen">
+<div class="overlay" *ngIf="isOpen">
     <div class="logoutPopup">
-        <p *ngIf="isLogoutWindowOpen && !isAfterOrderWindowOpen && !error && !isFetching" class="text-center">Logout was successful</p>
-        <p *ngIf="isAfterOrderWindowOpen && orderResponse" class="text-center">{{ orderResponse }}</p>
-        <div *ngIf="error" class="text-center">
+        <p *ngIf="isOpen && !(error$ | async) && !isFetching" class="text-center">{{ response }}</p>
+        <div *ngIf="(error$ | async) as error" class="text-center">
             <p [ngStyle]="{ 'color': 'red' }">{{ error }}</p>
-        </div>
-        <div *ngIf="isFetching" style="text-align: center;">
-            <app-loading-spinner></app-loading-spinner>
         </div>
         <button class="btn-closeLogoutPopup" type="button" (click)="closeLogoutPopup()">OK</button>
     </div>
+</div>
+<div *ngIf="isFetching" style="text-align: center;">
+    <app-loading-spinner></app-loading-spinner>
 </div>

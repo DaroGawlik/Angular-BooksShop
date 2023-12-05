@@ -1,11 +1,12 @@
 <div class="m-0 p-0 pb-4"
     style="background-image: linear-gradient(to left, #d7d2cc 0%, #304352 100%); position: relative;">
-    <div *ngIf="isLoading" style="text-align: center;">
+    <div *ngIf="(isFetching$ | async)" style="text-align: center;">
         <app-loading-spinner></app-loading-spinner>
+        <p>Loading...</p>
     </div>
     <div class="container justify-content-center">
-        <p class="headerPanelLogin">Please Login to your account</p>
-        <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
+        <p *ngIf="!(isFetching$ | async)" class="headerPanelLogin">Please Login to your account</p>
+        <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!(isFetching$ | async)">
             <div *ngIf="!isLoginMode" class="form-group">
                 <label for="username" class="col-12 mb-3">Username:</label>
                 <input type="username" class="col-12 mb-3" id="username" ngModel name="username" required
@@ -20,8 +21,8 @@
                 <input type="password" class="col-12 mb-3" id="password" ngModel name="password" required
                     minlength="6" />
             </div>
-            <div *ngIf="error" class="text-center">
-                <p [ngStyle]=" { 'color' : 'red' }">{{ error }}</p>
+            <div *ngIf="(error$ | async) as error" class="text-center">
+                <p [ngStyle]="{ 'color': 'red' }">{{ error }}</p>
             </div>
             <button class="btn-login" type="submit" [disabled]="!authForm.valid"> {{ isLoginMode ? 'Login' : 'Sign Up'
                 }}</button>
@@ -29,7 +30,7 @@
                 isLoginMode ? 'Sign Up' :
                 'Login' }}</button>
         </form>
-        <button *ngIf="!isLoading" class="btn-backToMenu" type="button" (click)="backToMenu()">Back to Main
+        <button *ngIf="!(isFetching$ | async)" class="btn-backToMenu" type="button" (click)="backToMenu()">Back to Main
             Menu</button>
     </div>
 </div>

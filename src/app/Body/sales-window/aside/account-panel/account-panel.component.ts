@@ -19,7 +19,7 @@ export class AccountPanelComponent implements OnInit {
   @Input() isBook: boolean;
 
   isAuthenticated: boolean = false;
-  
+
   private userSub: Subscription;
   constructor(
     private authService: AuthService,
@@ -29,11 +29,11 @@ export class AccountPanelComponent implements OnInit {
     this.userSub = this.authService.user.subscribe((user) => {
       this.isAuthenticated = !!user;
     });
-    this.accountSettingsService.userDataPublic.subscribe(
-      (userData: UserDataModel | null) => {
+    this.accountSettingsService.userDataPublic.subscribe((userData) => {
+      if (userData) {
         this.userData = userData;
       }
-    );
+    });
   }
 
   ngOnInit() {

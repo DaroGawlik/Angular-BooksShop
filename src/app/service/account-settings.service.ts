@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, Subject, throwError } from 'rxjs';
-import {
-  HttpHeaders,
-  HttpClient,
-  HttpErrorResponse,
-} from '@angular/common/http';
-import { tap, finalize, catchError, filter, switchMap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subject, throwError, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { tap, finalize, catchError, map } from 'rxjs/operators';
 import {
   PostUpdateUserNameModel,
   UserDataModel,
@@ -17,16 +13,20 @@ import { Order } from '../shared/order.model';
 import { Store } from '@ngrx/store';
 import { increment, decrement } from '../store/example.actions';
 import { HttpHeadersService } from './httpHeaders.service';
+import { PopUpService } from './popup.service';
+import { ErrorHandlerService } from './errorHandler.service';
+import { FetchingService } from './fetching.service';
 
 // import { IncrementAction } from '../store/example.actions';
 @Injectable({
   providedIn: 'root',
 })
 export class AccountSettingsService {
+  user: User;
+
   private apiUrl = 'http://localhost:8080';
   private apiUrlOrder = 'http://localhost:8080/order';
 
-  user: User | null;
   private userDataSubject = new BehaviorSubject<UserDataModel | null>(null);
   public userDataPublic: Observable<UserDataModel | null> =
     this.userDataSubject.asObservable();
@@ -37,101 +37,85 @@ export class AccountSettingsService {
 
   public canFetchOrders = new BehaviorSubject<boolean>(true);
 
-  public isFetchingPublic = new Subject<boolean>();
-  public errorPublic = new Subject<string>();
-
-  public isLogoutWindowPopup = new BehaviorSubject<boolean>(false);
+  private httpOptions = this.httpHeadersService.getHttpOptions();
+  private requestDataSecureToken = {
+    request: true,
+  };
 
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private store: Store,
-    private httpHeadersService: HttpHeadersService
+    private httpHeadersService: HttpHeadersService,
+    private popUp: PopUpService,
+    private errorService: ErrorHandlerService,
+    private fetchingService: FetchingService
   ) {
     this.authService.user.subscribe((user) => {
-      this.user = user;
-      if (this.user?.userId) {
+      if (user) {
+        this.user = user;
         this.getUserData(this.user.userId);
       }
     });
   }
 
   getUserData(userId: number) {
-    const httpOptions = this.httpHeadersService.getHttpOptions();
+    this.fetchingService.isFetchingSubject.next(true);
     this.http
       .post<UserDataModel>(`${this.apiUrl}/userData/${userId}/get`, null, {
-        headers: httpOptions,
+        headers: this.httpOptions,
       })
       .pipe(
-        catchError(this.handleError),
-        tap((responseData: UserDataModel) => {
-          const updatedUserData: any = {
-            ...this.userDataSubject.value,
-            userName: responseData.userName,
-          };
-          this.userDataSubject.next(updatedUserData);
-        }),
         finalize(() => {
-          this.isFetchingPublic.next(false);
+          this.fetchingService.isFetchingSubject.next(false);
         })
       )
-      .subscribe();
+      .subscribe((response: UserDataModel) => {
+        const updatedUserData: Partial<UserDataModel> = {
+          ...this.userDataSubject.value,
+          userName: response.userName,
+        };
+        this.userDataSubject.next(updatedUserData as UserDataModel);
+      });
   }
 
   changeUserName(userName: string) {
-    this.isFetchingPublic.next(true);
-    if (this.user?.userId) {
-      const requestData: PostUpdateUserNameModel = {
-        userName: userName,
-      };
-      const httpOptions = this.httpHeadersService.getHttpOptions();
-
-      this.http
-        .put<GetUpdateUserNameModel>(
-          `${this.apiUrl}/userData/${this.user.userId}/updateUserName`,
-          requestData,
-          { headers: httpOptions }
-        )
-        .pipe(
-          catchError(this.handleError),
-          tap((responseData: GetUpdateUserNameModel) => {
-            const updatedUserData: any = {
-              ...this.userDataSubject.value,
-              userName: responseData.userName,
-            };
-            this.userDataSubject.next(updatedUserData);
-          }),
-          finalize(() => {
-            this.isFetchingPublic.next(false);
-          })
-        )
-        .subscribe();
-    }
+    this.fetchingService.isFetchingSubject.next(true);
+    const requestData: PostUpdateUserNameModel = {
+      userName: userName,
+    };
+    this.http
+      .put<GetUpdateUserNameModel>(
+        `${this.apiUrl}/userData/${this.user.userId}/updateUserName`,
+        requestData,
+        { headers: this.httpOptions }
+      )
+      .pipe(
+        finalize(() => {
+          this.fetchingService.isFetchingSubject.next(false);
+        })
+      )
+      .subscribe((response: GetUpdateUserNameModel) => {
+        const updatedUserData: Partial<UserDataModel> = {
+          ...this.userDataSubject.value,
+          userName: response.userName,
+        };
+        this.userDataSubject.next(updatedUserData as UserDataModel);
+      });
   }
 
   fetchOrders() {
-    this.isFetchingPublic.next(true);
-    if (!this.user) {
-      this.errorPublic.next('User not identified');
-      this.isFetchingPublic.next(false);
-      return;
-    }
-
-    const httpOptions = this.httpHeadersService.getHttpOptions();
-    const requestData = {
-      returnSecureToken: true,
-    };
+    this.fetchingService.isFetchingSubject.next(true);
     const userApiUrl = `${this.apiUrlOrder}/${this.user.userId}/get`;
 
     this.http
-      .get<Order[]>(userApiUrl, { headers: httpOptions, params: requestData })
+      .get<Order[]>(userApiUrl, {
+        headers: this.httpOptions,
+        params: this.requestDataSecureToken,
+      })
       .pipe(
-        catchError((error) => {
-          this.handleError(error);
-          throw error;
-        }),
         finalize(() => {
-          this.isFetchingPublic.next(false);
+          this.fetchingService.isFetchingSubject.next(false);
         })
       )
       .subscribe((response: Order[]) => {
@@ -139,71 +123,51 @@ export class AccountSettingsService {
         this.store.dispatch(increment({ orders: response.length }));
       });
   }
-  deleteOrder(orderId: number) {
-    this.isFetchingPublic.next(true);
-    if (!this.user) {
-      this.errorPublic.next('User not identified');
-      this.isFetchingPublic.next(false);
-      return;
-    }
 
-    const httpOptions = this.httpHeadersService.getHttpOptions();
-    const requestData = {
-      returnSecureToken: true,
-    };
+  deleteOrder(orderId: number): Observable<boolean> {
+    this.fetchingService.isFetchingSubject.next(true);
     const userApiUrl = `${this.apiUrlOrder}/${this.user.userId}/delete/${orderId}`;
-    console.log('1');
-    this.http
-      .delete(userApiUrl, { headers: httpOptions, params: requestData })
-      .pipe(
-        catchError((error) => {
-          this.handleError(error);
-          throw error;
-        }),
-        finalize(() => {
-          const currentOrders = this.userOrdersSubject.getValue() ?? [];
-          const filteredOrders = currentOrders.filter(
-            (order) => order.id !== orderId
-          );
 
-          this.userOrdersSubject.next(filteredOrders);
-          this.store.dispatch(decrement({ orders: 1 }));
-          this.isFetchingPublic.next(false);
-        })
-      )
-      .subscribe();
-  }
-
-  deleteUser() {
-    this.isFetchingPublic.next(true);
-    if (!this.user) {
-      console.error('User data is missing.');
-      this.isFetchingPublic.next(false); // Zakończ tutaj, ponieważ brakuje danych użytkownika
-      return;
-    }
-    const httpOptions = this.httpHeadersService.getHttpOptions();
-    this.http
-      .delete(`${this.apiUrl}/auth/users/delete/${this.user.userId}`, {
-        ...httpOptions,
+    return this.http
+      .delete(userApiUrl, {
+        headers: this.httpOptions,
+        params: this.requestDataSecureToken,
         responseType: 'text',
       })
       .pipe(
-        catchError(this.handleError),
-        tap((responseData: string) => {
-          // console.log(responseData);
-        }),
         finalize(() => {
-          this.isFetchingPublic.next(false);
-          this.userOrdersSubject.next(null);
-          this.isLogoutWindowPopup.next(true);
+          this.fetchingService.isFetchingSubject.next(false);
+        }),
+        map((response: string) => {
+          const currentOrders = this.userOrdersSubject.getValue() ?? [];
+          const filteredOrders = currentOrders.filter(
+            (order) => order.orderId !== orderId
+          );
+          this.userOrdersSubject.next(filteredOrders);
+          this.store.dispatch(decrement({ orders: 1 }));
+          this.popUp.isOpen.next(true);
+          this.popUp.response.next(response);
+          return true;
         })
-      )
-      .subscribe();
+      );
   }
 
-  private handleError = (errorRes: HttpErrorResponse) => {
-    let errorMessage = errorRes.message;
-    this.errorPublic.next(errorMessage);
-    return throwError(errorMessage);
-  };
+  deleteUser() {
+    this.fetchingService.isFetchingSubject.next(true);
+    this.http
+      .delete(`${this.apiUrl}/auth/users/delete/${this.user.userId}`, {
+        ...this.httpOptions,
+        responseType: 'text',
+      })
+      .pipe(
+        finalize(() => {
+          this.fetchingService.isFetchingSubject.next(false);
+        })
+      )
+      .subscribe((response: string) => {
+        this.popUp.response.next(response);
+        this.userOrdersSubject.next(null);
+        this.popUp.isOpen.next(true);
+      });
+  }
 }

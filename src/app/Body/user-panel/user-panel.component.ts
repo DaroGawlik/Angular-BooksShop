@@ -4,13 +4,14 @@ import { Order } from 'src/app/shared/order.model';
 import { UserDataModel } from '../../shared/account-user.model';
 import { AccountSettingsService } from 'src/app/service/account-settings.service';
 import { NgForm } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
 import * as fromExample from 'src/app/store/example.selectros';
-import { SalesWindowComponent } from '../sales-window/sales-window.component';
-import { OrdersService } from 'src/app/service/orders.service';
+import { PopUpService } from 'src/app/service/popup.service';
+import { ErrorHandlerService } from 'src/app/service/errorHandler.service';
+import { FetchingService } from 'src/app/service/fetching.service';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
@@ -19,7 +20,7 @@ import { OrdersService } from 'src/app/service/orders.service';
 export class UserPanelComponent implements OnInit {
   isAsideOpen: boolean = false;
   isAfteorderWindowOpen: boolean;
-  userData: UserDataModel | null;
+  userData: UserDataModel;
   userOrders: Order[];
   selectedUserOrder: Order | null;
 
@@ -27,8 +28,9 @@ export class UserPanelComponent implements OnInit {
   countOrdersDouble$: Observable<number>;
   lengthBooksInBag$: Observable<number>;
 
-  isFetching: boolean;
-  error: string;
+  isFetching$: Observable<boolean>;
+  source: string;
+  error$: Observable<string | null>;
 
   openNgContainer: string = '';
 
@@ -38,33 +40,30 @@ export class UserPanelComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private accountSettingsService: AccountSettingsService,
-    private store: Store<{ example: number; bag: BooksInBagState }>
+    private store: Store<{ example: number; bag: BooksInBagState }>,
+    private popUp: PopUpService,
+    private errorService: ErrorHandlerService,
+    private fetchingService: FetchingService
   ) {
-    this.accountSettingsService.userDataPublic.subscribe(
-      (userData: UserDataModel | null) => {
+    this.accountSettingsService.userDataPublic.subscribe((userData) => {
+      if (userData) {
         this.userData = userData;
       }
-    );
-    this.accountSettingsService.userOrdersPublic.subscribe(
-      (userOrders: Order[] | null) => {
-        this.userOrders = userOrders !== null ? userOrders : this.userOrders;
-      }
-    );
-    this.accountSettingsService.isFetchingPublic.subscribe(
-      (isFetching: boolean) => {
-        this.isFetching = isFetching;
-      }
-    );
-    this.accountSettingsService.errorPublic.subscribe((error: string) => {
-      this.error = error;
+    });
+    this.error$ = this.errorService.error$;
+    this.isFetching$ = this.fetchingService.isFetching$;
+    this.accountSettingsService.userOrdersPublic.subscribe((userOrders) => {
+      this.userOrders = userOrders !== null ? userOrders : this.userOrders;
     });
     this.countOrders$ = this.store.select(fromExample.selectOrders);
     this.countOrdersDouble$ = this.store.select(fromExample.selectDoubleOrders);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.lengthBooksInBag$ = this.store.select(fromBooksInBag.lengthBooksInBag);
+    this.onClearError();
   }
+
   openAside() {
     this.isAsideOpen = true;
   }
@@ -82,12 +81,13 @@ export class UserPanelComponent implements OnInit {
     }
   }
   selectUserOrder(userOrder: Order) {
-    this.selectedUserOrder =
-      this.selectedUserOrder === userOrder ? null : userOrder;
+    this.selectedUserOrder = userOrder;
   }
 
-  cancelOrder(userOrder: Order) {
-    userOrder?.id && this.accountSettingsService.deleteOrder(userOrder.id);
+  deleteOrder(userOrder: Order) {
+    this.accountSettingsService
+      .deleteOrder(userOrder.orderId)
+      .subscribe((success) => success && (this.selectedUserOrder = null));
   }
 
   deleteAccount() {
@@ -97,11 +97,13 @@ export class UserPanelComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+    this.accountSettingsService.canFetchOrders.next(true);
     localStorage.removeItem('userData');
-    this.accountSettingsService.isLogoutWindowPopup.next(true);
+    this.popUp.isOpen.next(true);
+    this.popUp.response.next('Logout was successful');
   }
 
-  removeError() {
-    this.accountSettingsService.errorPublic.next('');
+  onClearError(): void {
+    this.errorService.clearErrorService();
   }
 }

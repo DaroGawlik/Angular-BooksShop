@@ -1,7 +1,7 @@
 import { BookModel } from "./book.model";
 export interface Order {
   [key: string]: any;
-  id: number;
+  orderId: number;
   orderData: {
     name: string;
     surname: string;

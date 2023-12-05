@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -40,6 +40,8 @@ import { ExampleEffects } from './store/example.effects';
 import { booksInBagReducer } from './service/store-ngrx/booksInbag.reducer';
 import { BooksInBagEffects } from './service/store-ngrx/booksInbag.effects';
 import { PopupComponent } from './Body/popup/popup.component';
+import { ErrorHandlerService } from './service/errorHandler.service';
+import { ErrorInterceptor } from './interceptors/errorInterceptor.service';
 
 @NgModule({
   declarations: [
@@ -93,6 +95,11 @@ import { PopupComponent } from './Body/popup/popup.component';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
       multi: true,
     },
   ],
