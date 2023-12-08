@@ -1,21 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+
+import { Store } from '@ngrx/store';
+import { increment, decrement } from '../store/example.actions';
+
+import { Observable, BehaviorSubject } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
+
+import { AuthService } from './auth.service';
+import { FetchingService } from './fetching.service';
+import { HttpHeadersService } from './httpHeaders.service';
+import { PopUpService } from './popup.service';
+import { ErrorHandlerService } from './errorHandler.service';
+
 import {
   PostUpdateUserNameModel,
   UserDataModel,
   GetUpdateUserNameModel,
 } from '../shared/account-user.model';
-import { AuthService } from './auth.service';
 import { User } from '../shared/user.model';
 import { Order } from '../shared/order.model';
-import { Store } from '@ngrx/store';
-import { increment, decrement } from '../store/example.actions';
-import { HttpHeadersService } from './httpHeaders.service';
-import { PopUpService } from './popup.service';
-import { ErrorHandlerService } from './errorHandler.service';
-import { FetchingService } from './fetching.service';
+
+import { ApiConfig } from 'src/api/api.config';
 
 @Injectable({
   providedIn: 'root',
@@ -23,8 +29,8 @@ import { FetchingService } from './fetching.service';
 export class AccountSettingsService {
   user: User;
 
-  private apiUrl = 'http://localhost:8080';
-  private apiUrlOrder = 'http://localhost:8080/order';
+  private apiUrl: string;
+  private apiUrlOrder: string;
 
   private userDataSubject = new BehaviorSubject<UserDataModel | null>(null);
   public userDataPublic: Observable<UserDataModel | null> =
@@ -40,7 +46,6 @@ export class AccountSettingsService {
   private requestDataSecureToken = {
     request: true,
   };
-
   constructor(
     private http: HttpClient,
     private authService: AuthService,
@@ -50,6 +55,8 @@ export class AccountSettingsService {
     private errorService: ErrorHandlerService,
     private fetchingService: FetchingService
   ) {
+    this.apiUrl = ApiConfig.apiUrl;
+    this.apiUrlOrder = ApiConfig.apiUrlOrder;
     this.authService.user.subscribe((user) => {
       if (user) {
         this.user = user;

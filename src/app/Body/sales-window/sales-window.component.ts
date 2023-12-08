@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+
+import { Observable } from 'rxjs';
+
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { AccountSettingsService } from 'src/app/service/account-settings.service';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import { lengthBooksInBag } from 'src/app/service/store-ngrx/booksInbag.selectors';
 

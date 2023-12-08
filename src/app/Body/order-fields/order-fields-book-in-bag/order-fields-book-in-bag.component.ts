@@ -1,12 +1,14 @@
 import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+
 import { Observable } from 'rxjs';
 
-import { BookModel } from 'src/app/shared/book.model';
+import { Store } from '@ngrx/store';
 import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
-import * as BooksInBagActions from '../../../service/store-ngrx/booksInbag.actions';
+// import * as BooksInBagActions from '../../../service/store-ngrx/booksInbag.actions';
+
+import { BookModel } from 'src/app/shared/book.model';
 @Component({
   selector: 'app-order-fields-book-in-bag',
   templateUrl: './order-fields-book-in-bag.component.html',

@@ -5,17 +5,17 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs-compat';
 import { finalize, tap } from 'rxjs/operators';
+
 import { Store } from '@ngrx/store';
-
-// import { ErrorHandlerService } from './errorHandler.service';
-import { TokenService } from './token.service';
-
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import * as BooksInBagActions from 'src/app/service/store-ngrx/booksInbag.actions';
 
-import { User } from '../shared/user.model';
-import { PopUpService } from './popup.service';
+import { TokenService } from './token.service';
 import { FetchingService } from './fetching.service';
+
+import { User } from '../shared/user.model';
+
+import { ApiConfig } from 'src/api/api.config';
 export interface AuthResponseData {
   userId: number;
   idToken: string;
@@ -24,7 +24,7 @@ export interface AuthResponseData {
 }
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/auth';
+  private apiUrlAuth: string;
 
   public user = new BehaviorSubject<User | null>(null);
 
@@ -35,9 +35,10 @@ export class AuthService {
     private router: Router,
     private store: Store<{ bag: BooksInBagState }>,
     private tokenService: TokenService,
-    private popUp: PopUpService,
     private fetchingService: FetchingService
-  ) {}
+  ) {
+    this.apiUrlAuth = ApiConfig.apiUrlAuth;
+  }
 
   signUp(
     userName: string,
@@ -49,7 +50,7 @@ export class AuthService {
     const requestData = { userName, email, password, returnSecureToken: true };
 
     return this.http
-      .post<AuthResponseData>(`${this.apiUrl}/register`, requestData)
+      .post<AuthResponseData>(`${this.apiUrlAuth}/register`, requestData)
       .pipe(
         tap(
           ({ userId, idToken, refreshToken, expiresIn }: AuthResponseData) => {
@@ -80,7 +81,7 @@ export class AuthService {
   login(email: string, password: string) {
     const requestData = { email, password, returnSecureToken: true };
     return this.http
-      .post<AuthResponseData>(`${this.apiUrl}/login`, requestData)
+      .post<AuthResponseData>(`${this.apiUrlAuth}/login`, requestData)
       .pipe(
         tap(
           ({ userId, idToken, refreshToken, expiresIn }: AuthResponseData) => {

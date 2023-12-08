@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { BehaviorSubject, Observable, ReplaySubject, throwError } from 'rxjs';
+import { BehaviorSubject, Observable  } from 'rxjs';
 
-import { PopUpService } from './popup.service';
 import { FetchingService } from './fetching.service';
 
 @Injectable({ providedIn: 'root' })

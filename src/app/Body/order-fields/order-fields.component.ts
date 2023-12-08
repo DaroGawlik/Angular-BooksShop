@@ -1,23 +1,24 @@
-import { Component, DoCheck, OnInit, OnDestroy } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormArray,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+
 import { Observable } from 'rxjs';
 
-import { BookModel } from 'src/app/shared/book.model';
-import { Order } from 'src/app/shared/order.model';
-import { OrdersService } from 'src/app/service/orders.service';
-import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
-
+import { Store } from '@ngrx/store';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
 import * as BooksInBagActions from 'src/app/service/store-ngrx/booksInbag.actions';
+
+import { OrdersService } from 'src/app/service/orders.service';
+
+import { BookModelToOrder } from 'src/app/shared/book.model.toorder';
+import { BookModel } from 'src/app/shared/book.model';
+import { Order } from 'src/app/shared/order.model';
 @Component({
   selector: 'app-order-fields',
   templateUrl: './order-fields.component.html',
@@ -106,18 +107,6 @@ export class OrderFieldsComponent implements OnInit, DoCheck {
       books: new FormArray([]),
       orderDate: new FormControl(this.todayDate, [Validators.required]),
     });
-    // this.isFetching = true;
-    // this.ordersService.fetchOrders().subscribe(
-    //   (orders) => {
-    //     this.isFetching = false;
-    //     this.loadedOrders = orders;
-    //   },
-    //   (error) => {
-    //     this.error = error.message;
-    //   }
-    // );
-    // this.additionalInformationControl =
-    //   this.signupForm.controls['additionalInformation'];
   }
 
   clickGift(gift: any) {

@@ -1,8 +1,11 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
+
 import { BehaviorSubject, Observable } from 'rxjs';
-import BooksJson from '../../books.json';
+
+
 import { BookModel } from '../shared/book.model';
 
+import BooksJson from '../../books.json';
 @Injectable()
 export class BooksService {
   private defaultBooks: BookModel[] = [];

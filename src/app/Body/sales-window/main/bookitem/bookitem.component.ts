@@ -1,9 +1,8 @@
 // NGRX APPROACH
 
 import { Component, OnInit, Input } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { BooksService } from 'src/app/service/books.service';
 
+import { Store } from '@ngrx/store';
 import * as BooksInBagActions from '../../../../service/store-ngrx/booksInbag.actions';
 import { State } from 'src/app/service/store-ngrx/booksInbag.reducer';
 

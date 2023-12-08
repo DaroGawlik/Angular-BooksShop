@@ -11,7 +11,7 @@ My web shop application includes all the necessary features for customers to buy
 Upon completion, users can navigate to their user panel, where they have the ability to change their account name and view all their previous orders. Additionally, they can log out, delete their account, or return to the sales window.
 
 To check and use all functions, you need to install the server side, which you can download and install from the following link:
-(https://github.com/DaroGawlik/Java-BooksShop-Backend)
+https://github.com/DaroGawlik/Java-BooksShop-Backend
 
 This application aims to provide a seamless experience for customers, allowing them to manage their accounts, place orders, and explore book offerings effortlessly.
 

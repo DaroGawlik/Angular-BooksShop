@@ -1,17 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
 import { BehaviorSubject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Order } from '../shared/order.model';
+
 import { AuthService } from './auth.service';
 import { AccountSettingsService } from './account-settings.service';
-import { User } from '../shared/user.model';
 import { HttpHeadersService } from './httpHeaders.service';
 import { PopUpService } from './popup.service';
 import { FetchingService } from './fetching.service';
+
+import { Order } from '../shared/order.model';
+import { User } from '../shared/user.model';
+
+import { ApiConfig } from 'src/api/api.config';
 @Injectable({ providedIn: 'root' })
 export class OrdersService {
-  private apiUrl = 'http://localhost:8080/order';
+  private apiUrlOrder: string;
   private user: User;
 
   public isAfterOrderWindowPopup = new BehaviorSubject<boolean>(false);
@@ -25,6 +30,7 @@ export class OrdersService {
     private popUp: PopUpService,
     private fetchingService: FetchingService
   ) {
+    this.apiUrlOrder = ApiConfig.apiUrlOrder;
     this.authService.user.subscribe((user) =>
       user !== null ? (this.user = user) : null
     );
@@ -33,7 +39,7 @@ export class OrdersService {
   createAndStoreOrder(requestData: Order) {
     this.fetchingService.isFetchingSubject.next(true);
     const httpOptions = this.httpHeadersService.getHttpOptions();
-    const userApiUrl = `${this.apiUrl}/${this.user.userId}/post`;
+    const userApiUrl = `${this.apiUrlOrder}/${this.user.userId}/post`;
     this.http
       .post(userApiUrl, requestData, {
         headers: httpOptions,

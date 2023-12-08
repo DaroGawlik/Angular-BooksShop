@@ -1,17 +1,22 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/service/auth.service';
-import { Order } from 'src/app/shared/order.model';
-import { UserDataModel } from '../../shared/account-user.model';
-import { AccountSettingsService } from 'src/app/service/account-settings.service';
+
 import { NgForm } from '@angular/forms';
+
 import { Observable } from 'rxjs';
+
 import { Store } from '@ngrx/store';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import * as fromBooksInBag from 'src/app/service/store-ngrx/booksInbag.selectors';
 import * as fromExample from 'src/app/store/example.selectros';
+
+import { AccountSettingsService } from 'src/app/service/account-settings.service';
+import { AuthService } from 'src/app/service/auth.service';
 import { PopUpService } from 'src/app/service/popup.service';
 import { ErrorHandlerService } from 'src/app/service/errorHandler.service';
 import { FetchingService } from 'src/app/service/fetching.service';
+
+import { UserDataModel } from '../../shared/account-user.model';
+import { Order } from 'src/app/shared/order.model';
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
