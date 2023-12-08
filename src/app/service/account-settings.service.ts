@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, Subject, throwError, of } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap, finalize, catchError, map } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import {
   PostUpdateUserNameModel,
   UserDataModel,
   GetUpdateUserNameModel,
 } from '../shared/account-user.model';
 import { AuthService } from './auth.service';
-import { User } from '../Body/login-panel/user.model';
+import { User } from '../shared/user.model';
 import { Order } from '../shared/order.model';
 import { Store } from '@ngrx/store';
 import { increment, decrement } from '../store/example.actions';
@@ -17,7 +17,6 @@ import { PopUpService } from './popup.service';
 import { ErrorHandlerService } from './errorHandler.service';
 import { FetchingService } from './fetching.service';
 
-// import { IncrementAction } from '../store/example.actions';
 @Injectable({
   providedIn: 'root',
 })

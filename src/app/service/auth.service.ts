@@ -13,7 +13,7 @@ import { TokenService } from './token.service';
 import { State as BooksInBagState } from 'src/app/service/store-ngrx/booksInbag.reducer';
 import * as BooksInBagActions from 'src/app/service/store-ngrx/booksInbag.actions';
 
-import { User } from '../Body/login-panel/user.model';
+import { User } from '../shared/user.model';
 import { PopUpService } from './popup.service';
 import { FetchingService } from './fetching.service';
 export interface AuthResponseData {

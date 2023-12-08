@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Order } from '../shared/order.model';
 import { AuthService } from './auth.service';
 import { AccountSettingsService } from './account-settings.service';
-import { User } from '../Body/login-panel/user.model';
+import { User } from '../shared/user.model';
 import { HttpHeadersService } from './httpHeaders.service';
 import { PopUpService } from './popup.service';
 import { FetchingService } from './fetching.service';
